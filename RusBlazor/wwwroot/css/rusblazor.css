@@ -1,0 +1,103 @@
+@import url("scrollbar.css");
+
+:root {
+    --rus-menu-item-hover-background: #666;
+    --rus-menu-item-hover-color: white;
+    background-color: #333;
+}
+
+.rus-menu {
+    position: absolute;
+    z-index: 2;
+    background-color: white;
+    border: 1px solid #d4d4d4;
+    width: 100%;
+    max-height: 240px;
+    overflow-y: scroll;
+    cursor: pointer;
+}
+
+.rus-menu-item {
+    padding: 10px;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+    .rus-menu-item.hoverable:hover {
+        color: var(--rus-menu-item-hover-color);
+        background: var(--rus-menu-item-hover-background);
+    }
+
+.rus-input-container {
+    position: relative;
+    display: inline-block;
+}
+
+.rus-input-subtext {
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    bottom: -20px;
+    left: 0;
+    color: #666;
+    font-size: 12px;
+}
+
+.rus-input-container:hover .rus-input-subtext {
+    visibility: visible;
+}
+
+.rus-select {
+    position: relative;
+    display: inline-block;
+}
+
+.rus-background-overlay {
+    content: "";
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0);
+    display: block;
+}
+
+
+.rus-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+    .rus-input:focus {
+        border-color: #66afe9;
+        outline: none;
+        box-shadow: 0 0 8px rgba(102,175,233,.6);
+    }
+
+
+
+.rus-checkbox {
+}
+
+    .rus-checkbox:hover {
+        cursor: pointer;
+    }
+
+.rus-text-menu-item1 {
+}
+
+.rus-text-menu-item2 {
+}
+
+
+
+
+
+
+
+

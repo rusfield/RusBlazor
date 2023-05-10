@@ -1,0 +1,69 @@
+﻿@using RusBlazor.Enums
+@typeparam T
+
+<div class="@("rus-menu")" style="@StateStyle() @AnchorStyle()" id="@id">
+
+    @ChildContent
+
+</div>
+
+@if (IsOpen)
+{
+    <RusBackgroundOverlay OnClick="Close" />
+}
+
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public Anchor Anchor { get; set; } = Anchor.Auto;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    string id;
+
+    protected override void OnInitialized()
+    {
+        id = Guid.NewGuid().ToString();
+        base.OnInitialized();
+    }
+
+    string AnchorStyle()
+    {
+        return Anchor switch
+        {
+            Anchor.Bottom => "top: 100%; left: 0;",
+            Anchor.Top => "bottom: 100%; left: 0;",
+            Anchor.Left => "right: 100%; top: 0;",
+            Anchor.Right => "left: 100%; top: 0;",
+            Anchor.BottomLeft => "top: 100%; right: 0;",
+            Anchor.BottomRight => "top: 100%; left: 0;",
+            Anchor.TopLeft => "bottom: 100%; right: 0;",
+            Anchor.TopRight => "bottom: 100%; left: 0;",
+            _ => "top: 100%; left: 0;",
+        };
+    }
+
+    string StateStyle()
+    {
+        return IsOpen ? "display:block;" : "display:none;";
+    }
+
+    public void Close()
+    {
+        IsOpen = false;
+        this.StateHasChanged();
+        IsOpenChanged.InvokeAsync(IsOpen);
+    }
+
+    public string GetId()
+    {
+        return id;
+    }
+}

@@ -1,0 +1,10 @@
+﻿@inherits InputBase<bool>
+
+<input type="checkbox" @bind="CurrentValue" @attributes="AdditionalAttributes" class="rus-checkbox"/>
+
+@code {
+    protected override bool TryParseValueFromString(string value, out bool result, out string validationErrorMessage)
+    {
+        throw new NotImplementedException();
+    }
+}

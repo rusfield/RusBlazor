@@ -1,0 +1,29 @@
+﻿@typeparam TValue
+@inherits InputBase<TValue>
+
+<div class="rus-input-container">
+    <input @bind="Value" @onfocus="@OnFocus" @onblur="@OnBlur" @oninput="@OnInput" class="rus-input" />
+    <div class="rus-input-subtext">Your helper text goes here</div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnFocus { get; set; }
+
+    [Parameter]
+    public EventCallback OnBlur { get; set; }
+
+    [Parameter]
+    public EventCallback<string> InputChanged { get; set; }
+
+
+    void OnInput(ChangeEventArgs args)
+    {
+        InputChanged.InvokeAsync(args.Value.ToString());
+    }
+
+    protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
+    {
+        throw new NotImplementedException();
+    }
+}

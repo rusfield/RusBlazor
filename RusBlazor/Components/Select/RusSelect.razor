@@ -1,0 +1,133 @@
+﻿@using Extensions;
+@typeparam T
+@inject IJSRuntime JSRuntime
+
+<div class="rus-select">
+    <RusInput TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" />
+    <RusMenu @ref="rusMenu" T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
+        @if (loading)
+        {
+            <RusMenuItem Hoverable="false">
+                <RusMenuItemContentLoading />
+            </RusMenuItem>
+        }
+        else if (!filteredItems.Any())
+        {
+            <RusMenuItem Hoverable="false">
+                <RusMenuItemContentNoResults />
+            </RusMenuItem>
+        }
+        else
+        {
+            foreach (var item in filteredItems)
+            {
+                <RusMenuItem OnItemClick="@(() => SelectItem(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")">
+                    <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@item.Value" />
+                </RusMenuItem>
+            }
+        }
+    </RusMenu>
+</div>
+
+@code {
+    [Parameter]
+    public T Value { get; set; }
+
+    [Parameter]
+    public EventCallback<T> ValueChanged { get; set; }
+
+    [Parameter]
+    public Func<string, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
+
+    [Parameter]
+    public bool AllowUndefinedValues { get; set; } = true;
+
+    bool loading = false;
+    bool menuOpen = false;
+    string? displayValue;
+    string? lastVerifiedDisplayValue;
+    private Timer? searchTimer;
+    private CancellationTokenSource? cancellationTokenSource;
+    Dictionary<T, string> filteredItems = new();
+    RusMenu<T>? rusMenu;
+
+    void OnFocus()
+    {
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+        Task.Run(async () =>
+        {
+            await UpdateList("", cancellationToken);
+        });
+    }
+
+    void OnBlur()
+    {
+        cancellationTokenSource?.Cancel();
+    }
+
+    void InputChanged(string input)
+    {
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+        searchTimer?.Dispose();
+        searchTimer = new Timer(async (state) =>
+        {
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                await UpdateList(input, cancellationToken);
+            }
+        }, null, 300, Timeout.Infinite);
+    }
+
+    async Task UpdateList(string search, CancellationToken token)
+    {
+        loading = true;
+        menuOpen = true;
+        await InvokeAsync(StateHasChanged);
+        try
+        {
+            if (GetOptionsAsync != null)
+                filteredItems = await GetOptionsAsync.Invoke(search, token);
+
+            // Adjust search so that a potential custom value is retrieved
+            if (string.IsNullOrWhiteSpace(search))
+                search = lastVerifiedDisplayValue ?? "";
+
+            // Search for custom values
+            if (AllowUndefinedValues && search.TryParseT<T>(out var value) && !filteredItems.ContainsKey(value))
+                filteredItems.Add(value, search);
+        }
+        catch (OperationCanceledException e)
+        {
+            // Search cancelled
+        }
+        loading = false;
+        await InvokeAsync(StateHasChanged);
+        if (filteredItems.ContainsKey(Value))
+        {
+            await JSRuntime.InvokeVoidAsync("scrollToElementInContainer", rusMenu!.GetId(), $"{rusMenu!.GetId()}-{Value.ToString()}", 2000);
+        }
+    }
+
+    void SelectItem(T key, string value)
+    {
+        Value = key;
+        displayValue = value;
+        lastVerifiedDisplayValue = value;
+        menuOpen = false;
+        _ = ValueChanged.InvokeAsync(Value);
+    }
+
+    void ShowMenuChanged(bool showMenu)
+    {
+        if (!showMenu)
+            displayValue = lastVerifiedDisplayValue;
+        menuOpen = showMenu;
+    }
+}
+
