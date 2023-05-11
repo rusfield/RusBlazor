@@ -41,10 +41,10 @@
         {
             token.ThrowIfCancellationRequested();
             if (item.Contains(search, StringComparison.InvariantCultureIgnoreCase))
-                results.Add(id, (item, id % 2 == 0));
+                results.Add(id, (item, id.ToString().Contains("2")));
 
             if (search.TryParseT<int>(out var value) && id == value && !results.ContainsKey(value))
-                results.Add(id, (item, id % 2 == 0));
+                results.Add(id, (item, id.ToString().Contains("2")));
                 
             id = id * 2;
         }

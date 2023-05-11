@@ -29,3 +29,10 @@ window.scrollToElementInContainer = (containerId, elementId, scrollDuration) => 
         window.requestAnimationFrame(animateScroll);
     }
 };
+
+
+// Focus element by ID
+window.focusElement = (elementId) => {
+    console.log("focusing " + elementId);
+    document.getElementById(elementId).focus();
+};

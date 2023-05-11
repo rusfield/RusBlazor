@@ -1,8 +1,10 @@
-﻿@typeparam T
+﻿@using RusBlazor.Extensions;
+@typeparam T
+@inject IJSRuntime JSRuntime
 
 
 <div class="rus-select">
-    <RusInput TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" />
+    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" />
     <RusMenu T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
         @if (loading)
         {
@@ -20,8 +22,8 @@
         {
             foreach (var item in filteredItems)
             {
-                <RusMenuItem OnItemClick="@(() => SelectItem(item.Key))">
-                    <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@item.Value.Item1" Multiselect="true" Checked="@(selectedValues.Contains(item.Key))" />
+                <RusMenuItem OnItemClick="@(async () => await SelectItem(item.Key))">
+                    <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value.Item1 + (item.Value.Item2 ? " (e)" : ""))" Multiselect="true" Checked="@(selectedValues.Contains(item.Key))" />
                 </RusMenuItem>
             }
         }
@@ -38,6 +40,7 @@
     [Parameter]
     public Func<string, CancellationToken, Task<Dictionary<T, (string, bool)>>> GetOptionsAsync { get; set; }
 
+    string id = "";
     bool loading = false;
     bool menuOpen = false;
     string? displayValue;
@@ -46,17 +49,31 @@
     private CancellationTokenSource? cancellationTokenSource;
     Dictionary<T, (string, bool)> filteredItems = new();
     List<T> selectedValues = new();
+    RusInput<string>? rusInput;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            selectedValues.GetFlagsByValue(Value);
+        }
+        base.OnAfterRender(firstRender);
+    }
 
     void OnFocus()
     {
-        cancellationTokenSource?.Cancel();
-        cancellationTokenSource = new CancellationTokenSource();
-        CancellationToken cancellationToken = cancellationTokenSource.Token;
-
-        Task.Run(async () =>
+        // Element may be re-focused from clicking in menu too.
+        if (!menuOpen)
         {
-            await UpdateList("", cancellationToken);
-        });
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            Task.Run(async () =>
+            {
+                await UpdateList("", cancellationToken);
+            });
+        }
     }
 
     void OnBlur()
@@ -98,13 +115,45 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    void SelectItem(T key)
+    async Task SelectItem(T key)
     {
+        // Toggle whether key is added or removed
         if (selectedValues.Contains(key))
+        {
             selectedValues.Remove(key);
+        }
         else
-            selectedValues.Add(key);
+        {
+            // Remove all keys if new key is exclusive,
+            // or remove all exlusive keys if not
+            if (filteredItems[key].Item2)
+                selectedValues.Clear();
+            else
+                selectedValues.RemoveAll(i => filteredItems.TryGetValue(i, out var value) && value.Item2);
 
+            selectedValues.Add(key);
+        }
+
+        // If 0 are selected, automatically select default (0)
+        if (selectedValues.Count == 0)
+        {
+            selectedValues.Add(default(T));
+        }
+
+        Value = selectedValues.FlagsToValue();
+
+        if (selectedValues.Count == 1)
+        {
+            displayValue = filteredItems[key].Item1;
+        }
+        else
+        {
+            displayValue = $"{selectedValues.Count} selected";
+        }
+        lastVerifiedDisplayValue = displayValue;
+
+        var id = rusInput?.GetId() ?? "";
+        await JSRuntime.InvokeVoidAsync("focusElement", id);
         _ = ValueChanged.InvokeAsync(Value);
     }
 
