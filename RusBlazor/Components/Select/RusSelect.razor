@@ -99,7 +99,7 @@
                 search = lastVerifiedDisplayValue ?? "";
 
             // Search for custom values
-            if (AllowUndefinedValues && search.TryParseT<T>(out var value) && !filteredItems.ContainsKey(value))
+            if (AllowUndefinedValues && search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
                 filteredItems.Add(value, search);
         }
         catch (OperationCanceledException e)

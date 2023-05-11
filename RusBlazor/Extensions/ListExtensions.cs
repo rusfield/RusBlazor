@@ -11,7 +11,7 @@ namespace RusBlazor.Extensions
     {
         public static T FlagsToValue<T>(this List<T> list)
         {
-            if (!GenericIsWholeNumber<T>())
+            if (!typeof(T).IsWholeNumberType())
                 throw new ArgumentException($"Type {typeof(T)} is not supported here.");
 
             dynamic result = 0;
@@ -24,7 +24,7 @@ namespace RusBlazor.Extensions
 
         public static void GetFlagsByValue<T>(this List<T> list, T flag)
         {
-            if (!GenericIsWholeNumber<T>())
+            if (!typeof(T).IsWholeNumberType())
                 throw new ArgumentException($"Type {typeof(T)} is not supported here.");
 
             dynamic value = flag;
@@ -47,15 +47,6 @@ namespace RusBlazor.Extensions
                     }
                 }
             }
-        }
-
-
-        static bool GenericIsWholeNumber<T>()
-        {
-            return (typeof(T) == typeof(byte) || typeof(T) == typeof(sbyte) ||
-                typeof(T) == typeof(short) || typeof(T) == typeof(ushort) ||
-                typeof(T) == typeof(int) || typeof(T) == typeof(uint) ||
-                typeof(T) == typeof(long) || typeof(T) == typeof(ulong));
         }
     }
 }

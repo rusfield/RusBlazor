@@ -8,7 +8,7 @@ namespace RusBlazor.Extensions
 {
     public static class StringExtensions
     {
-        public static bool TryParseT<T>(this string str, out T value)
+        public static bool TryParseAsT<T>(this string str, out T value)
         {
             var type = typeof(T);
             value = default;

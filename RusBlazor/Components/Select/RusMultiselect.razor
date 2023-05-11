@@ -47,6 +47,7 @@
     string? lastVerifiedDisplayValue;
     private Timer? searchTimer;
     private CancellationTokenSource? cancellationTokenSource;
+    Dictionary<T, (string, bool)>? options;
     Dictionary<T, (string, bool)> filteredItems = new();
     List<T> selectedValues = new();
     RusInput<string>? rusInput;
@@ -104,8 +105,7 @@
         await InvokeAsync(StateHasChanged);
         try
         {
-            if (GetOptionsAsync != null)
-                filteredItems = await GetOptionsAsync.Invoke(search, token);
+            filteredItems = await SearchAsync(search, token);
         }
         catch (OperationCanceledException e)
         {
@@ -162,5 +162,52 @@
         if (!showMenu)
             displayValue = lastVerifiedDisplayValue;
         menuOpen = showMenu;
+    }
+
+    async Task<Dictionary<T, (string, bool)>> SearchAsync(string input, CancellationToken token)
+    {
+        if(options == null)
+        {
+            var validOptions = await GetOptionsAsync.Invoke("", token);
+            token.ThrowIfCancellationRequested();
+
+            options = new();
+            if (typeof(T).IsWholeNumberType())
+                options[default(T)] = ("None", true);
+
+            foreach (var validOption in validOptions)
+                options[validOption.Key] = validOption.Value;
+
+            if (typeof(T).IsWholeNumberType() && typeof(T).TryGetMaxValue<T>(out var maxValue))
+            {
+                var undefinedOptions = new List<T>();
+                undefinedOptions.GetFlagsByValue(maxValue);
+                foreach (var undefinedOption in undefinedOptions)
+                    if (!options.ContainsKey(undefinedOption))
+                        options[undefinedOption] = ("Undefined", false);
+            }
+        }
+
+        var results = new Dictionary<T, (string, bool)>();
+        var keyMatches = new List<T>();
+        if (typeof(T).IsWholeNumberType() && input.TryParseAsT<T>(out var value))
+        {
+            keyMatches.GetFlagsByValue(value);
+        }
+        keyMatches.AddRange(options.Where(v => v.Value.Item1.Contains(input, StringComparison.InvariantCultureIgnoreCase)).Select(k => k.Key));
+
+        token.ThrowIfCancellationRequested();
+        foreach(var match in keyMatches)
+        {
+            if (options.ContainsKey(match))
+                results[match] = options[match];
+            else
+                results[match] = new("Undefined", match.ToString().StartsWith("-")); // Negative values are always exclusive
+        }
+
+        if(!options.ContainsKey(Value))
+            results[Value] = new("Undefined", Value.ToString().StartsWith("-"));
+
+        return results;
     }
 }
