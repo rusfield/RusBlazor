@@ -28,5 +28,19 @@ namespace RusBlazor.Extensions
             value = default(T);
             return false;
         }
+
+        public static bool TryGetTypeAsUnsigned(this Type type, out Type? value)
+        {
+            value = type.Name switch
+            {
+                "Byte" or "SByte" => typeof(byte),
+                "Int16" or "UInt16" => typeof(ushort),
+                "Int32" or "UInt32" => typeof(uint),
+                "Int64" or "UInt64" => typeof(ulong),
+                _ => null
+            };
+
+            return value != null;
+        }
     }
 }
