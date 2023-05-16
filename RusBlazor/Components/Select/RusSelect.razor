@@ -5,27 +5,29 @@
 <div class="rus-select">
     <RusInput TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" />
     <RusMenu @ref="rusMenu" T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
-        @if (loading)
-        {
-            <RusMenuItem Hoverable="false">
-                <RusMenuItemContentLoading />
-            </RusMenuItem>
-        }
-        else if (!filteredItems.Any())
-        {
-            <RusMenuItem Hoverable="false">
-                <RusMenuItemContentNoResults />
-            </RusMenuItem>
-        }
-        else
-        {
-            foreach (var item in filteredItems)
+        <MenuContent>
+            @if (loading)
             {
-                <RusMenuItem OnItemClick="@(() => SelectItem(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")">
-                    <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@item.Value" />
+                <RusMenuItem Hoverable="false">
+                    <RusMenuItemContentLoading />
                 </RusMenuItem>
             }
-        }
+            else if (!filteredItems.Any())
+            {
+                <RusMenuItem Hoverable="false">
+                    <RusMenuItemContentNoResults />
+                </RusMenuItem>
+            }
+            else
+            {
+                foreach (var item in filteredItems)
+                {
+                    <RusMenuItem OnItemClick="@(() => SelectItem(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")">
+                        <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@item.Value" />
+                    </RusMenuItem>
+                }
+            }
+        </MenuContent>
     </RusMenu>
 </div>
 

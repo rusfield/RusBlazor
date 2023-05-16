@@ -12,19 +12,22 @@
     background-color: white;
     border: 1px solid #d4d4d4;
     width: 100%;
-    max-height: 240px;
-    overflow-y: scroll;
-    cursor: pointer;
 }
 
+    .rus-menu .rus-menu-content {
+        max-height: 240px;
+        overflow-y: scroll;
+    }
+
 .rus-menu-item {
-    padding: 10px;
+    /* padding: 10px; */
     border-bottom: 1px solid #d4d4d4;
 }
 
     .rus-menu-item.hoverable:hover {
         color: var(--rus-menu-item-hover-color);
         background: var(--rus-menu-item-hover-background);
+        cursor: pointer;
     }
 
 .rus-input-container {
@@ -94,10 +97,6 @@
 .rus-text-menu-item2 {
 }
 
-
-
-
-
-
-
-
+.rus-button {
+    cursor: pointer;
+}

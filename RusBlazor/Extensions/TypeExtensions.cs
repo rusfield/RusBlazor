@@ -19,12 +19,28 @@ namespace RusBlazor.Extensions
 
         public static bool TryGetMaxValue<T>(this Type type, out T value)
         {
-            FieldInfo? field = type.GetField("MaxValue");
-            if (field != null)
+            if (type.IsUnsignedNumberType())
             {
-                value = (T)field.GetValue(null);
-                return true;
+                FieldInfo? field = type.GetField("MaxValue");
+                if (field != null)
+                {
+                    value = (T)field.GetValue(null);
+                    return true;
+                }
             }
+            else
+            {
+                try
+                {
+                    value = (T)Convert.ChangeType(-1, type);
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    // Not valid type
+                }
+            }
+
             value = default(T);
             return false;
         }
@@ -41,6 +57,12 @@ namespace RusBlazor.Extensions
             };
 
             return value != null;
+        }
+
+        public static bool IsUnsignedNumberType(this Type type)
+        {
+            var unsignedTypes = new[] { typeof(byte), typeof(ushort), typeof(uint), typeof(ulong) };
+            return unsignedTypes.Contains(type);
         }
     }
 }

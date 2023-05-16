@@ -2,9 +2,16 @@
 @typeparam T
 
 <div class="@("rus-menu")" style="@StateStyle() @AnchorStyle()" id="@id">
-
-    @ChildContent
-
+    @if (ControlContent != null)
+    {
+        @ControlContent
+    }
+    <div class="rus-menu-content">
+        @if (MenuContent != null)
+        {
+            @MenuContent
+        }
+    </div>
 </div>
 
 @if (IsOpen)
@@ -24,7 +31,10 @@
     public Anchor Anchor { get; set; } = Anchor.Auto;
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? MenuContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? ControlContent { get; set; }
 
     string id;
 

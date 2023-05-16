@@ -33,6 +33,5 @@ window.scrollToElementInContainer = (containerId, elementId, scrollDuration) => 
 
 // Focus element by ID
 window.focusElement = (elementId) => {
-    console.log("focusing " + elementId);
     document.getElementById(elementId).focus();
 };

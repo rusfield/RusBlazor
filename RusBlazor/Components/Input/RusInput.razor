@@ -3,7 +3,7 @@
 
 <div class="rus-input-container">
     <input id="@id" @bind="Value" @onfocus="@OnFocus" @onblur="@OnBlur" @oninput="@OnInput" class="rus-input" />
-    <div class="rus-input-subtext">Your helper text goes here</div>
+    <div class="rus-input-subtext">@HelperText</div>
 </div>
 
 @code {
@@ -15,6 +15,9 @@
 
     [Parameter]
     public EventCallback<string> InputChanged { get; set; }
+
+    [Parameter]
+    public string HelperText { get; set; }
 
     string id;
 
