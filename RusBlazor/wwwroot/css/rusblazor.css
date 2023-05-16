@@ -69,19 +69,7 @@
 
 .rus-input {
     width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    box-sizing: border-box;
 }
-
-    .rus-input:focus {
-        border-color: #66afe9;
-        outline: none;
-        box-shadow: 0 0 8px rgba(102,175,233,.6);
-    }
-
 
 
 .rus-checkbox {
@@ -97,6 +85,6 @@
 .rus-text-menu-item2 {
 }
 
-.rus-button {
+.rus-button:not(:disabled):hover {
     cursor: pointer;
 }

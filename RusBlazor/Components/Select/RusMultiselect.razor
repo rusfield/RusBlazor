@@ -4,13 +4,17 @@
 
 
 <div class="rus-select">
-    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T)})")" />
+    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" />
     <RusMenu T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
         <ControlContent>
-            <RusMenuItem>
+            <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:50%; height:100%;" Text="@(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")" OnClick="SelectFilteredAsync" Disabled="loading || !filteredItems.Any()" />
-                    <RusButton Style="width:50%; height:100%;" Text="@(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")" OnClick="DeselectFilteredAsync" Disabled="loading || !filteredItems.Any()" />
+                    <RusButton Style="width:50%; height:100%;" OnClick="SelectFilteredAsync" Disabled="loading || !filteredItems.Any()">
+                        @(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")
+                    </RusButton>
+                    <RusButton Style="width:50%; height:100%;" OnClick="DeselectFilteredAsync" Disabled="loading || !filteredItems.Any()">
+                        @(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")
+                    </RusButton>
                 </div>
             </RusMenuItem>
         </ControlContent>

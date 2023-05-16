@@ -1,9 +1,11 @@
-﻿<button class="rus-button @Class" style="@Style" @onclick="OnClick" disabled="@Disabled">@Text</button>
+﻿<button class="rus-button @Class" style="@Style" @onclick="OnClick" disabled="@Disabled">
+    @ChildContent
+</button>
 
 
 @code {
     [Parameter]
-    public string Text { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
     public EventCallback OnClick { get; set; }
