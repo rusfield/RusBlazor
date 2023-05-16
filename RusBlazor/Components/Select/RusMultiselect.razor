@@ -9,8 +9,8 @@
         <ControlContent>
             <RusMenuItem>
                 <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:50%; height:100%;" Text="@(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")" OnClick="SelectAll" Disabled="loading || !filteredItems.Any()"></RusButton>
-                    <RusButton Style="width:50%; height:100%;" Text="@(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")" OnClick="DeselectAll" Disabled="loading || !filteredItems.Any()"></RusButton>
+                    <RusButton Style="width:50%; height:100%;" Text="@(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")" OnClick="SelectFilteredAsync" Disabled="loading || !filteredItems.Any()" />
+                    <RusButton Style="width:50%; height:100%;" Text="@(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")" OnClick="DeselectFilteredAsync" Disabled="loading || !filteredItems.Any()" />
                 </div>
             </RusMenuItem>
         </ControlContent>
@@ -31,7 +31,7 @@
             {
                 foreach (var item in filteredItems)
                 {
-                    <RusMenuItem OnItemClick="@(async () => await SelectItem(item.Key))">
+                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))">
                         <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value)" Multiselect="true" Checked="@(selectedValues.Contains(item.Key))" />
                     </RusMenuItem>
                 }
@@ -61,11 +61,13 @@
     Dictionary<T, string> filteredItems = new();
     List<T> selectedValues = new();
     RusInput<string>? rusInput;
+    string? rusInputId;
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
+            rusInputId = rusInput?.GetId() ?? "";
             selectedValues.GetFlagsByValue(Value);
         }
         base.OnAfterRender(firstRender);
@@ -82,7 +84,7 @@
 
             Task.Run(async () =>
             {
-                await UpdateList("", cancellationToken);
+                await UpdateListAsync("", cancellationToken);
             });
         }
     }
@@ -103,12 +105,12 @@
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                await UpdateList(input, cancellationToken);
+                await UpdateListAsync(input, cancellationToken);
             }
         }, null, 300, Timeout.Infinite);
     }
 
-    async Task UpdateList(string search, CancellationToken token)
+    async Task UpdateListAsync(string search, CancellationToken token)
     {
         loading = true;
         menuOpen = true;
@@ -125,40 +127,37 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    void SelectAll()
+    async Task SelectFilteredAsync()
     {
-        if (filteredItems.Select(t => t.Key).ToList().TrySum<T>(out var sum))
+        foreach (var item in filteredItems)
+        {
+            if (!selectedValues.Contains(item.Key))
+                selectedValues.Add(item.Key);
+        }
+        if (selectedValues.TrySum<T>(out var sum))
         {
             Value = sum;
-            selectedValues.GetFlagsByValue(sum);
             SetDisplayText();
+            await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
         }
     }
 
-    void DeselectAll()
+    async Task DeselectFilteredAsync()
     {
-        if (filteredItems.Select(t => t.Key).ToList().TrySum<T>(out var sum))
+        foreach (var item in filteredItems)
         {
-            var deselectedValues = new List<T>();
-            deselectedValues.GetFlagsByValue(sum);
-            foreach(var dValue in deselectedValues)
-            {
-                if (selectedValues.Contains(dValue))
-                    selectedValues.Remove(dValue);
-            }
-            if(selectedValues.TrySum<T>(out var newSum))
-            {
-                Value = newSum;
-            }
-            else
-            {
-                throw new ThisShouldNotHappenException("Sum worked for T in first condition but not second.");
-            }
+            if (selectedValues.Contains(item.Key))
+                selectedValues.Remove(item.Key);
+        }
+        if (selectedValues.TrySum<T>(out var sum))
+        {
+            Value = sum;
             SetDisplayText();
+            await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
         }
     }
 
-    async Task SelectItem(T key)
+    async Task SelectItemAsync(T key)
     {
         // Toggle whether key is added or removed
         if (selectedValues.Contains(key))
@@ -171,12 +170,11 @@
         }
 
         Value = selectedValues.GetValueByFlags();
-
         SetDisplayText();
 
-        var id = rusInput?.GetId() ?? "";
-        await JSRuntime.InvokeVoidAsync("focusElement", id);
-        _ = ValueChanged.InvokeAsync(Value);
+        //_ = ValueChanged.InvokeAsync(Value);
+
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }
 
     void ShowMenuChanged(bool showMenu)
@@ -240,7 +238,7 @@
         }
         else if (selectedValues.Count == 1)
         {
-            displayValue = filteredItems[selectedValues.First()];
+            displayValue = options?[selectedValues.First()];
         }
         else
         {

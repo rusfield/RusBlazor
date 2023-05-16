@@ -35,3 +35,12 @@ window.scrollToElementInContainer = (containerId, elementId, scrollDuration) => 
 window.focusElement = (elementId) => {
     document.getElementById(elementId).focus();
 };
+
+// Select text in element by ID
+window.selectElement = (elementId) => {
+    setTimeout(function () {
+        var element = document.getElementById(elementId);
+        element.focus();
+        element.select();
+    }, 10);
+}
