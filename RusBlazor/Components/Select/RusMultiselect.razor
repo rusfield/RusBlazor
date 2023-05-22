@@ -111,7 +111,7 @@
             {
                 await UpdateListAsync(input, cancellationToken);
             }
-        }, null, 300, Timeout.Infinite);
+        }, null, 150, Timeout.Infinite);
     }
 
     async Task UpdateListAsync(string search, CancellationToken token)

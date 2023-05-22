@@ -15,7 +15,7 @@
             else if (!filteredItems.Any())
             {
                 <RusMenuItem Hoverable="false">
-                    <RusMenuItemContentNoResults />
+                    <RusMenuItemContentText Text="No results" />
                 </RusMenuItem>
             }
             else
@@ -83,7 +83,7 @@
             {
                 await UpdateList(input, cancellationToken);
             }
-        }, null, 300, Timeout.Infinite);
+        }, null, 150, Timeout.Infinite);
     }
 
     async Task UpdateList(string search, CancellationToken token)
