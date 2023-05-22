@@ -1,12 +1,13 @@
-﻿@using RusBlazor.Enums
+﻿@using RusBlazor.Components.Helpers
+@using RusBlazor.Enums
 @typeparam T
 
-<div class="@("rus-menu")" style="@StateStyle() @AnchorStyle()" id="@id">
+<div class="rus-menu" style="@StateStyle() @AnchorStyle()" id="@id">
     @if (ControlContent != null)
     {
         @ControlContent
     }
-    <div class="rus-menu-content">
+    <div class="rus-menu-dropdown">
         @if (MenuContent != null)
         {
             @MenuContent

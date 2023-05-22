@@ -1,0 +1,23 @@
+.rus-input {
+    width: 100%;
+}
+
+.rus-input-container {
+    position: relative;
+    display: inline-block;
+}
+
+    .rus-input-container:hover .rus-input-subtext {
+        visibility: visible;
+    }
+
+.rus-input-subtext {
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    bottom: -20px;
+    left: 0;
+    color: #666;
+    font-size: 12px;
+}
+

@@ -15,6 +15,16 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Components\Checkbox\RusCheckbox.razor.css" />
+    <None Remove="Components\Menu\RusMenuItem.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Checkbox\RusCheckbox.razor.css" />
+    <Content Include="Components\Menu\RusMenuItem.razor.css" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />

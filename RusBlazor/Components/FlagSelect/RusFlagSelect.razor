@@ -3,7 +3,7 @@
 @inject IJSRuntime JSRuntime
 
 
-<div class="rus-select">
+<div class="rus-flag-select">
     <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" />
     <RusMenu T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
         <ControlContent>
@@ -54,7 +54,6 @@
     [Parameter]
     public Func<string, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
 
-    string id = "";
     bool loading = false;
     bool menuOpen = false;
     string? displayValue;

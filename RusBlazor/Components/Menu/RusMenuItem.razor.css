@@ -1,0 +1,9 @@
+﻿.rus-menu-item {
+    border-bottom: 1px solid #d4d4d4;
+}
+
+    .rus-menu-item.hoverable:hover {
+        color: var(--rus-menu-item-hover-color);
+        background: var(--rus-menu-item-hover-background);
+        cursor: pointer;
+    }
