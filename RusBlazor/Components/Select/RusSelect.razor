@@ -3,10 +3,10 @@
 @inject IJSRuntime JSRuntime
 
 <div class="rus-select">
-    <RusInput TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" />
+    <RusInput TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" />
     <RusMenu @ref="rusMenu" T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
         <MenuContent>
-            @if (loading)
+            @if (loadingSearch)
             {
                 <RusMenuItem Hoverable="false">
                     <RusMenuItemContentLoading />
@@ -39,19 +39,44 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
+    public Func<string, int, int, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
 
     [Parameter]
     public bool AllowUndefinedValues { get; set; } = true;
 
-    bool loading = false;
+    bool loadingComponent = true;
+    bool loadingSearch = false;
     bool menuOpen = false;
-    string? displayValue;
+    string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
     private Timer? searchTimer;
     private CancellationTokenSource? cancellationTokenSource;
     Dictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
+    int defaultPageSize = 5;
+    int currentPageIndex = 0;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Init default option
+        if (firstRender)
+        {
+            var currentValue = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
+            if (currentValue.ContainsKey(Value))
+            {
+                displayValue = currentValue[Value];
+            }
+            else
+            {
+                displayValue = $"Unknown ({Value})";
+            }
+            loadingComponent = false;
+            lastVerifiedDisplayValue = displayValue;
+            this.StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     void OnFocus()
     {
@@ -88,13 +113,13 @@
 
     async Task UpdateList(string search, CancellationToken token)
     {
-        loading = true;
+        loadingSearch = true;
         menuOpen = true;
         await InvokeAsync(StateHasChanged);
         try
         {
             if (GetOptionsAsync != null)
-                filteredItems = await GetOptionsAsync.Invoke(search, token);
+                filteredItems = await GetOptionsAsync.Invoke(search, currentPageIndex, defaultPageSize, token);
 
             // Adjust search so that a potential custom value is retrieved
             if (string.IsNullOrWhiteSpace(search))
@@ -102,13 +127,13 @@
 
             // Search for custom values
             if (AllowUndefinedValues && search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
-                filteredItems.Add(value, search);
+                filteredItems.Add(value, $"Undefined ({value})");
         }
         catch (OperationCanceledException e)
         {
             // Search cancelled
         }
-        loading = false;
+        loadingSearch = false;
         await InvokeAsync(StateHasChanged);
         if (filteredItems.ContainsKey(Value))
         {

@@ -4,22 +4,22 @@
 
 
 <div class="rus-flag-select">
-    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" />
+    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" />
     <RusMenu T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:50%; height:100%;" OnClick="SelectFilteredAsync" Disabled="loading || !filteredItems.Any()">
+                    <RusButton Style="width:50%; height:100%;" OnClick="SelectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
                         @(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")
                     </RusButton>
-                    <RusButton Style="width:50%; height:100%;" OnClick="DeselectFilteredAsync" Disabled="loading || !filteredItems.Any()">
+                    <RusButton Style="width:50%; height:100%;" OnClick="DeselectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
                         @(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")
                     </RusButton>
                 </div>
             </RusMenuItem>
         </MenuTopContent>
         <MenuContent>
-            @if (loading)
+            @if (loadingSearch)
             {
                 <RusMenuItem Hoverable="false">
                     <RusMenuItemContentLoading />
@@ -64,11 +64,12 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
+    public Func<string, int, int, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
 
-    bool loading = false;
+    bool loadingComponent = true;
+    bool loadingSearch = false;
     bool menuOpen = false;
-    string? displayValue;
+    string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
     private Timer? searchTimer;
     private CancellationTokenSource? cancellationTokenSource;
@@ -78,14 +79,37 @@
     RusInput<string>? rusInput;
     string? rusInputId;
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             rusInputId = rusInput?.GetId() ?? "";
             selectedValues.GetFlagsByValue(Value);
+
+            // Set default value
+            if(selectedValues.Count != 1)
+            {
+                SetDisplayText();
+            }
+            else
+            {
+                // If only 1 selected, load and display the actual value
+                var currentValue = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
+                if (currentValue.ContainsKey(Value))
+                {
+                    displayValue = currentValue[Value];
+                }
+                else
+                {
+                    displayValue = $"Unknown ({Value})";
+                }
+                lastVerifiedDisplayValue = displayValue;
+            }
+
+            loadingComponent = false;
+            this.StateHasChanged();
         }
-        base.OnAfterRender(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     void OnFocus()
@@ -127,7 +151,7 @@
 
     async Task UpdateListAsync(string search, CancellationToken token)
     {
-        loading = true;
+        loadingSearch = true;
         menuOpen = true;
         await InvokeAsync(StateHasChanged);
         try
@@ -138,7 +162,7 @@
         {
             // Search cancelled
         }
-        loading = false;
+        loadingSearch = false;
         await InvokeAsync(StateHasChanged);
     }
 
@@ -215,7 +239,8 @@
     {
         if (options == null)
         {
-            var validOptions = await GetOptionsAsync.Invoke("", token);
+            // a pagesize for flags will at most be the number of times ulong can be multiplied by 2, which is around 64-65. 100 is thus more than enough.
+            var validOptions = await GetOptionsAsync.Invoke("", 0, 100, token);
             token.ThrowIfCancellationRequested();
 
             options = new();
@@ -233,7 +258,7 @@
                 undefinedOptions.GetFlagsByValue(maxValue);
                 foreach (var undefinedOption in undefinedOptions)
                     if (!options.ContainsKey(undefinedOption))
-                        options[undefinedOption] = "Undefined";
+                        options[undefinedOption] = $"Undefined ({undefinedOption})";
             }
         }
 

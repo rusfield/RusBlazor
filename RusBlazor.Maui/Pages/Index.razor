@@ -3,16 +3,16 @@
 @page "/"
 
 
-<RusSelect GetOptionsAsync="GetFruitsAsync" />
+<RusSelect GetOptionsAsync="GetFruitsAsync" Value="2" />
 <hr />
-<RusFlagSelect GetOptionsAsync="GetFruitsMultiselectAsync" />
+<RusFlagSelect GetOptionsAsync="GetFruitsMultiselectAsync" Value="2" />
 
 
 @code{
     private int selectedItem = 0;
     private IEnumerable<string> selectedItems = new List<string>();
 
-    async Task<Dictionary<int, string>> GetFruitsAsync(string search, CancellationToken token)
+    async Task<Dictionary<int, string>> GetFruitsAsync(string search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(1000, token);
         var results = new Dictionary<int, string>();
@@ -29,10 +29,10 @@
 
             id++;
         }
-        return results;
+        return results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value);
     }
 
-    async Task<Dictionary<int, string>> GetFruitsMultiselectAsync(string search, CancellationToken token)
+    async Task<Dictionary<int, string>> GetFruitsMultiselectAsync(string search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(500, token);
         var results = new Dictionary<int, string>();
@@ -48,7 +48,7 @@
 
             id = id * 2;
         }
-        return results;
+        return results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value);
     }
 
     private List<string> items = new List<string>
