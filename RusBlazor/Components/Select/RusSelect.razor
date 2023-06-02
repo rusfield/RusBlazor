@@ -1,4 +1,5 @@
 ﻿@using Extensions;
+@using RusBlazor.Components.Button
 @typeparam T
 @inject IJSRuntime JSRuntime
 
@@ -28,6 +29,24 @@
                 }
             }
         </MenuContent>
+        <MenuBottomContent>
+            @if (resultCount > -1)
+            {
+                <RusMenuItem Hoverable="false">
+                    <div style="display: flex; height: 30px;">
+                        <RusButton Style="width:25%;height:30px;" OnClick="PreviousPage" Disabled="currentPageIndex == 0">
+                            @("<")
+                        </RusButton>
+                        <div style="width:50%;height:30px;">
+                            @(GetPaginationText())
+                        </div>
+                        <RusButton Style="width:25%;height:30px;" OnClick="NextPage" Disabled="IsLastPageIndex()">
+                            @(">")
+                        </RusButton>
+                    </div>
+                </RusMenuItem>
+            }
+        </MenuBottomContent>
     </RusMenu>
 </div>
 
@@ -39,7 +58,7 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
+    public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter]
     public bool AllowUndefinedValues { get; set; } = true;
@@ -49,19 +68,21 @@
     bool menuOpen = false;
     string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
+    string lastInput = "";
     private Timer? searchTimer;
     private CancellationTokenSource? cancellationTokenSource;
     Dictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
-    int defaultPageSize = 5;
+    int pageSize = 5;
     int currentPageIndex = 0;
+    int resultCount = -1;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         // Init default option
         if (firstRender)
         {
-            var currentValue = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
+            (var currentValue, int tempCount) = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
             if (currentValue.ContainsKey(Value))
             {
                 displayValue = currentValue[Value];
@@ -80,14 +101,7 @@
 
     void OnFocus()
     {
-        cancellationTokenSource?.Cancel();
-        cancellationTokenSource = new CancellationTokenSource();
-        CancellationToken cancellationToken = cancellationTokenSource.Token;
-
-        Task.Run(async () =>
-        {
-            await UpdateList("", cancellationToken);
-        });
+        InitSearch(0);
     }
 
     void OnBlur()
@@ -96,6 +110,24 @@
     }
 
     void InputChanged(string input)
+    {
+        lastInput = input;
+        InitSearch(150);
+    }
+
+    void NextPage()
+    {
+        currentPageIndex++;
+        InitSearch(0);
+    }
+
+    void PreviousPage()
+    {
+        currentPageIndex--;
+        InitSearch(0);
+    }
+
+    void InitSearch(int searchDelayMs)
     {
         cancellationTokenSource?.Cancel();
         cancellationTokenSource = new CancellationTokenSource();
@@ -106,20 +138,21 @@
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                await UpdateList(input, cancellationToken);
+                await SearchOptionsAsync(cancellationToken);
             }
-        }, null, 150, Timeout.Infinite);
+        }, null, searchDelayMs, Timeout.Infinite);
     }
 
-    async Task UpdateList(string search, CancellationToken token)
+    async Task SearchOptionsAsync(CancellationToken token)
     {
         loadingSearch = true;
         menuOpen = true;
+        string search = lastInput;
         await InvokeAsync(StateHasChanged);
         try
         {
             if (GetOptionsAsync != null)
-                filteredItems = await GetOptionsAsync.Invoke(search, currentPageIndex, defaultPageSize, token);
+                (filteredItems, resultCount) = await GetOptionsAsync.Invoke(search, currentPageIndex, pageSize, token);
 
             // Adjust search so that a potential custom value is retrieved
             if (string.IsNullOrWhiteSpace(search))
@@ -153,8 +186,28 @@
     void ShowMenuChanged(bool showMenu)
     {
         if (!showMenu)
+        {
             displayValue = lastVerifiedDisplayValue;
+            lastInput = "";
+            resultCount = -1;
+        }
         menuOpen = showMenu;
+    }
+
+    string GetPaginationText()
+    {
+        int from = currentPageIndex * pageSize + 1;
+        int to = (currentPageIndex + 1) * pageSize;
+
+        to = to > resultCount ? resultCount : to;
+        string action = loadingSearch ? "Loading" : "Showing";
+
+        return $"{action} {from} to {to} of {resultCount} results";
+    }
+
+    bool IsLastPageIndex()
+    {
+        return ((currentPageIndex + 1) * pageSize) >= resultCount;
     }
 }
 

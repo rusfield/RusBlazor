@@ -12,7 +12,7 @@
     private int selectedItem = 0;
     private IEnumerable<string> selectedItems = new List<string>();
 
-    async Task<Dictionary<int, string>> GetFruitsAsync(string search, int pageIndex, int pageSize, CancellationToken token)
+    async Task<(Dictionary<int, string>, int)> GetFruitsAsync(string search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(1000, token);
         var results = new Dictionary<int, string>();
@@ -29,10 +29,10 @@
 
             id++;
         }
-        return results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value);
+        return (results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value), results.Count);
     }
 
-    async Task<Dictionary<int, string>> GetFruitsMultiselectAsync(string search, int pageIndex, int pageSize, CancellationToken token)
+    async Task<(Dictionary<int, string>, int)> GetFruitsMultiselectAsync(string search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(500, token);
         var results = new Dictionary<int, string>();
@@ -48,7 +48,7 @@
 
             id = id * 2;
         }
-        return results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value);
+        return (results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value), results.Count);
     }
 
     private List<string> items = new List<string>

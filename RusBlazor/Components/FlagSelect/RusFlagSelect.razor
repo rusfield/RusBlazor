@@ -64,7 +64,7 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<Dictionary<T, string>>> GetOptionsAsync { get; set; }
+    public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     bool loadingComponent = true;
     bool loadingSearch = false;
@@ -94,7 +94,7 @@
             else
             {
                 // If only 1 selected, load and display the actual value
-                var currentValue = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
+                (var currentValue, var unusedCount) = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
                 if (currentValue.ContainsKey(Value))
                 {
                     displayValue = currentValue[Value];
@@ -240,7 +240,7 @@
         if (options == null)
         {
             // a pagesize for flags will at most be the number of times ulong can be multiplied by 2, which is around 64-65. 100 is thus more than enough.
-            var validOptions = await GetOptionsAsync.Invoke("", 0, 100, token);
+            (var validOptions, int unusedCount) = await GetOptionsAsync.Invoke("", 0, 100, token);
             token.ThrowIfCancellationRequested();
 
             options = new();
