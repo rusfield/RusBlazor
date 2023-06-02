@@ -6,6 +6,15 @@
     background-color: #333;
 }
 
+* {
+    user-select: none;
+}
+
+.allow-select {
+    user-select: auto;
+}
+
+
 .rus-background-overlay {
     content: "";
     position: fixed;
@@ -17,7 +26,3 @@
     background-color: rgba(0, 0, 0, 0);
     display: block;
 }
-
-
-
-

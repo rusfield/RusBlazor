@@ -6,7 +6,7 @@
 <div class="rus-flag-select">
     <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" />
     <RusMenu T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
-        <ControlContent>
+        <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">
                     <RusButton Style="width:50%; height:100%;" OnClick="SelectFilteredAsync" Disabled="loading || !filteredItems.Any()">
@@ -17,7 +17,7 @@
                     </RusButton>
                 </div>
             </RusMenuItem>
-        </ControlContent>
+        </MenuTopContent>
         <MenuContent>
             @if (loading)
             {
@@ -41,6 +41,18 @@
                 }
             }
         </MenuContent>
+        <MenuBottomContent>
+            <RusMenuItem Hoverable="false">
+                <div style="display: flex; height: 30px;">
+                    <RusButton Style="width:50%;height:30px;" OnClick="ShowSelectedAsync">
+                        @("Show selected")
+                    </RusButton>
+                    <RusButton Style="width:50%;height:30px;" OnClick="ShowAllAsync">
+                        @("Show all")
+                    </RusButton>
+                </div>
+            </RusMenuItem>
+        </MenuBottomContent>
     </RusMenu>
 </div>
 
@@ -128,6 +140,18 @@
         }
         loading = false;
         await InvokeAsync(StateHasChanged);
+    }
+
+    async Task ShowSelectedAsync()
+    {
+        filteredItems = options.Where(o => selectedValues.Contains(o.Key)).ToDictionary(k => k.Key, v => v.Value);
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+    }
+
+    async Task ShowAllAsync()
+    {
+        filteredItems = new(options);
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }
 
     async Task SelectFilteredAsync()

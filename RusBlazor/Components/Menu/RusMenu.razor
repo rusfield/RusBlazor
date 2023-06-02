@@ -3,9 +3,9 @@
 @typeparam T
 
 <div class="rus-menu" style="@StateStyle() @AnchorStyle()" id="@id">
-    @if (ControlContent != null)
+    @if (MenuTopContent != null)
     {
-        @ControlContent
+        @MenuTopContent
     }
     <div class="rus-menu-dropdown">
         @if (MenuContent != null)
@@ -13,6 +13,10 @@
             @MenuContent
         }
     </div>
+    @if (MenuBottomContent != null)
+    {
+        @MenuBottomContent
+    }
 </div>
 
 @if (IsOpen)
@@ -35,7 +39,10 @@
     public RenderFragment? MenuContent { get; set; }
 
     [Parameter]
-    public RenderFragment? ControlContent { get; set; }
+    public RenderFragment? MenuTopContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? MenuBottomContent { get; set; }
 
     string id;
 
