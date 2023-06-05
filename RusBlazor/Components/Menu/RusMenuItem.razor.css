@@ -1,6 +1,11 @@
 ﻿.rus-menu-item {
     border-bottom: 1px solid #d4d4d4;
+    font-family: Consolas, 'Courier New', monospace;
 }
+
+    .rus-menu-item.selected {
+        font-weight: bold;
+    }
 
     .rus-menu-item.hoverable:hover {
         color: var(--rus-menu-item-hover-color);

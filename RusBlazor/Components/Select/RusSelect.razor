@@ -5,7 +5,7 @@
 
 <div class="rus-select">
     <RusInput TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" />
-    <RusMenu @ref="rusMenu" T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
+    <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
         <MenuContent>
             @if (loadingSearch)
             {
@@ -23,7 +23,7 @@
             {
                 foreach (var item in filteredItems)
                 {
-                    <RusMenuItem OnItemClick="@(() => SelectItem(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")">
+                    <RusMenuItem OnItemClick="@(() => SelectItem(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")" Class="@(Value.Equals(item.Key) ? "selected" : "")">
                         <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@item.Value" />
                     </RusMenuItem>
                 }
@@ -68,7 +68,6 @@
 
     bool loadingComponent = true;
     bool loadingSearch = false;
-    bool menuOpen = false;
     string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
     string lastInput = "";
@@ -149,7 +148,7 @@
     async Task SearchOptionsAsync(CancellationToken token)
     {
         loadingSearch = true;
-        menuOpen = true;
+        await rusMenu.OpenAsync();
         string search = lastInput;
         await InvokeAsync(StateHasChanged);
         try
@@ -186,7 +185,7 @@
         Value = key;
         displayValue = value;
         lastVerifiedDisplayValue = value;
-        menuOpen = false;
+        rusMenu.CloseAsync();
         _ = ValueChanged.InvokeAsync(Value);
     }
 
@@ -199,7 +198,6 @@
             resultCount = -1;
             currentPageIndex = -1;
         }
-        menuOpen = showMenu;
     }
 
     string GetPaginationText()

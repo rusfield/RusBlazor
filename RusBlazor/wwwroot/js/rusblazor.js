@@ -50,9 +50,19 @@ window.selectElement = (elementId) => {
 
 
 // Animate a CSS property of an element
+let ongoingAnimations = {};
 window.animateProperty = (elementId, property, startValue, endValue, durationMs, unit = '') => {
-    let startTimestamp = null;
     const element = document.getElementById(elementId);
+    if (!element) return; // If the element does not exist, ignore the request
+
+    // If there's an ongoing animation for this element and this property, cancel it
+    if (ongoingAnimations[elementId] && ongoingAnimations[elementId][property]) {
+        window.cancelAnimationFrame(ongoingAnimations[elementId][property]);
+    } else if (!ongoingAnimations[elementId]) {
+        ongoingAnimations[elementId] = {};
+    }
+
+    let startTimestamp = null;
 
     function frame(timestamp) {
         if (startTimestamp === null) startTimestamp = timestamp;
@@ -60,12 +70,18 @@ window.animateProperty = (elementId, property, startValue, endValue, durationMs,
         const progress = Math.min(elapsed / durationMs, 1);
         const currentValue = startValue + (endValue - startValue) * progress;
         element.style[property] = currentValue + unit;
+
         if (progress < 1) {
-            window.requestAnimationFrame(frame);
+            ongoingAnimations[elementId][property] = window.requestAnimationFrame(frame);
+        } else {
+            delete ongoingAnimations[elementId][property];
+            if (Object.keys(ongoingAnimations[elementId]).length === 0) {
+                delete ongoingAnimations[elementId]; // Cleanup if no more ongoing animations for this element
+            }
         }
     }
 
-    window.requestAnimationFrame(frame);
+    ongoingAnimations[elementId][property] = window.requestAnimationFrame(frame);
 };
 
 

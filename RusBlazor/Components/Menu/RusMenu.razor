@@ -4,7 +4,7 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="rus-menu" style="@AnchorStyle()" id="@parentContainerId">
+<div class="rus-menu" style="@StateStyle() @AnchorStyle()" id="@parentContainerId">
     @if (MenuTopContent != null)
     {
         @MenuTopContent
@@ -23,7 +23,7 @@
 
 @if (IsOpen)
 {
-    <RusBackgroundOverlay OnClick="Close" />
+    <RusBackgroundOverlay OnClick="CloseAsync" />
 }
 
 
@@ -48,8 +48,7 @@
 
     string id;
     string parentContainerId;
-    private bool previousIsOpen;
-    int animationDurationMs = 1000;
+    int animationDurationMs = 200;
     int dropdownHeight = 240;
 
     protected override void OnInitialized()
@@ -57,21 +56,6 @@
         id = Guid.NewGuid().ToString();
         parentContainerId = Guid.NewGuid().ToString();
         base.OnInitialized();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if (IsOpen != previousIsOpen && IsOpen == true)
-        {
-            await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
-            await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
-
-            await IsOpenChanged.InvokeAsync(IsOpen);
-        }
-
-        previousIsOpen = IsOpen;
-
-        await base.OnParametersSetAsync();
     }
 
     string AnchorStyle()
@@ -95,7 +79,18 @@
         return IsOpen ? "display:block;" : "display:none;";
     }
 
-    public async Task Close()
+    public async Task OpenAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
+        await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
+        await InvokeAsync(async () =>
+        {
+            IsOpen = true;
+            await IsOpenChanged.InvokeAsync(IsOpen);
+        });
+    }
+
+    public async Task CloseAsync()
     {
         await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
         await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);

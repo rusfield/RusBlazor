@@ -5,7 +5,7 @@
 
 <div class="rus-flag-select">
     <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" />
-    <RusMenu T="T" IsOpen="menuOpen" IsOpenChanged="ShowMenuChanged">
+    <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">
@@ -35,7 +35,7 @@
             {
                 foreach (var item in filteredItems)
                 {
-                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))">
+                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))" Class="@(selectedValues.Contains(item.Key) ? "selected" : "")">
                         <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value)" Multiselect="true" Checked="@(selectedValues.Contains(item.Key))" />
                     </RusMenuItem>
                 }
@@ -77,6 +77,7 @@
     Dictionary<T, string> filteredItems = new();
     List<T> selectedValues = new();
     RusInput<string>? rusInput;
+    RusMenu<T> rusMenu;
     string? rusInputId;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -152,7 +153,7 @@
     async Task UpdateListAsync(string search, CancellationToken token)
     {
         loadingSearch = true;
-        menuOpen = true;
+        await rusMenu.OpenAsync();
         await InvokeAsync(StateHasChanged);
         try
         {

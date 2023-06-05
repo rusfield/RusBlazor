@@ -1,5 +1,5 @@
 ﻿
-<div @onclick="OnClick" class="rus-menu-item @HoverClass()" style="@HoverStyle()" id="@Id">
+<div @onclick="OnClick" class="rus-menu-item @HoverClass() @Class" style="@HoverStyle()" id="@Id">
     @ChildContent
 </div>
 
@@ -15,6 +15,9 @@
 
     [Parameter]
     public string Id { get; set; } = "";
+
+    [Parameter]
+    public string Class { get; set; }
 
     void OnClick()
     {
