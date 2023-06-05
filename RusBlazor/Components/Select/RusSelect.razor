@@ -177,7 +177,7 @@
         await InvokeAsync(StateHasChanged);
         if (filteredItems.ContainsKey(Value))
         {
-            await JSRuntime.InvokeVoidAsync("scrollToElementInContainer", rusMenu!.GetId(), $"{rusMenu!.GetId()}-{Value.ToString()}", 2000);
+            await JSRuntime.InvokeVoidAsync("scrollToElementInContainer", rusMenu!.GetId(), $"{rusMenu!.GetId()}-{Value.ToString()}", 150);
         }
     }
 

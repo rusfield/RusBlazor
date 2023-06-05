@@ -44,3 +44,39 @@ window.selectElement = (elementId) => {
         element.select();
     }, 10);
 }
+
+
+
+
+
+// Animate a CSS property of an element
+window.animateProperty = (elementId, property, startValue, endValue, durationMs, unit = '') => {
+    let startTimestamp = null;
+    const element = document.getElementById(elementId);
+
+    function frame(timestamp) {
+        if (startTimestamp === null) startTimestamp = timestamp;
+        const elapsed = timestamp - startTimestamp;
+        const progress = Math.min(elapsed / durationMs, 1);
+        const currentValue = startValue + (endValue - startValue) * progress;
+        element.style[property] = currentValue + unit;
+        if (progress < 1) {
+            window.requestAnimationFrame(frame);
+        }
+    }
+
+    window.requestAnimationFrame(frame);
+};
+
+
+window.toggleDropdownHeight = (elementId, isOpen, height, durationMs) => {
+    const startHeight = isOpen ? 0 : height;
+    const endHeight = isOpen ? height : 0;
+    window.animateProperty(elementId, 'height', startHeight, endHeight, durationMs, 'px'); 
+};
+
+window.toggleDropdownOpacity = (elementId, isOpen, durationMs) => {
+    const startOpacity = isOpen ? 0 : 1;
+    const endOpacity = isOpen ? 1 : 0;
+    window.animateProperty(elementId, 'opacity', startOpacity, endOpacity, durationMs);
+};

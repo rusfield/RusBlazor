@@ -2,7 +2,9 @@
 @using RusBlazor.Enums
 @typeparam T
 
-<div class="rus-menu" style="@StateStyle() @AnchorStyle()">
+@inject IJSRuntime JSRuntime
+
+<div class="rus-menu" style="@AnchorStyle()" id="@parentContainerId">
     @if (MenuTopContent != null)
     {
         @MenuTopContent
@@ -45,22 +47,31 @@
     public RenderFragment? MenuBottomContent { get; set; }
 
     string id;
+    string parentContainerId;
     private bool previousIsOpen;
+    int animationDurationMs = 1000;
+    int dropdownHeight = 240;
 
     protected override void OnInitialized()
     {
         id = Guid.NewGuid().ToString();
+        parentContainerId = Guid.NewGuid().ToString();
         base.OnInitialized();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (IsOpen != previousIsOpen && IsOpen == true)
         {
-            IsOpenChanged.InvokeAsync(IsOpen);
+            await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
+            await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
+
+            await IsOpenChanged.InvokeAsync(IsOpen);
         }
 
         previousIsOpen = IsOpen;
+
+        await base.OnParametersSetAsync();
     }
 
     string AnchorStyle()
@@ -84,11 +95,14 @@
         return IsOpen ? "display:block;" : "display:none;";
     }
 
-    public void Close()
+    public async Task Close()
     {
+        await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
+        await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);
+
+        await Task.Delay(animationDurationMs);
         IsOpen = false;
-        this.StateHasChanged();
-        IsOpenChanged.InvokeAsync(IsOpen);
+        await IsOpenChanged.InvokeAsync(IsOpen);
     }
 
     public string GetId()
