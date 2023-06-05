@@ -30,22 +30,19 @@
             }
         </MenuContent>
         <MenuBottomContent>
-            @if (resultCount > -1)
-            {
-                <RusMenuItem Hoverable="false">
-                    <div style="display: flex; height: 30px;">
-                        <RusButton Style="width:25%;height:30px;" OnClick="PreviousPage" Disabled="currentPageIndex == 0">
-                            @("<")
-                        </RusButton>
-                        <div style="width:50%;height:30px;">
-                            @(GetPaginationText())
-                        </div>
-                        <RusButton Style="width:25%;height:30px;" OnClick="NextPage" Disabled="IsLastPageIndex()">
-                            @(">")
-                        </RusButton>
+            <RusMenuItem Hoverable="false">
+                <div style="display: flex; height: 30px;">
+                    <RusButton Style="width:25%;height:30px;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
+                        @("<")
+                    </RusButton>
+                    <div style="width:50%;height:30px;">
+                        @(GetPaginationText())
                     </div>
-                </RusMenuItem>
-            }
+                    <RusButton Style="width:25%;height:30px;" OnClick="NextPage" Disabled="IsLastPageIndex()">
+                        @(">")
+                    </RusButton>
+                </div>
+            </RusMenuItem>
         </MenuBottomContent>
     </RusMenu>
 </div>
@@ -154,7 +151,7 @@
         try
         {
             // Happens on new searches
-            if(currentPageIndex < 0)
+            if (currentPageIndex < 0)
                 currentPageIndex = GetPageIndexByIdAsync != null ? await GetPageIndexByIdAsync(Value, pageSize) : 0;
 
             if (GetOptionsAsync != null)
@@ -202,6 +199,9 @@
 
     string GetPaginationText()
     {
+        if (resultCount == -1)
+            return "";
+
         int from = currentPageIndex * pageSize + 1;
         int to = (currentPageIndex + 1) * pageSize;
 

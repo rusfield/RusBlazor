@@ -81,23 +81,29 @@
 
     public async Task OpenAsync()
     {
-        await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
-        await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
-        await InvokeAsync(async () =>
+        if (!IsOpen)
         {
-            IsOpen = true;
-            await IsOpenChanged.InvokeAsync(IsOpen);
-        });
+            await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
+            await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
+            await InvokeAsync(async () =>
+            {
+                IsOpen = true;
+                await IsOpenChanged.InvokeAsync(IsOpen);
+            });
+        }
     }
 
     public async Task CloseAsync()
     {
-        await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
-        await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);
+        if (IsOpen)
+        {
+            await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
+            await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);
 
-        await Task.Delay(animationDurationMs);
-        IsOpen = false;
-        await IsOpenChanged.InvokeAsync(IsOpen);
+            await Task.Delay(animationDurationMs);
+            IsOpen = false;
+            await IsOpenChanged.InvokeAsync(IsOpen);
+        }
     }
 
     public string GetId()
