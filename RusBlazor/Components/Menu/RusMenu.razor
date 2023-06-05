@@ -2,12 +2,12 @@
 @using RusBlazor.Enums
 @typeparam T
 
-<div class="rus-menu" style="@StateStyle() @AnchorStyle()" id="@id">
+<div class="rus-menu" style="@StateStyle() @AnchorStyle()">
     @if (MenuTopContent != null)
     {
         @MenuTopContent
     }
-    <div class="rus-menu-dropdown">
+    <div class="rus-menu-dropdown" id="@id">
         @if (MenuContent != null)
         {
             @MenuContent
@@ -45,11 +45,22 @@
     public RenderFragment? MenuBottomContent { get; set; }
 
     string id;
+    private bool previousIsOpen;
 
     protected override void OnInitialized()
     {
         id = Guid.NewGuid().ToString();
         base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen != previousIsOpen && IsOpen == true)
+        {
+            IsOpenChanged.InvokeAsync(IsOpen);
+        }
+
+        previousIsOpen = IsOpen;
     }
 
     string AnchorStyle()

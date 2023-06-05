@@ -61,6 +61,9 @@
     public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter]
+    public Func<T, int, Task<int>> GetPageIndexByIdAsync { get; set; }
+
+    [Parameter]
     public bool AllowUndefinedValues { get; set; } = true;
 
     bool loadingComponent = true;
@@ -73,8 +76,8 @@
     private CancellationTokenSource? cancellationTokenSource;
     Dictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
-    int pageSize = 5;
-    int currentPageIndex = 0;
+    int pageSize = 15;
+    int currentPageIndex = -1;
     int resultCount = -1;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,7 +102,7 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    void OnFocus()
+    async Task OnFocus()
     {
         InitSearch(0);
     }
@@ -151,6 +154,10 @@
         await InvokeAsync(StateHasChanged);
         try
         {
+            // Happens on new searches
+            if(currentPageIndex < 0)
+                currentPageIndex = GetPageIndexByIdAsync != null ? await GetPageIndexByIdAsync(Value, pageSize) : 0;
+
             if (GetOptionsAsync != null)
                 (filteredItems, resultCount) = await GetOptionsAsync.Invoke(search, currentPageIndex, pageSize, token);
 
@@ -190,6 +197,7 @@
             displayValue = lastVerifiedDisplayValue;
             lastInput = "";
             resultCount = -1;
+            currentPageIndex = -1;
         }
         menuOpen = showMenu;
     }

@@ -3,12 +3,12 @@
 @page "/"
 
 
-<RusSelect GetOptionsAsync="GetFruitsAsync" Value="2" />
+<RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" Value="2" />
 <hr />
 <RusFlagSelect GetOptionsAsync="GetFruitsMultiselectAsync" Value="2" />
 
 
-@code{
+@code {
     private int selectedItem = 0;
     private IEnumerable<string> selectedItems = new List<string>();
 
@@ -30,6 +30,16 @@
             id++;
         }
         return (results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value), results.Count);
+    }
+
+    async Task<int> GetPageIndexByIdAsync(int id, int pageSize)
+    {
+        var results = await GetFruitsAsync("", 0, 99999, CancellationToken.None);
+        var pageIndex = results.Item1
+            .Select((value, index) => new { value.Key, Index = index })
+            .FirstOrDefault(x => x.Key == id)?.Index / pageSize;
+
+        return pageIndex ?? 0;
     }
 
     async Task<(Dictionary<int, string>, int)> GetFruitsMultiselectAsync(string search, int pageIndex, int pageSize, CancellationToken token)
