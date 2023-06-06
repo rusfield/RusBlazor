@@ -2,7 +2,7 @@
 @inherits InputBase<TValue>
 
 <div class="rus-input-container @Class" style="@Style">
-    <input id="@id" @bind="Value" @onfocus="@OnFocus" @onblur="@OnBlur" @oninput="@OnInput" class="rus-input" disabled="@Disabled" />
+    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="rus-input @ActiveStyle()" disabled="@Disabled" />
     <div class="rus-input-subtext">@HelperText</div>
 </div>
 
@@ -28,7 +28,11 @@
     [Parameter]
     public string Style { get; set; } = "";
 
+    [Parameter] // Used for handling active from the outside, for example menus which frequently loses focus of input
+    public bool? Active { get; set; }
+
     string id;
+    bool active = false;
 
     protected override void OnInitialized()
     {
@@ -45,6 +49,38 @@
     {
         return id;
     } 
+
+    string ActiveStyle()
+    {
+        if(Active != null)
+        {
+            return (bool)Active ? "active" : "";
+        }
+        else
+        {
+            return active ? "active" : "";
+        }
+    }
+
+    async Task HandleFocusAsync()
+    {
+        active = true;
+        this.StateHasChanged();
+        if (OnFocus.HasDelegate)
+        {
+            await OnFocus.InvokeAsync();
+        }
+    }
+
+    async Task HandleBlurAsync()
+    {
+        active = false;
+        this.StateHasChanged();
+        if (OnBlur.HasDelegate)
+        {
+            await OnBlur.InvokeAsync();
+        }
+    }
 
     protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
     {

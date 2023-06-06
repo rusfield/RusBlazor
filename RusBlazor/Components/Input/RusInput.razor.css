@@ -1,6 +1,14 @@
 .rus-input {
     width: 100%;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
+
+    .rus-input.active {
+        border-color: #007BFF;
+        outline: none;
+    }
 
 .rus-input-container {
     position: relative;
@@ -20,4 +28,3 @@
     color: #666;
     font-size: 12px;
 }
-
