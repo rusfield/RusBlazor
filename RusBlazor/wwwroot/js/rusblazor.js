@@ -42,7 +42,7 @@ window.selectElement = (elementId) => {
         var element = document.getElementById(elementId);
         element.focus();
         element.select();
-    }, 10);
+    }, 100);
 }
 
 

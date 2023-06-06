@@ -1,10 +1,9 @@
-﻿@using Extensions;
-@using RusBlazor.Components.Button
+﻿@using RusBlazor.Components.Button
 @typeparam T
 @inject IJSRuntime JSRuntime
 
 <div class="rus-select">
-    <RusInput TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" />
     <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
         <MenuContent>
             @if (loadingSearch)
@@ -65,6 +64,7 @@
 
     bool loadingComponent = true;
     bool loadingSearch = false;
+    bool menuOpen;
     string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
     string lastInput = "";
@@ -72,15 +72,18 @@
     private CancellationTokenSource? cancellationTokenSource;
     Dictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
+    RusInput<string>? rusInput;
     int pageSize = 15;
     int currentPageIndex = -1;
     int resultCount = -1;
+    string? rusInputId;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         // Init default option
         if (firstRender)
         {
+            rusInputId = rusInput?.GetId() ?? "";
             (var currentValue, int tempCount) = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
             if (currentValue.ContainsKey(Value))
             {
@@ -98,7 +101,7 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    async Task OnFocus()
+    void OnFocus()
     {
         InitSearch(0);
     }
@@ -137,17 +140,17 @@
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                await SearchOptionsAsync(cancellationToken);
+                await SearchAsync(cancellationToken);
             }
         }, null, searchDelayMs, Timeout.Infinite);
     }
 
-    async Task SearchOptionsAsync(CancellationToken token)
+    async Task SearchAsync(CancellationToken token)
     {
         loadingSearch = true;
         await rusMenu.OpenAsync();
         string search = lastInput;
-        await InvokeAsync(StateHasChanged);
+        await InvokeAsync(StateHasChanged); // triggers "Loading" in menu
         try
         {
             // Happens on new searches
@@ -195,6 +198,7 @@
             resultCount = -1;
             currentPageIndex = -1;
         }
+        menuOpen = showMenu;
     }
 
     string GetPaginationText()

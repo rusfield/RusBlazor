@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusBlazor.Maui", "RusBlazor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusBlazor", "RusBlazor\RusBlazor.csproj", "{10248F85-C0A1-49B7-B42C-7418895959AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RusBlazor.Console", "RusBlazor.Console\RusBlazor.Console.csproj", "{FFF466EC-E4F0-41A1-BEA7-47E1C4962E73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusBlazor.Console", "RusBlazor.Console\RusBlazor.Console.csproj", "{FFF466EC-E4F0-41A1-BEA7-47E1C4962E73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,7 +33,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6590608C-D066-4EB1-8EF8-AD7895F8AAB6}
 		        SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
+		SolutionGuid = {6590608C-D066-4EB1-8EF8-AD7895F8AAB6}
 	EndGlobalSection
 EndGlobal

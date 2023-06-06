@@ -5,8 +5,13 @@
 
 <RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" Value="2" />
 <hr />
+<hr />
+<hr />
 <RusFlagSelect GetOptionsAsync="GetFruitsMultiselectAsync" Value="2" />
-
+<hr />
+<hr />
+<hr />
+<RusMultiSelect GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="@(new ())" />
 
 @code {
     private int selectedItem = 0;
@@ -40,6 +45,15 @@
             .FirstOrDefault(x => x.Key == id)?.Index / pageSize;
 
         return pageIndex ?? 0;
+    }
+
+    async Task<(Dictionary<int, string>, int)> GetSelectedFruitsMultiselectAsync(List<int> selectedValues, int pageIndex, int pageSize, CancellationToken token)
+    {
+        var allValues = await GetFruitsMultiselectAsync("", pageIndex, pageSize, token);
+        var results = allValues.Item1.Where(v => selectedValues.Contains(v.Key)).ToDictionary(k => k.Key, v => v.Value);
+        foreach (var undefined in selectedValues.Where(v => !results.ContainsKey(v)))
+            results.Add(undefined, $"Undefined ({undefined})");
+        return (results, results.Count);
     }
 
     async Task<(Dictionary<int, string>, int)> GetFruitsMultiselectAsync(string search, int pageIndex, int pageSize, CancellationToken token)

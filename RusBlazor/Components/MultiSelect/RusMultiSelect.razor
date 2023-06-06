@@ -1,0 +1,281 @@
+﻿@using RusBlazor.Components.Button
+@typeparam T
+@inject IJSRuntime JSRuntime
+
+
+<div class="rus-multi-select">
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.Count} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" />
+    <RusMenu T="T" @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
+
+        <MenuTopContent>
+            <RusMenuItem Hoverable="false">
+                <div style="display: flex; height: 30px;">
+                    <RusButton Style="width:50%;height:30px;" OnClick="ShowSelectedAsync">
+                        @("Show selected")
+                    </RusButton>
+                    <RusButton Style="width:50%;height:30px;" OnClick="ShowAllAsync">
+                        @("Show all")
+                    </RusButton>
+                </div>
+            </RusMenuItem>
+        </MenuTopContent>
+        <MenuContent>
+            @if (loadingSearch)
+            {
+                <RusMenuItem Hoverable="false">
+                    <RusMenuItemContentLoading />
+                </RusMenuItem>
+            }
+            else if (!filteredItems.Any())
+            {
+                <RusMenuItem Hoverable="false">
+                    <RusMenuItemContentText Text="No results" />
+                </RusMenuItem>
+            }
+            else
+            {
+                foreach (var item in filteredItems)
+                {
+                    bool selected = Value.Contains(item.Key);
+                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))" Class="@(selected ? "selected" : "")">
+                        <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value)" Multiselect="true" Checked="@(selected)" />
+                    </RusMenuItem>
+                }
+            }
+        </MenuContent>
+        <MenuBottomContent>
+            <RusMenuItem Hoverable="false">
+                <div style="display: flex; height: 30px;">
+                    <RusButton Style="width:25%;height:30px;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
+                        @("<")
+                    </RusButton>
+                    <div style="width:50%;height:30px;">
+                        @(GetPaginationText())
+                    </div>
+                    <RusButton Style="width:25%;height:30px;" OnClick="NextPage" Disabled="IsLastPageIndex()">
+                        @(">")
+                    </RusButton>
+                </div>
+            </RusMenuItem>
+        </MenuBottomContent>
+    </RusMenu>
+</div>
+
+@code {
+    [Parameter]
+    public List<T> Value { get; set; }
+
+    [Parameter]
+    public EventCallback<List<T>> ValueChanged { get; set; }
+
+    [Parameter]
+    public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
+
+    [Parameter]
+    public Func<List<T>, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetSelectedOptionsAsync { get; set; }
+
+    [Parameter]
+    public bool AllowUndefinedValues { get; set; } = true;
+
+    bool loadingComponent = true;
+    bool loadingSearch = false;
+    string displayValue = "";
+    string lastVerifiedDisplayValue = "";
+    string lastInput = "";
+    bool menuOpen;
+    int pageSize = 15;
+    int currentPageIndex = 0;
+    int resultCount = -1;
+    private Timer? searchTimer;
+    private CancellationTokenSource? cancellationTokenSource;
+    Dictionary<T, string> filteredItems = new();
+    RusMenu<T>? rusMenu;
+    RusInput<string>? rusInput;
+    string? rusInputId;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            rusInputId = rusInput?.GetId() ?? "";
+            await SetDisplayTextAsync();
+
+            loadingComponent = false;
+            this.StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task OnFocusAsync()
+    {
+        // Element may be re-focused from clicking in menu too.
+        if (!menuOpen)
+        {
+            await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+            InitSearch(0);
+        }
+    }
+
+    void NextPage()
+    {
+        currentPageIndex++;
+        InitSearch(0);
+    }
+
+    void PreviousPage()
+    {
+        currentPageIndex--;
+        InitSearch(0);
+    }
+
+    void OnBlur()
+    {
+        cancellationTokenSource?.Cancel();
+    }
+
+    void InputChanged(string input)
+    {
+        lastInput = input;
+        InitSearch(150);
+    }
+
+    void ShowMenuChanged(bool showMenu)
+    {
+        if (!showMenu)
+        {
+            displayValue = lastVerifiedDisplayValue;
+            lastInput = "";
+            resultCount = -1;
+            currentPageIndex = 0;
+        }
+        menuOpen = showMenu;
+    }
+
+    void InitSearch(int searchDelayMs)
+    {
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+        searchTimer?.Dispose();
+        searchTimer = new Timer(async (state) =>
+        {
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                await SearchAsync(cancellationToken);
+            }
+        }, null, searchDelayMs, Timeout.Infinite);
+    }
+
+    async Task SearchAsync(CancellationToken token)
+    {
+        loadingSearch = true;
+        await rusMenu.OpenAsync();
+        string search = lastInput;
+        await InvokeAsync(StateHasChanged); // triggers "Loading" in menu
+        try
+        {
+            if (GetOptionsAsync != null)
+                (filteredItems, resultCount) = await GetOptionsAsync.Invoke(search, currentPageIndex, pageSize, token);
+
+            // Search for custom values on first page
+            if (AllowUndefinedValues && currentPageIndex == 0 && search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
+                filteredItems.Add(value, $"Undefined ({value})");
+        }
+        catch (OperationCanceledException e)
+        {
+            // Search cancelled
+        }
+        loadingSearch = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task SelectItemAsync(T key)
+    {
+        // Toggle whether key is added or removed
+        if (Value.Contains(key))
+        {
+            Value.Remove(key);
+        }
+        else
+        {
+            Value.Add(key);
+        }
+
+        await SetDisplayTextAsync();
+
+        await ValueChanged.InvokeAsync(Value);
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+    }
+
+    async Task SetDisplayTextAsync()
+    {
+        if (Value.Count == 0)
+        {
+            displayValue = "None";
+        }
+        else if (Value.Count == 1)
+        {
+            if (filteredItems.ContainsKey(Value.First()))
+            {
+                displayValue = filteredItems[Value.First()];
+            }
+            else
+            {
+                (var currentValue, var unusedCount) = await GetSelectedOptionsAsync(Value, 0, 1, CancellationToken.None);
+                if (currentValue.ContainsKey(Value.First()))
+                {
+                    displayValue = currentValue[Value.First()];
+                }
+                else
+                {
+                    displayValue = "Error"; // TODO ?
+                }
+            }
+        }
+        else
+        {
+            displayValue = $"{Value.Count} selected";
+        }
+        lastVerifiedDisplayValue = displayValue;
+    }
+
+    async Task ShowAllAsync()
+    {
+        InitSearch(0);
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+    }
+
+    async Task ShowSelectedAsync()
+    {
+        loadingSearch = true;
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+        (filteredItems, resultCount) = await GetSelectedOptionsAsync(Value, currentPageIndex, pageSize, cancellationToken);
+        loadingSearch = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    string GetPaginationText()
+    {
+        if (resultCount == -1)
+            return "";
+
+        int from = currentPageIndex * pageSize + 1;
+        int to = (currentPageIndex + 1) * pageSize;
+
+        to = to > resultCount ? resultCount : to;
+        string action = loadingSearch ? "Loading" : "Showing";
+
+        return $"{action} {from} to {to} of {resultCount} results";
+    }
+
+    bool IsLastPageIndex()
+    {
+        return ((currentPageIndex + 1) * pageSize) >= resultCount;
+    }
+}

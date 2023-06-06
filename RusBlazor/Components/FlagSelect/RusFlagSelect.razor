@@ -4,16 +4,16 @@
 
 
 <div class="rus-flag-select">
-    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" />
+    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" />
     <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:50%; height:100%;" OnClick="SelectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
-                        @(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")
+                    <RusButton Style="width:50%;height:30px;" OnClick="ShowSelectedAsync">
+                        @("Show selected")
                     </RusButton>
-                    <RusButton Style="width:50%; height:100%;" OnClick="DeselectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
-                        @(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")
+                    <RusButton Style="width:50%;height:30px;" OnClick="ShowAllAsync">
+                        @("Show all")
                     </RusButton>
                 </div>
             </RusMenuItem>
@@ -35,8 +35,9 @@
             {
                 foreach (var item in filteredItems)
                 {
-                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))" Class="@(selectedValues.Contains(item.Key) ? "selected" : "")">
-                        <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value)" Multiselect="true" Checked="@(selectedValues.Contains(item.Key))" />
+                    bool selected = selectedValues.Contains(item.Key);
+                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))" Class="@(selected ? "selected" : "")">
+                        <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value)" Multiselect="true" Checked="@(selected)" />
                     </RusMenuItem>
                 }
             }
@@ -44,11 +45,11 @@
         <MenuBottomContent>
             <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:50%;height:30px;" OnClick="ShowSelectedAsync">
-                        @("Show selected")
+                    <RusButton Style="width:50%; height:100%;" OnClick="SelectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
+                        @(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")
                     </RusButton>
-                    <RusButton Style="width:50%;height:30px;" OnClick="ShowAllAsync">
-                        @("Show all")
+                    <RusButton Style="width:50%; height:100%;" OnClick="DeselectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
+                        @(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")
                     </RusButton>
                 </div>
             </RusMenuItem>
@@ -169,8 +170,8 @@
 
     async Task ShowSelectedAsync()
     {
-        filteredItems = options.Where(o => selectedValues.Contains(o.Key)).ToDictionary(k => k.Key, v => v.Value);
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+        filteredItems = options.Where(o => selectedValues.Contains(o.Key)).ToDictionary(k => k.Key, v => v.Value);
     }
 
     async Task ShowAllAsync()
@@ -224,8 +225,7 @@
         Value = selectedValues.GetValueByFlags();
         SetDisplayText();
 
-        //_ = ValueChanged.InvokeAsync(Value);
-
+        await ValueChanged.InvokeAsync(Value);
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }
 
