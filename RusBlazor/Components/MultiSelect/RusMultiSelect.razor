@@ -3,25 +3,28 @@
 @inject IJSRuntime JSRuntime
 
 
-<div class="rus-multi-select">
+<div class="rus-multiselect">
     <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.Count} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="menuOpen" />
     <RusMenu T="T" @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
 
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
-                <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:25%;height:30px;" OnClick="ShowSelectedAsync">
+                <div style="display: flex;">
+                    <RusButton Style="width:25%;height:30px;" OnClick="ShowSelectedAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ShowSelected))" OnMouseOut="HideButtonDescription">
                         @("Show selected")
                     </RusButton>
-                    <RusButton Style="width:25%;height:30px;" OnClick="ResetFilterAsync">
+                    <RusButton Style="width:25%;height:30px;" OnClick="ResetFilterAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ResetFilter))" OnMouseOut="HideButtonDescription">
                         @("Reset filter")
                     </RusButton>
-                    <RusButton Style="width:25%; height:100%;" OnClick="SelectVisibleAsync">
+                    <RusButton Style="width:25%; height:30px;" OnClick="SelectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_SelectVisible))" OnMouseOut="HideButtonDescription">
                         @("Select visible")
                     </RusButton>
-                    <RusButton Style="width:25%; height:100%;" OnClick="DeselectVisibleAsync">
+                    <RusButton Style="width:25%; height:30px;" OnClick="DeselectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_DeselectVisible))" OnMouseOut="HideButtonDescription">
                         @("Deselect visible")
                     </RusButton>
+                </div>
+                <div class="@($"rus-multiselect-buttons {(descriptionHover ? "show" : "hide")}")">
+                    @buttonDescription
                 </div>
             </RusMenuItem>
         </MenuTopContent>
@@ -92,12 +95,20 @@
     int pageSize = 15;
     int currentPageIndex = 0;
     int resultCount = -1;
-    private Timer? searchTimer;
-    private CancellationTokenSource? cancellationTokenSource;
+    Timer? searchTimer;
+    CancellationTokenSource? cancellationTokenSource;
     Dictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
     RusInput<string>? rusInput;
     string? rusInputId;
+
+    bool descriptionHover = false;
+    string buttonDescription = "";
+    string description_ShowSelected = "Show the selected values";
+    string description_ResetFilter = "Reset current filter";
+    string description_SelectVisible = "Selects all options on this page";
+    string description_DeselectVisible = "Deselects all options on this page";
+    CancellationTokenSource? displayDescriptionTokenSource;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -254,7 +265,7 @@
 
     async Task SelectVisibleAsync()
     {
-        foreach(var item in filteredItems)
+        foreach (var item in filteredItems)
         {
             if (!Value.Contains(item.Key))
                 Value.Add(item.Key);
@@ -310,4 +321,32 @@
     {
         return ((currentPageIndex + 1) * pageSize) >= resultCount;
     }
+
+    async Task ShowButtonDescriptionAsync(string description)
+    {
+        displayDescriptionTokenSource?.Cancel();
+        displayDescriptionTokenSource = new();
+
+        try
+        {
+            await Task.Delay(100, displayDescriptionTokenSource.Token);
+            descriptionHover = true;
+            buttonDescription = description;
+        }
+        catch (TaskCanceledException)
+        {
+            // Cancelled
+        }
+
+    }
+
+    void HideButtonDescription()
+    {
+        displayDescriptionTokenSource?.Cancel();
+        displayDescriptionTokenSource = new();
+
+        descriptionHover = false;
+        buttonDescription = "";
+    }
+
 }

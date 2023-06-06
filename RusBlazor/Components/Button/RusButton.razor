@@ -1,4 +1,4 @@
-﻿<button class="rus-button @Class" style="@Style" @onclick="OnClick" disabled="@Disabled">
+﻿<button class="@(string.Join(" ", "rus-button", Class))" style="@(Style)" @onclick="OnClick" disabled="@Disabled" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut">
     @ChildContent
 </button>
 
@@ -18,4 +18,10 @@
 
     [Parameter]
     public string Style { get; set; }
+
+    [Parameter]
+    public EventCallback OnMouseOver { get; set; }
+
+    [Parameter]
+    public EventCallback OnMouseOut { get; set; }
 }
