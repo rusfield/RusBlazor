@@ -209,6 +209,7 @@
         int from = currentPageIndex * pageSize + 1;
         int to = (currentPageIndex + 1) * pageSize;
 
+        from = from > resultCount ? resultCount : from;
         to = to > resultCount ? resultCount : to;
         string action = loadingSearch ? "Loading" : "Showing";
 
