@@ -10,14 +10,17 @@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:33%;height:30px;" OnClick="ShowSelectedAsync">
+                    <RusButton Style="width:25%;height:30px;" OnClick="ShowSelectedAsync">
                         @("Show selected")
                     </RusButton>
-                    <RusButton Style="width:33%;height:30px;" OnClick="ResetFilterAsync">
+                    <RusButton Style="width:25%;height:30px;" OnClick="ResetFilterAsync">
                         @("Reset filter")
                     </RusButton>
-                    <RusButton Style="width:33%; height:100%;" OnClick="ClearValuesAsync">
-                        @("Clear values")
+                    <RusButton Style="width:25%; height:100%;" OnClick="SelectVisibleAsync">
+                        @("Select visible")
+                    </RusButton>
+                    <RusButton Style="width:25%; height:100%;" OnClick="DeselectVisibleAsync">
+                        @("Deselect visible")
                     </RusButton>
                 </div>
             </RusMenuItem>
@@ -249,9 +252,26 @@
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }
 
-    async Task ClearValuesAsync()
+    async Task SelectVisibleAsync()
     {
-        Value.Clear();
+        foreach(var item in filteredItems)
+        {
+            if (!Value.Contains(item.Key))
+                Value.Add(item.Key);
+        }
+
+        await ValueChanged.InvokeAsync(Value);
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+    }
+
+    async Task DeselectVisibleAsync()
+    {
+        foreach (var item in filteredItems)
+        {
+            if (Value.Contains(item.Key))
+                Value.Remove(item.Key);
+        }
+
         await ValueChanged.InvokeAsync(Value);
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }
