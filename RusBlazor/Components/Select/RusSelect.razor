@@ -22,7 +22,7 @@
             {
                 foreach (var item in filteredItems)
                 {
-                    <RusMenuItem OnItemClick="@(() => SelectItem(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")" Class="@(Value.Equals(item.Key) ? "selected" : "")">
+                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")" Class="@(Value.Equals(item.Key) ? "selected" : "")">
                         <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@item.Value" />
                     </RusMenuItem>
                 }
@@ -180,13 +180,13 @@
         }
     }
 
-    void SelectItem(T key, string value)
+    async Task SelectItemAsync(T key, string value)
     {
         Value = key;
         displayValue = value;
         lastVerifiedDisplayValue = value;
-        rusMenu.CloseAsync();
-        _ = ValueChanged.InvokeAsync(Value);
+        await rusMenu.CloseAsync();
+        await ValueChanged.InvokeAsync(Value);
     }
 
     void ShowMenuChanged(bool showMenu)
