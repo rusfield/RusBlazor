@@ -9,21 +9,21 @@
 
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
-                <div style="display: flex;">
-                    <RusButton Style="width:25%;height:30px;" OnClick="ShowSelectedAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ShowSelected))" OnMouseOut="HideButtonDescription">
-                        @("Show selected")
+                <div class="@("rus-multiselect-button-group")">
+                    <RusButton Style="@(buttonStyle)" OnClick="ShowSelectedAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ShowSelected))" OnMouseOut="HideButtonDescription">
+                        @("Show")
                     </RusButton>
-                    <RusButton Style="width:25%;height:30px;" OnClick="ResetFilterAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ResetFilter))" OnMouseOut="HideButtonDescription">
-                        @("Reset filter")
+                    <RusButton Style="@(buttonStyle)" OnClick="ResetFilterAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ResetFilter))" OnMouseOut="HideButtonDescription">
+                        @("Reset")
                     </RusButton>
-                    <RusButton Style="width:25%; height:30px;" OnClick="SelectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_SelectVisible))" OnMouseOut="HideButtonDescription">
-                        @("Select visible")
+                    <RusButton Style="@(buttonStyle)" OnClick="SelectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_SelectVisible))" OnMouseOut="HideButtonDescription">
+                        @("Select")
                     </RusButton>
-                    <RusButton Style="width:25%; height:30px;" OnClick="DeselectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_DeselectVisible))" OnMouseOut="HideButtonDescription">
-                        @("Deselect visible")
+                    <RusButton Style="@(buttonStyle)" OnClick="DeselectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_DeselectVisible))" OnMouseOut="HideButtonDescription">
+                        @("Deselect")
                     </RusButton>
                 </div>
-                <div class="@($"rus-multiselect-buttons {(descriptionHover ? "show" : "hide")}")">
+                <div class="@($"rus-multiselect-button-description {(descriptionHover ? "show" : "hide")}")">
                     @buttonDescription
                 </div>
             </RusMenuItem>
@@ -101,6 +101,8 @@
     RusMenu<T>? rusMenu;
     RusInput<string>? rusInput;
     string? rusInputId;
+
+    string buttonStyle = "aspect-ratio:1/1;justify-self:stretch;overflow:hidden;";
 
     bool descriptionHover = false;
     string buttonDescription = "";

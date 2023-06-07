@@ -3,20 +3,28 @@
     display: inline-block;
 }
 
-.rus-multiselect-buttons {
-    height: 1rem;
+.rus-multiselect-button-group {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    justify-items: stretch;
+}
+
+.rus-multiselect-button-description {
+    height: 16px;
     text-align: center;
     overflow: hidden;
     white-space: nowrap;
     font-size: 0.75rem;
+    text-decoration: underline;
 }
 
-    .rus-multiselect-buttons.hide {
+    .rus-multiselect-button-description.hide {
         clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
         transition: clip-path 0.25s;
     }
 
-    .rus-multiselect-buttons.show {
+    .rus-multiselect-button-description.show {
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         transition: clip-path 0.25s;
     }

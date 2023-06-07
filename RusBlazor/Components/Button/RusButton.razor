@@ -1,4 +1,4 @@
-﻿<button class="@(string.Join(" ", "rus-button", Class))" style="@(Style)" @onclick="OnClick" disabled="@Disabled" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut">
+﻿<button class="@($"rus-button {Class}")" style="@(Style)" @onclick="OnClick" disabled="@Disabled" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut">
     @ChildContent
 </button>
 

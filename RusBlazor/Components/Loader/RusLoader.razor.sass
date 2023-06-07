@@ -1,0 +1,55 @@
+*
+	border: 0
+	box-sizing: 0
+	margin: 0
+	padding: 0
+\:root
+	font-size: calc(16px + (20 - 16) * (100vw - 320px) / (1280 - 320))
+body
+	background: hsl(223,10%,10%)
+	display: grid
+	place-items: center
+	font: 1em/1.5 sans-serif
+	height:  100vh
+
+@function circumf($rad)
+	@return 3.1415926 * $rad * 2
+
+$ringRad: 60 52.5 46 40.5 36 32.5
+$rings: 6
+
+.pl
+	$dur: 4s
+	$delayInc: $dur / 100
+	width: 8em
+	height: 8em
+	circle
+		transform:
+			box: fill-box
+			origin: 50% 50%
+	@for $r from 1 through $rings
+		&__ring#{$r}
+			animation: ring#{$r} $dur ($delayInc * ($r - 1)) ease-in-out infinite
+
+/* Animations */
+@for $r from 1 through $rings
+	@keyframes ring#{$r}
+		from
+			stroke-dashoffset: circumf(nth($ringRad,$r)) * -0.998
+			transform: rotate(-0.25turn)
+			animation-timing-function: ease-in
+		23%
+			stroke-dashoffset: circumf(nth($ringRad,$r)) * -0.25
+			transform: rotate(1turn)
+			animation-timing-function: ease-out
+		46%, 50%
+			stroke-dashoffset: circumf(nth($ringRad,$r)) * -0.998
+			transform: rotate(2.25turn)
+			animation-timing-function: ease-in
+		73%
+			stroke-dashoffset: circumf(nth($ringRad,$r)) * -0.25
+			transform: rotate(3.5turn)
+			animation-timing-function: ease-out
+		96%, to
+			stroke-dashoffset: circumf(nth($ringRad,$r)) * -0.998
+			transform: rotate(4.75turn)

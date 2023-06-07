@@ -1,0 +1,7 @@
+.rus-menu-item-content-loading {
+    display: flex;
+    justify-content: center; /* center horizontally */
+    align-items: center; /* center vertically */
+    height: 100%; /* full height of its own parent */
+    width: 100%; /* full width of its own parent */
+}
