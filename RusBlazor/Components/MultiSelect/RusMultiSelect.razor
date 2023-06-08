@@ -24,7 +24,7 @@
                     </RusButton>
                 </div>
                 <div class="@($"rus-multiselect-button-description {(descriptionHover ? "show" : "hide")}")">
-                    @buttonDescription
+                    @(new MarkupString(buttonDescription))
                 </div>
             </RusMenuItem>
         </MenuTopContent>
@@ -58,8 +58,8 @@
                     <RusButton Style="width:25%;height:30px;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
                         @("<")
                     </RusButton>
-                    <div style="width:50%;height:30px;">
-                        @(GetPaginationText())
+                    <div style="width:50%;" class="@($"rus-multiselect-button-description")">
+                        @(new MarkupString(GetPaginationText()))
                     </div>
                     <RusButton Style="width:25%;height:30px;" OnClick="NextPage" Disabled="IsLastPageIndex()">
                         @(">")
@@ -105,7 +105,7 @@
     string buttonStyle = "aspect-ratio:1/1;justify-self:stretch;overflow:hidden;";
 
     bool descriptionHover = false;
-    string buttonDescription = "";
+    string buttonDescription = new("&nbsp;");
     string description_ShowSelected = "Show the selected values";
     string description_ResetFilter = "Reset current filter";
     string description_SelectVisible = "Selects all options on this page";
@@ -273,6 +273,7 @@
                 Value.Add(item.Key);
         }
 
+        await SetDisplayTextAsync();
         await ValueChanged.InvokeAsync(Value);
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }
@@ -285,6 +286,7 @@
                 Value.Remove(item.Key);
         }
 
+        await SetDisplayTextAsync();
         await ValueChanged.InvokeAsync(Value);
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }
@@ -308,15 +310,14 @@
     string GetPaginationText()
     {
         if (resultCount == -1)
-            return "";
+            return new("&nbsp;");
 
         int from = currentPageIndex * pageSize + 1;
         int to = (currentPageIndex + 1) * pageSize;
 
         to = to > resultCount ? resultCount : to;
-        string action = loadingSearch ? "Loading" : "Showing";
 
-        return $"{action} {from} to {to} of {resultCount} results";
+        return new($"{from} to {to}<br />of {resultCount}");
     }
 
     bool IsLastPageIndex()
@@ -333,7 +334,7 @@
         {
             await Task.Delay(100, displayDescriptionTokenSource.Token);
             descriptionHover = true;
-            buttonDescription = description;
+            buttonDescription = new(description);
         }
         catch (TaskCanceledException)
         {
@@ -348,7 +349,7 @@
         displayDescriptionTokenSource = new();
 
         descriptionHover = false;
-        buttonDescription = "";
+        buttonDescription = new("&nbsp;");
     }
 
 }

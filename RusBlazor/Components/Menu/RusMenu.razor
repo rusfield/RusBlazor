@@ -4,21 +4,31 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="rus-menu" style="@StateStyle() @AnchorStyle()" id="@parentContainerId">
+<div class="@("rus-menu")" style="@($"{StateStyle()} {AnchorStyle()}")" id="@(parentContainerId)">
+
     @if (MenuTopContent != null)
     {
-        @MenuTopContent
+        <div class="rus-menu-top">
+            @MenuTopContent
+        </div>
     }
-    <div class="rus-menu-dropdown" id="@id">
-        @if (MenuContent != null)
-        {
+
+
+    @if (MenuContent != null)
+    {
+        <div class="rus-menu-dropdown" id="@id">
             @MenuContent
-        }
-    </div>
+        </div>
+    }
+
+
     @if (MenuBottomContent != null)
     {
-        @MenuBottomContent
+        <div class="rus-menu-bottom">
+            @MenuBottomContent
+        </div>
     }
+
 </div>
 
 @if (IsOpen)

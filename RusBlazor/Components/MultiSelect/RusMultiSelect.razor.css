@@ -11,12 +11,10 @@
 }
 
 .rus-multiselect-button-description {
-    height: 16px;
     text-align: center;
     overflow: hidden;
     white-space: nowrap;
     font-size: 0.75rem;
-    text-decoration: underline;
 }
 
     .rus-multiselect-button-description.hide {
