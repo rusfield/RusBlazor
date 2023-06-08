@@ -1,7 +1,8 @@
 .rus-input {
     width: 100%;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 6px solid transparent;
+    padding: 6px; /* Adding padding equivalent to the border width */
     border-radius: 5px;
 }
 

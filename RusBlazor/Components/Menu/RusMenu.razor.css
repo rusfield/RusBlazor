@@ -2,9 +2,9 @@
     position: absolute;
     z-index: 2;
     width: 100%;
-    padding: 10px; /* Adding padding equivalent to the border width */
+    padding: 6px; /* Adding padding equivalent to the border width */
     box-shadow: 0px 15px 50px 0px rgba(0,0,0,0.4);
-    border-radius: 10px;
+    border-radius: 6px;
     background: transparent; /* make the background transparent */
     overflow: hidden; /* hide the pseudo-element that overflows the border-radius */
 }
@@ -24,9 +24,6 @@
 
 
 
-
-
-
 .rus-menu-top {
     background-color: white;
     border-radius: 5px;
@@ -42,5 +39,5 @@
 
 .rus-menu-bottom {
     background-color: white;
-    border-radius: 5px;
+    border-radius: 6px;
 }
