@@ -1,14 +1,46 @@
 .rus-menu {
     position: absolute;
     z-index: 2;
-    background-color: red;
-    border: 10px solid transparent;
     width: 100%;
-    opacity: 0;
+    padding: 10px; /* Adding padding equivalent to the border width */
     box-shadow: 0px 15px 50px 0px rgba(0,0,0,0.4);
     border-radius: 10px;
+    background: transparent; /* make the background transparent */
+    overflow: hidden; /* hide the pseudo-element that overflows the border-radius */
+}
+
+    .rus-menu::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* push the gradient behind the content */
+        background-color: #2a2a72;
+        background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
+        border-radius: inherit; /* match the border radius of the parent div */
+    }
+
+
+
+
+
+
+.rus-menu-top {
+    background-color: white;
+    border-radius: 5px;
 }
 
 .rus-menu-dropdown {
+    background-color: white;
     overflow-y: scroll;
+    margin-left: 4px;
+    margin-right: 4px;
+    box-shadow: inset 0 0 10px #000000;
+}
+
+.rus-menu-bottom {
+    background-color: white;
+    border-radius: 5px;
 }
