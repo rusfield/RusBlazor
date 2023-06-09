@@ -1,31 +1,36 @@
 .rus-input {
     width: 100%;
-    font-size: 16px;
-    border: 6px solid transparent;
-    padding: 6px; /* Adding padding equivalent to the border width */
-    border-radius: 5px;
+    font-size: 1.2rem;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: #f2f2f2;
 }
+    .rus-input.inactive {
+    }
 
     .rus-input.active {
-        border-color: #007BFF;
-        outline: none;
     }
 
 .rus-input-container {
-    position: relative;
-    display: inline-block;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    background-color: #424242;
+    cursor: text;
+    padding: 4px;
 }
 
-    .rus-input-container:hover .rus-input-subtext {
-        visibility: visible;
-    }
-
 .rus-input-subtext {
-    visibility: hidden;
-    position: absolute;
     width: 100%;
-    bottom: -20px;
-    left: 0;
-    color: #666;
-    font-size: 12px;
+    border-top: 1px solid #b3b3b3;
+    font-size: 0.7rem;
+    color: #b3b3b3;
+}
+
+.rus-input-label {
+    padding-left: 4px;
+    font-size: 0.9rem;
+    color: #d3d3d3;
+    font-weight: bold;
 }

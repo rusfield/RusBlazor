@@ -1,9 +1,18 @@
 ﻿@typeparam TValue
 @inherits InputBase<TValue>
 
-<div class="rus-input-container @Class" style="@Style">
-    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="rus-input @ActiveStyle()" disabled="@Disabled" />
-    <div class="rus-input-subtext">@HelperText</div>
+@inject IJSRuntime JSRuntime
+
+<div class="@($"rus-input-label")">
+    @Label
+</div>
+<div class="@($"rus-input-container {Class}")" style="@(Style)" @onclick="FocusInputAsync">
+    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="rus-input @ActiveClass()" disabled="@Disabled" />
+    <div class="rus-input-subtext">
+        <div style="padding-left: 6px;">
+            @HelperText
+        </div>
+    </div>
 </div>
 
 @code {
@@ -17,7 +26,10 @@
     public EventCallback<string> InputChanged { get; set; }
 
     [Parameter]
-    public string HelperText { get; set; }
+    public string HelperText { get; set; } = "Hello";
+
+    [Parameter]
+    public string Label { get; set; } = "Various Fruits";
 
     [Parameter]
     public bool Disabled { get; set; } = false;
@@ -48,17 +60,17 @@
     public string GetId()
     {
         return id;
-    } 
+    }
 
-    string ActiveStyle()
+    string ActiveClass()
     {
-        if(Active != null)
+        if (Active != null)
         {
-            return (bool)Active ? "active" : "";
+            return (bool)Active ? "active" : "inactive";
         }
         else
         {
-            return active ? "active" : "";
+            return active ? "active" : "inactive";
         }
     }
 
@@ -80,6 +92,11 @@
         {
             await OnBlur.InvokeAsync();
         }
+    }
+
+    async Task FocusInputAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("selectElement", id);
     }
 
     protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
