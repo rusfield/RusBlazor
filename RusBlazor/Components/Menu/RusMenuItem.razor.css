@@ -3,6 +3,7 @@
     font-family: Consolas, 'Courier New', monospace;
     padding: 5px;
     cursor: auto;
+    margin-left: 16px; /* to match scrollbar on right */
 }
 
     .rus-menu-item.selected {
@@ -16,5 +17,5 @@
     }
 
     .rus-menu-item.separator {
-        border-bottom: 1px solid red;
+        border-bottom: 1px solid #b3b3b3;
     }
