@@ -3,7 +3,7 @@
 @inject IJSRuntime JSRuntime
 
 <div class="rus-select">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" />
     <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
         <MenuContent>
             @if (loadingSearch)
@@ -66,6 +66,7 @@
     bool loadingComponent = true;
     bool loadingSearch = false;
     bool menuOpen;
+    bool inputActive;
     string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
     string lastInput = "";
@@ -190,14 +191,19 @@
         await ValueChanged.InvokeAsync(Value);
     }
 
-    void ShowMenuChanged(bool showMenu)
+    async Task ShowMenuChanged((bool, int) data)
     {
+        bool showMenu = data.Item1;
+        int animationDelay = data.Item2;
+        inputActive = showMenu;
         if (!showMenu)
         {
             displayValue = lastVerifiedDisplayValue;
             lastInput = "";
             resultCount = -1;
             currentPageIndex = -1;
+            this.StateHasChanged();
+            await Task.Delay(animationDelay);
         }
         menuOpen = showMenu;
     }

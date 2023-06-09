@@ -5,7 +5,8 @@
 
 <div class="rus-flag-select">
     <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" />
-    <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
+    <RusMenu @ref="rusMenu" T="T">
+        @* IsOpenChanged="ShowMenuChanged"> *@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div style="display: flex; height: 30px;">

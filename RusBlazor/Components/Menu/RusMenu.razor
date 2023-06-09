@@ -31,7 +31,7 @@
 
 </div>
 
-@if (IsOpen)
+@if (isOpen)
 {
     <RusBackgroundOverlay OnClick="CloseAsync" />
 }
@@ -39,10 +39,7 @@
 
 @code {
     [Parameter]
-    public bool IsOpen { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
+    public EventCallback<(bool, int)> IsOpenChanged { get; set; }
 
     [Parameter]
     public Anchor Anchor { get; set; } = Anchor.Auto;
@@ -60,6 +57,7 @@
     string parentContainerId;
     int animationDurationMs = 200;
     int dropdownHeight = 240;
+    bool isOpen = false;
 
     protected override void OnInitialized()
     {
@@ -86,33 +84,37 @@
 
     string StateStyle()
     {
-        return IsOpen ? "display:block;" : "display:none;";
+        return isOpen ? "display:block;" : "display:none;";
     }
 
     public async Task OpenAsync()
     {
-        if (!IsOpen)
+        if (!isOpen)
         {
             await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
             await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
+
             await InvokeAsync(async () =>
             {
-                IsOpen = true;
-                await IsOpenChanged.InvokeAsync(IsOpen);
+                await IsOpenChanged.InvokeAsync((true, animationDurationMs));
             });
+            isOpen = true;
         }
     }
 
     public async Task CloseAsync()
     {
-        if (IsOpen)
+        if (isOpen)
         {
             await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
             await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);
 
+            await InvokeAsync(async () =>
+            {
+                await IsOpenChanged.InvokeAsync((false, animationDurationMs));
+            });
             await Task.Delay(animationDurationMs);
-            IsOpen = false;
-            await IsOpenChanged.InvokeAsync(IsOpen);
+            isOpen = false;
         }
     }
 

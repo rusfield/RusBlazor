@@ -4,9 +4,8 @@
 
 
 <div class="rus-multiselect">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.Count} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="menuOpen" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.Count} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" />
     <RusMenu T="T" @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
-
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-multiselect-button-group")">
@@ -93,6 +92,7 @@
     string lastVerifiedDisplayValue = "";
     string lastInput = "";
     bool menuOpen;
+    bool inputActive;
     int pageSize = 15;
     int currentPageIndex = 0;
     int resultCount = -1;
@@ -159,14 +159,19 @@
         InitSearch(150);
     }
 
-    void ShowMenuChanged(bool showMenu)
+    async Task ShowMenuChanged((bool, int) data)
     {
+        bool showMenu = data.Item1;
+        int animationDelay = data.Item2;
+        inputActive = showMenu;
         if (!showMenu)
         {
             displayValue = lastVerifiedDisplayValue;
             lastInput = "";
             resultCount = -1;
             currentPageIndex = 0;
+            this.StateHasChanged();
+            await Task.Delay(animationDelay);
         }
         menuOpen = showMenu;
     }
