@@ -20,9 +20,10 @@
             }
             else
             {
+                int itterator = 1;
                 foreach (var item in filteredItems)
                 {
-                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")" Class="@(Value.Equals(item.Key) ? "selected" : "")">
+                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key, item.Value))" Id="@($"{rusMenu!.GetId()}-{item.Key.ToString()}")" Class="@(Value.Equals(item.Key) ? "selected" : "")" Separator="@(itterator++ < filteredItems.Count)">
                         <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@item.Value" />
                     </RusMenuItem>
                 }

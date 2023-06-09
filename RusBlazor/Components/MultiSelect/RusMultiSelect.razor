@@ -43,10 +43,11 @@
             }
             else
             {
+                int itterator = 1;
                 foreach (var item in filteredItems)
                 {
                     bool selected = Value.Contains(item.Key);
-                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))" Class="@(selected ? "selected" : "")">
+                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))" Class="@(selected ? "selected" : "")" Separator="@(itterator++ < filteredItems.Count)">
                         <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value)" Multiselect="true" Checked="@(selected)" />
                     </RusMenuItem>
                 }

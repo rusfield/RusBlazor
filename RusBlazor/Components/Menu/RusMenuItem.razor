@@ -1,5 +1,5 @@
 ﻿
-<div @onclick="OnClick" class="rus-menu-item @HoverClass() @Class" style="@HoverStyle()" id="@Id">
+<div @onclick="OnClick" class="@($"rus-menu-item {HoverClass()} {Class} {SeparatorClass()}")" id="@Id">
     @ChildContent
 </div>
 
@@ -19,6 +19,9 @@
     [Parameter]
     public string Class { get; set; }
 
+    [Parameter]
+    public bool Separator { get; set; } = false;
+
     void OnClick()
     {
         OnItemClick.InvokeAsync();
@@ -29,8 +32,8 @@
         return Hoverable ? "hoverable" : "";
     }
 
-    string HoverStyle()
+    string SeparatorClass()
     {
-        return Hoverable ? "" : "cursor:auto !important;";
+        return Separator ? "separator" : "";
     }
 }

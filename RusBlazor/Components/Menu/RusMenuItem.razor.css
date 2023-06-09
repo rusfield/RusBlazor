@@ -2,6 +2,7 @@
     /* border-bottom: 1px solid #d4d4d4; */
     font-family: Consolas, 'Courier New', monospace;
     padding: 5px;
+    cursor: auto;
 }
 
     .rus-menu-item.selected {
@@ -12,4 +13,8 @@
         color: var(--rus-menu-item-hover-color);
         background: var(--rus-menu-item-hover-background);
         cursor: pointer;
+    }
+
+    .rus-menu-item.separator {
+        border-bottom: 1px solid red;
     }
