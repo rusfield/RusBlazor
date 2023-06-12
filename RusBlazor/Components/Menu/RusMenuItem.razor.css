@@ -3,7 +3,6 @@
     font-family: Consolas, 'Courier New', monospace;
     padding: 5px;
     cursor: auto;
-    margin-left: 16px; /* to match scrollbar on right */
 }
 
     .rus-menu-item.selected {
