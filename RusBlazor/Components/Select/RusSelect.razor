@@ -57,11 +57,11 @@
     [Parameter]
     public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
-    [Parameter]
-    public Func<T, int, Task<int>> GetPageIndexByIdAsync { get; set; }
+    [Parameter] // Used to navigate to the page where selected value is.
+    public Func<T, int, Task<int>> GetPageIndexByIdAsync { get; set; } = (_, __) => Task.FromResult(0);
 
-    [Parameter]
-    public bool AllowUndefinedValues { get; set; } = true;
+    [Parameter] // Label over component
+    public string Label { get; set; } = "";
 
     bool loadingComponent = true;
     bool loadingSearch = false;
@@ -79,6 +79,13 @@
     int currentPageIndex = -1;
     int resultCount = -1;
     string? rusInputId;
+
+    protected override void OnParametersSet()
+    {
+        if (GetOptionsAsync == null)
+            throw new ParameterRequiredException(nameof(GetOptionsAsync));
+        base.OnParametersSet();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -166,8 +173,8 @@
             if (string.IsNullOrWhiteSpace(search))
                 search = lastVerifiedDisplayValue ?? "";
 
-            // Search for custom values
-            if (AllowUndefinedValues && search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
+            // TODO: Remove this, undefined values are returned in backend
+            if (search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
                 filteredItems.Add(value, $"Undefined ({value})");
         }
         catch (OperationCanceledException e)

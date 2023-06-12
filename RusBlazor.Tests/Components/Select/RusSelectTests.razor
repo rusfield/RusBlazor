@@ -1,0 +1,13 @@
+﻿@using RusBlazor.Components.Select
+
+@inherits TestContext
+
+@code {
+    [Fact]
+    public void RendersCorrectly()
+    {
+        int currentValue = 123;
+        var cut = Render(@<RusSelect T="int" @bind-Value="currentValue" />);
+        cut.MarkupMatches(@<div class="rus-select"></div>);
+    }
+}

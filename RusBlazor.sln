@@ -8,6 +8,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusBlazor", "RusBlazor\RusB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusBlazor.Console", "RusBlazor.Console\RusBlazor.Console.csproj", "{FFF466EC-E4F0-41A1-BEA7-47E1C4962E73}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusBlazor.Tests", "RusBlazor.Tests\RusBlazor.Tests.csproj", "{24A4DCF9-3D82-4A24-8FD6-C5950CE3CE36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{FFF466EC-E4F0-41A1-BEA7-47E1C4962E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFF466EC-E4F0-41A1-BEA7-47E1C4962E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFF466EC-E4F0-41A1-BEA7-47E1C4962E73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24A4DCF9-3D82-4A24-8FD6-C5950CE3CE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24A4DCF9-3D82-4A24-8FD6-C5950CE3CE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24A4DCF9-3D82-4A24-8FD6-C5950CE3CE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24A4DCF9-3D82-4A24-8FD6-C5950CE3CE36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

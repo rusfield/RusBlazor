@@ -1,0 +1,59 @@
+﻿@using RusBlazor.Components.Button
+
+@inherits TestContext
+
+@code {
+    [Fact]
+    public void RendersCorrectly()
+    {
+        var cut = Render(@<RusButton Disabled="true">Test</RusButton>);
+        cut.MarkupMatches(@<button disabled class="rus-button">Test</button>);
+    }
+
+    [Fact]
+    public void OnClickEvents()
+    {
+        var clicked = false;
+        var cut = Render(@<RusButton OnClick="@(() => clicked = true)">Test</RusButton>);
+        cut.Find("button").Click();
+        Assert.True(clicked);
+    }
+
+    [Fact]
+    public void DisabledProperty()
+    {
+        var cut = Render(@<RusButton Disabled="false">Test</RusButton>);
+        Assert.Null(cut.Find("button").GetAttribute("disabled"));
+        cut = Render(@<RusButton Disabled="true">Test</RusButton>);
+        Assert.NotNull(cut.Find("button").GetAttribute("disabled"));
+    }
+
+    [Fact]
+    public void ClassProperty()
+    {
+        var cut = Render(@<RusButton Class="extra-class">Test</RusButton>);
+        Assert.Equal("rus-button extra-class", cut.Find("button").GetAttribute("class"));
+    }
+
+    [Fact]
+    public void StyleProperty()
+    {
+        var cut = Render(@<RusButton Style="color:red;">Test</RusButton>);
+        Assert.Equal("color:red;", cut.Find("button").GetAttribute("style"));
+    }
+
+    [Fact]
+    public async Task OnMouseOverAndOnMouseOutEvents()
+    {
+        var mouseOverFired = false;
+        var mouseOutFired = false;
+        var cut = Render(@<RusButton OnMouseOver="@(() => mouseOverFired = true)" OnMouseOut="@(() => mouseOutFired = true)">Test</RusButton>);
+
+        var button = cut.Find("button");
+        await button.TriggerEventAsync("onmouseover", new MouseEventArgs());
+        Assert.True(mouseOverFired);
+        await button.TriggerEventAsync("onmouseout", new MouseEventArgs());
+        Assert.True(mouseOutFired);
+    }
+
+}
