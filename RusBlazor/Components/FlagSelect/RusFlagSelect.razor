@@ -13,7 +13,7 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
+    public Func<List<T>, string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter]
     public Func<List<T>, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetSelectedOptionsAsync { get; set; }

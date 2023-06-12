@@ -55,7 +55,7 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
+    public Func<T, string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter] // Used to navigate to the page where selected value is.
     public Func<T, int, Task<int>> GetPageIndexByIdAsync { get; set; } = (_, __) => Task.FromResult(0);
@@ -93,7 +93,7 @@
         if (firstRender)
         {
             rusInputId = rusInput?.GetId() ?? "";
-            (var currentValue, int tempCount) = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
+            (var currentValue, int tempCount) = await GetOptionsAsync(Value, Value.ToString(), 0, 1, CancellationToken.None);
             if (currentValue.ContainsKey(Value))
             {
                 displayValue = currentValue[Value];
@@ -167,7 +167,7 @@
                 currentPageIndex = GetPageIndexByIdAsync != null ? await GetPageIndexByIdAsync(Value, pageSize) : 0;
 
             if (GetOptionsAsync != null)
-                (filteredItems, resultCount) = await GetOptionsAsync.Invoke(search, currentPageIndex, pageSize, token);
+                (filteredItems, resultCount) = await GetOptionsAsync.Invoke(Value, search, currentPageIndex, pageSize, token);
 
             // Adjust search so that a potential custom value is retrieved
             if (string.IsNullOrWhiteSpace(search))

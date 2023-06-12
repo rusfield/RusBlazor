@@ -78,7 +78,7 @@
     public EventCallback<List<T>> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
+    public Func<List<T>, string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter]
     public Func<List<T>, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetSelectedOptionsAsync { get; set; }
@@ -201,7 +201,7 @@
         try
         {
             if (GetOptionsAsync != null)
-                (filteredItems, resultCount) = await GetOptionsAsync.Invoke(search, currentPageIndex, pageSize, token);
+                (filteredItems, resultCount) = await GetOptionsAsync.Invoke(Value, search, currentPageIndex, pageSize, token);
 
             // TODO: Remove after undefined values can come from backend
             if (currentPageIndex == 0 && search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))

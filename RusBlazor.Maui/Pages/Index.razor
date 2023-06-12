@@ -10,14 +10,14 @@
 <br />
 <br />
 <br />
-<RusFlagSelect GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="3" />
+<RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="3" />
 <br />
 <br />
 <br />
 <br />
 <br />
 <br />
-<RusMultiSelect GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="@(new() { 1, 3 })" />
+<RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="@(new() { 1, 3 })" />
 <br />
 <br />
 <br />
@@ -31,11 +31,12 @@
     private int selectedItem = 0;
     private IEnumerable<string> selectedItems = new List<string>();
 
-    async Task<(SortedDictionary<int, string>, int)> GetFruitsAsync(string search, int pageIndex, int pageSize, CancellationToken token)
+    async Task<(SortedDictionary<int, string>, int)> GetFruitsAsync(int selectedValue, string search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(1000, token);
         var results = new SortedDictionary<int, string>();
         int id = 1;
+
         foreach (var item in items)
         {
             token.ThrowIfCancellationRequested();
@@ -48,12 +49,13 @@
 
             id++;
         }
+
         return (new SortedDictionary<int, string>(results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value)), results.Count);
     }
 
     async Task<int> GetPageIndexByIdAsync(int id, int pageSize)
     {
-        var results = await GetFruitsAsync("", 0, 99999, CancellationToken.None);
+        var results = await GetFruitsAsync(id, "", 0, 99999, CancellationToken.None);
         var pageIndex = results.Item1
             .Select((value, index) => new { value.Key, Index = index })
             .FirstOrDefault(x => x.Key == id)?.Index / pageSize;
@@ -63,14 +65,14 @@
 
     async Task<(SortedDictionary<int, string>, int)> GetSelectedFruitsMultiselectAsync(List<int> selectedValues, int pageIndex, int pageSize, CancellationToken token)
     {
-        var allValues = await GetFruitsMultiselectAsync("", pageIndex, pageSize, token);
+        var allValues = await GetFruitsMultiselectAsync(selectedValues, "", pageIndex, pageSize, token);
         var results = allValues.Item1.Where(v => selectedValues.Contains(v.Key)).ToDictionary(k => k.Key, v => v.Value);
         foreach (var undefined in selectedValues.Where(v => !results.ContainsKey(v)))
             results.Add(undefined, $"Undefined ({undefined})");
         return (new SortedDictionary<int, string>(results), results.Count);
     }
 
-    async Task<(SortedDictionary<int, string>, int)> GetFruitsMultiselectAsync(string search, int pageIndex, int pageSize, CancellationToken token)
+    async Task<(SortedDictionary<int, string>, int)> GetFruitsMultiselectAsync(List<int> selectedValues, string search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(500, token);
         var results = new Dictionary<int, string>();
