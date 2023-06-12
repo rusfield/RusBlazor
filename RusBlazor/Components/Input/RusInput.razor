@@ -10,7 +10,7 @@
     <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="rus-input @ActiveClass()" disabled="@Disabled" />
     <div class="rus-input-subtext">
         <div style="padding-left: 6px;">
-            @HelperText
+            @ValueText
         </div>
     </div>
 </div>
@@ -26,7 +26,7 @@
     public EventCallback<string> InputChanged { get; set; }
 
     [Parameter]
-    public string HelperText { get; set; } = "Hello";
+    public string ValueText { get; set; } = "";
 
     [Parameter]
     public string Label { get; set; } = "Various Fruits";

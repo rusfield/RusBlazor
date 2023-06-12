@@ -1,64 +1,11 @@
-﻿@using RusBlazor.Components.Button
+﻿@using RusBlazor.Components.MultiSelect
 @typeparam T
-@inject IJSRuntime JSRuntime
 
+<RusMultiSelect T="T" Value="selectedValues" ValueChanged="SelectedValuesChanged" OverrideValueText="OverrideValueText" GetOptionsAsync="GetOptionsAsync" GetSelectedOptionsAsync="GetSelectedOptionsAsync"  />
 
-<div class="rus-flag-select">
-    <RusInput @ref="rusInput" TValue="string" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.ToString()} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" />
-    <RusMenu @ref="rusMenu" T="T">
-        @* IsOpenChanged="ShowMenuChanged"> *@
-        <MenuTopContent>
-            <RusMenuItem Hoverable="false">
-                <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:50%;height:30px;" OnClick="ShowSelectedAsync">
-                        @("Show selected")
-                    </RusButton>
-                    <RusButton Style="width:50%;height:30px;" OnClick="ShowAllAsync">
-                        @("Show all")
-                    </RusButton>
-                </div>
-            </RusMenuItem>
-        </MenuTopContent>
-        <MenuContent>
-            @if (loadingSearch)
-            {
-                <RusMenuItem Hoverable="false">
-                    <RusMenuItemContentLoading />
-                </RusMenuItem>
-            }
-            else if (!filteredItems.Any())
-            {
-                <RusMenuItem Hoverable="false">
-                    <RusMenuItemContentText Text="No results" />
-                </RusMenuItem>
-            }
-            else
-            {
-                foreach (var item in filteredItems)
-                {
-                    bool selected = selectedValues.Contains(item.Key);
-                    <RusMenuItem OnItemClick="@(async () => await SelectItemAsync(item.Key))" Class="@(selected ? "selected" : "")">
-                        <RusMenuItemContentKeyValue Key="@item.Key.ToString()" Value="@(item.Value)" Multiselect="true" Checked="@(selected)" />
-                    </RusMenuItem>
-                }
-            }
-        </MenuContent>
-        <MenuBottomContent>
-            <RusMenuItem Hoverable="false">
-                <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:50%; height:100%;" OnClick="SelectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
-                        @(filteredItems.Count == options?.Count ? "Select all" : "Select filtered")
-                    </RusButton>
-                    <RusButton Style="width:50%; height:100%;" OnClick="DeselectFilteredAsync" Disabled="loadingSearch || !filteredItems.Any()">
-                        @(filteredItems.Count == options?.Count ? "Deselect all" : "Deselect filtered")
-                    </RusButton>
-                </div>
-            </RusMenuItem>
-        </MenuBottomContent>
-    </RusMenu>
-</div>
 
 @code {
+
     [Parameter]
     public T Value { get; set; }
 
@@ -66,238 +13,28 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
+    public Func<string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
-    bool loadingComponent = true;
-    bool loadingSearch = false;
-    bool menuOpen = false;
-    string displayValue = "Loading";
-    string? lastVerifiedDisplayValue;
-    private Timer? searchTimer;
-    private CancellationTokenSource? cancellationTokenSource;
-    Dictionary<T, string>? options;
-    Dictionary<T, string> filteredItems = new();
+    [Parameter]
+    public Func<List<T>, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetSelectedOptionsAsync { get; set; }
+
     List<T> selectedValues = new();
-    RusInput<string>? rusInput;
-    RusMenu<T> rusMenu;
-    string? rusInputId;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnParametersSet()
     {
-        if (firstRender)
-        {
-            rusInputId = rusInput?.GetId() ?? "";
-            selectedValues.GetFlagsByValue(Value);
-
-            // Set default value
-            if(selectedValues.Count != 1)
-            {
-                SetDisplayText();
-            }
-            else
-            {
-                // If only 1 selected, load and display the actual value
-                (var currentValue, var unusedCount) = await GetOptionsAsync(Value.ToString(), 0, 1, CancellationToken.None);
-                if (currentValue.ContainsKey(Value))
-                {
-                    displayValue = currentValue[Value];
-                }
-                else
-                {
-                    displayValue = $"Unknown ({Value})";
-                }
-                lastVerifiedDisplayValue = displayValue;
-            }
-
-            loadingComponent = false;
-            this.StateHasChanged();
-        }
-        await base.OnAfterRenderAsync(firstRender);
+        selectedValues.GetFlagsByValue(Value);
+        base.OnParametersSet();
     }
 
-    void OnFocus()
+    void SelectedValuesChanged(List<T> newValues)
     {
-        // Element may be re-focused from clicking in menu too.
-        if (!menuOpen)
-        {
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken cancellationToken = cancellationTokenSource.Token;
-
-            Task.Run(async () =>
-            {
-                await UpdateListAsync("", cancellationToken);
-            });
-        }
-    }
-
-    void OnBlur()
-    {
-        cancellationTokenSource?.Cancel();
-    }
-
-    void InputChanged(string input)
-    {
-        cancellationTokenSource?.Cancel();
-        cancellationTokenSource = new CancellationTokenSource();
-        CancellationToken cancellationToken = cancellationTokenSource.Token;
-
-        searchTimer?.Dispose();
-        searchTimer = new Timer(async (state) =>
-        {
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                await UpdateListAsync(input, cancellationToken);
-            }
-        }, null, 150, Timeout.Infinite);
-    }
-
-    async Task UpdateListAsync(string search, CancellationToken token)
-    {
-        loadingSearch = true;
-        await rusMenu.OpenAsync();
-        await InvokeAsync(StateHasChanged);
-        try
-        {
-            filteredItems = await SearchAsync(search, token);
-        }
-        catch (OperationCanceledException e)
-        {
-            // Search cancelled
-        }
-        loadingSearch = false;
-        await InvokeAsync(StateHasChanged);
-    }
-
-    async Task ShowSelectedAsync()
-    {
-        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
-        filteredItems = options.Where(o => selectedValues.Contains(o.Key)).ToDictionary(k => k.Key, v => v.Value);
-    }
-
-    async Task ShowAllAsync()
-    {
-        filteredItems = new(options);
-        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
-    }
-
-    async Task SelectFilteredAsync()
-    {
-        foreach (var item in filteredItems)
-        {
-            if (!selectedValues.Contains(item.Key))
-                selectedValues.Add(item.Key);
-        }
-        if (selectedValues.TrySum<T>(out var sum))
-        {
-            Value = sum;
-            SetDisplayText();
-            await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
-        }
-    }
-
-    async Task DeselectFilteredAsync()
-    {
-        foreach (var item in filteredItems)
-        {
-            if (selectedValues.Contains(item.Key))
-                selectedValues.Remove(item.Key);
-        }
-        if (selectedValues.TrySum<T>(out var sum))
-        {
-            Value = sum;
-            SetDisplayText();
-            await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
-        }
-    }
-
-    async Task SelectItemAsync(T key)
-    {
-        // Toggle whether key is added or removed
-        if (selectedValues.Contains(key))
-        {
-            selectedValues.Remove(key);
-        }
-        else
-        {
-            selectedValues.Add(key);
-        }
-
+        selectedValues = newValues;
         Value = selectedValues.GetValueByFlags();
-        SetDisplayText();
-
-        await ValueChanged.InvokeAsync(Value);
-        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+        ValueChanged.InvokeAsync(Value);
     }
 
-    void ShowMenuChanged(bool showMenu)
+    string OverrideValueText(List<T> selectedValues)
     {
-        if (!showMenu)
-            displayValue = lastVerifiedDisplayValue;
-        menuOpen = showMenu;
-    }
-
-    async Task<Dictionary<T, string>> SearchAsync(string input, CancellationToken token)
-    {
-        if (options == null)
-        {
-            // a pagesize for flags will at most be the number of times ulong can be multiplied by 2, which is around 64-65. 100 is thus more than enough.
-            (var validOptions, int unusedCount) = await GetOptionsAsync.Invoke("", 0, 100, token);
-            token.ThrowIfCancellationRequested();
-
-            options = new();
-
-            // Remove key 0. This is handled by menu automatically.
-            if (typeof(T).IsWholeNumberType() && options.ContainsKey(default(T)))
-                options.Remove(default(T));
-
-            foreach (var validOption in validOptions)
-                options[validOption.Key] = validOption.Value;
-
-            if (typeof(T).IsWholeNumberType() && typeof(T).TryGetMaxValue<T>(out var maxValue))
-            {
-                var undefinedOptions = new List<T>();
-                undefinedOptions.GetFlagsByValue(maxValue);
-                foreach (var undefinedOption in undefinedOptions)
-                    if (!options.ContainsKey(undefinedOption))
-                        options[undefinedOption] = $"Undefined ({undefinedOption})";
-            }
-        }
-
-        var results = new Dictionary<T, string>();
-        var keyMatches = new List<T>();
-        if (typeof(T).IsWholeNumberType() && input.TryParseAsT<T>(out var value))
-        {
-            keyMatches.GetFlagsByValue(value);
-        }
-        keyMatches.AddRange(options.Where(v => v.Value.Contains(input, StringComparison.InvariantCultureIgnoreCase)).Select(k => k.Key));
-
-        token.ThrowIfCancellationRequested();
-        foreach (var match in keyMatches)
-        {
-            if (options.ContainsKey(match))
-                results[match] = options[match];
-            else
-                results[match] = new("Undefined");
-        }
-
-        return results;
-    }
-
-    void SetDisplayText()
-    {
-        if (selectedValues.Count == 0)
-        {
-            displayValue = "None";
-        }
-        else if (selectedValues.Count == 1)
-        {
-            displayValue = options?[selectedValues.First()];
-        }
-        else
-        {
-            displayValue = $"{selectedValues.Count} selected";
-        }
-        lastVerifiedDisplayValue = displayValue;
+        return Value.ToString();
     }
 }

@@ -4,7 +4,7 @@
 
 
 <div class="rus-multiselect">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" HelperText="@($"{Value.Count} ({typeof(T).ToTypeDisplayName()})")" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetValueText())" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" />
     <RusMenu T="T" @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
@@ -78,13 +78,13 @@
     public EventCallback<List<T>> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
+    public Func<string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter]
-    public Func<List<T>, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetSelectedOptionsAsync { get; set; }
+    public Func<List<T>, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetSelectedOptionsAsync { get; set; }
 
-    [Parameter]
-    public bool AllowUndefinedValues { get; set; } = true;
+    [Parameter] // Set to override how value is displayed. Default is "xxx yyy zzz".
+    public Func<List<T>, string> OverrideValueText { get; set; }
 
     bool loadingComponent = true;
     bool loadingSearch = false;
@@ -98,7 +98,7 @@
     int resultCount = -1;
     Timer? searchTimer;
     CancellationTokenSource? cancellationTokenSource;
-    Dictionary<T, string> filteredItems = new();
+    SortedDictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
     RusInput<string>? rusInput;
     string? rusInputId;
@@ -203,8 +203,8 @@
             if (GetOptionsAsync != null)
                 (filteredItems, resultCount) = await GetOptionsAsync.Invoke(search, currentPageIndex, pageSize, token);
 
-            // Search for custom values on first page
-            if (AllowUndefinedValues && currentPageIndex == 0 && search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
+            // TODO: Remove after undefined values can come from backend
+            if (currentPageIndex == 0 && search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
                 filteredItems.Add(value, $"Undefined ({value})");
         }
         catch (OperationCanceledException e)
@@ -358,4 +358,12 @@
         buttonDescription = new("&nbsp;");
     }
 
+    string GetValueText()
+    {
+        if(OverrideValueText != null)
+        {
+            return OverrideValueText(Value);
+        }
+        return string.Join(", ", Value);
+    }
 }

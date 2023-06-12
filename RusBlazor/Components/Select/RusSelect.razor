@@ -3,7 +3,7 @@
 @inject IJSRuntime JSRuntime
 
 <div class="rus-select">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" ValueText="@(Value.ToString())" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" />
     <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
         <MenuContent>
             @if (loadingSearch)
@@ -55,7 +55,7 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<string, int, int, CancellationToken, Task<(Dictionary<T, string>, int)>> GetOptionsAsync { get; set; }
+    public Func<string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter] // Used to navigate to the page where selected value is.
     public Func<T, int, Task<int>> GetPageIndexByIdAsync { get; set; } = (_, __) => Task.FromResult(0);
@@ -72,7 +72,7 @@
     string lastInput = "";
     private Timer? searchTimer;
     private CancellationTokenSource? cancellationTokenSource;
-    Dictionary<T, string> filteredItems = new();
+    SortedDictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
     RusInput<string>? rusInput;
     int pageSize = 15;
