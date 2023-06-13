@@ -6,7 +6,7 @@
 
 @if (IsOpen)
 {
-    <div class="@("rus-menu")" style="@($"{StateStyle()} {AnchorStyle()}")" id="@(parentContainerId)">
+    <div class="@("rus-menu")" style="@($"{AnchorStyle()}")" id="@(parentContainerId)">
 
         @if (MenuTopContent != null)
         {
@@ -30,13 +30,13 @@
         }
 
     </div>
-    <RusBackgroundOverlay OnClick="CloseAsync" />
+    <RusBackgroundOverlay OnClick="CloseAsync" Vislbie="showOverlay"/>
 }
 
 
 @code {
     [Parameter]
-    public bool IsOpen { get; set; }
+    public bool IsOpen { get; set; } = false;
 
     [Parameter]
     public EventCallback<(bool, int)> IsOpenChanged { get; set; }
@@ -57,6 +57,7 @@
     string parentContainerId;
     int animationDurationMs = 200;
     int dropdownHeight = 240;
+    bool showOverlay;
 
     protected override void OnInitialized()
     {
@@ -81,23 +82,20 @@
         };
     }
 
-    string StateStyle()
-    {
-        return IsOpen ? "display:block;" : "display:none;";
-    }
-
     public async Task OpenAsync()
     {
         if (!IsOpen)
         {
+            showOverlay = true;
+            IsOpen = true;
+            await InvokeAsync(StateHasChanged);
+            await JSRuntime.InvokeVoidAsync("addAndRemoveClass", id, "loading", animationDurationMs);
             await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
             await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
-
             await InvokeAsync(async () =>
             {
                 await IsOpenChanged.InvokeAsync((true, animationDurationMs));
             });
-            IsOpen = true;
         }
         else
         {
@@ -113,6 +111,7 @@
     {
         if (IsOpen)
         {
+            showOverlay = false;
             await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
             await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);
 

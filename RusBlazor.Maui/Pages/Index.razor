@@ -80,11 +80,18 @@
         foreach (var item in items)
         {
             token.ThrowIfCancellationRequested();
+            if (search == null)
+            {
+                results[id] = item;
+                continue;
+            }
+            
+
             if (item.Contains(search, StringComparison.InvariantCultureIgnoreCase))
-                results.Add(id, item);
+                results[id] = item;
 
             if (search.TryParseAsT<int>(out var value) && id == value && !results.ContainsKey(value))
-                results.Add(id, item);
+                results[id] = item;
 
             id = id * 2;
         }

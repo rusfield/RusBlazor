@@ -84,7 +84,6 @@ window.animateProperty = (elementId, property, startValue, endValue, durationMs,
     ongoingAnimations[elementId][property] = window.requestAnimationFrame(frame);
 };
 
-
 window.toggleDropdownHeight = (elementId, isOpen, height, durationMs) => {
     const startHeight = isOpen ? 0 : height;
     const endHeight = isOpen ? height : 0;
@@ -95,4 +94,15 @@ window.toggleDropdownOpacity = (elementId, isOpen, durationMs) => {
     const startOpacity = isOpen ? 0 : 1;
     const endOpacity = isOpen ? 1 : 0;
     window.animateProperty(elementId, 'opacity', startOpacity, endOpacity, durationMs);
+};
+
+
+
+window.addAndRemoveClass = (elementId, className, duration) => {
+    let element = document.getElementById(elementId);
+    element.classList.add(className);
+
+    setTimeout(() => {
+        element.classList.remove(className);
+    }, duration);
 };

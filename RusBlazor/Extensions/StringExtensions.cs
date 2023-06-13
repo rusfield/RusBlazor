@@ -13,6 +13,9 @@ namespace RusBlazor.Extensions
             var type = typeof(T);
             value = default;
 
+            if (string.IsNullOrWhiteSpace(str))
+                return false;
+
             var tryParseMethod = type.GetMethod("TryParse", new[] { typeof(string), type.MakeByRefType() });
 
             if (tryParseMethod != null)

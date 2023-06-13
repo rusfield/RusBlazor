@@ -4,7 +4,7 @@
 
 
 <div class="rus-multiselect">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetValueText())" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" Label="@Label" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetValueText())" Disabled="loadingComponent" Active="inputActive" Label="@Label" />
     <RusMenu T="T" @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">

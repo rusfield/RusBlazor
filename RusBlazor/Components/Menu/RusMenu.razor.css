@@ -1,6 +1,6 @@
 .rus-menu {
     position: absolute;
-    z-index: 2;
+    z-index: var(--zindex-menu);
     width: calc(100% - 8px);
     padding: 4px; /* Adding padding equivalent to the border width */
     box-shadow: 0px 15px 50px 0px rgba(0,0,0,0.4);
@@ -16,7 +16,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: -1;
+        z-index: var(--zindex-menu-bg);
         background-color: #2a2a72; /* fallback */
         background: linear-gradient(to bottom left, #333333, #204593, #009ffd);
     }
@@ -26,6 +26,8 @@
 .rus-menu-top {
     background-color: #424242;
     border-radius: 6px;
+    z-index: var( --zindex-menu);
+    position: relative;
 }
 
 .rus-menu-dropdown {
@@ -34,9 +36,22 @@
     margin-left: 4px;
     margin-right: 4px;
     box-shadow: inset 0 0 10px #000000;
+    z-index: var( --zindex-menu);
+    position: relative;
 }
+
+    .rus-menu-dropdown.loading {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+        .rus-menu-dropdown.loading::-webkit-scrollbar {
+            display: none;
+        }
 
 .rus-menu-bottom {
     background-color: #424242;
     border-radius: 6px;
+    z-index: var( --zindex-menu);
+    position: relative;
 }

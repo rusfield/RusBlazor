@@ -1,0 +1,6 @@
+:root {
+    --zindex-background-overlay: 100;
+    --zindex-input-active: 105;
+    --zindex-menu-bg: 109;
+    --zindex-menu: 110;
+}
