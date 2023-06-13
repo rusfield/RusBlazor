@@ -3,21 +3,21 @@
 @page "/"
 
 
-<RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" Value="2" />
+<RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" Value="2" Label="Single Select" />
 <br />
 <br />
 <br />
 <br />
 <br />
 <br />
-<RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="3" />
+<RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="3" Label="Flag Select" />
 <br />
 <br />
 <br />
 <br />
 <br />
 <br />
-<RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="@(new() { 1, 3 })" />
+<RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="@(new() { 1, 3 })" Label="Multiselect" />
 <br />
 <br />
 <br />

@@ -4,38 +4,40 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="@("rus-menu")" style="@($"{StateStyle()} {AnchorStyle()}")" id="@(parentContainerId)">
-
-    @if (MenuTopContent != null)
-    {
-        <div class="rus-menu-top">
-            @MenuTopContent
-        </div>
-    }
-
-    @if (MenuContent != null)
-    {
-        <div class="rus-menu-dropdown" id="@id">
-            @MenuContent
-        </div>
-    }
-
-    @if (MenuBottomContent != null)
-    {
-        <div class="rus-menu-bottom">
-            @MenuBottomContent
-        </div>
-    }
-
-</div>
-
-@if (isOpen)
+@if (IsOpen)
 {
+    <div class="@("rus-menu")" style="@($"{StateStyle()} {AnchorStyle()}")" id="@(parentContainerId)">
+
+        @if (MenuTopContent != null)
+        {
+            <div class="rus-menu-top">
+                @MenuTopContent
+            </div>
+        }
+
+        @if (MenuContent != null)
+        {
+            <div class="rus-menu-dropdown" id="@id" style="@($"height:{dropdownHeight}px;")">
+                @MenuContent
+            </div>
+        }
+
+        @if (MenuBottomContent != null)
+        {
+            <div class="rus-menu-bottom">
+                @MenuBottomContent
+            </div>
+        }
+
+    </div>
     <RusBackgroundOverlay OnClick="CloseAsync" />
 }
 
 
 @code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
     [Parameter]
     public EventCallback<(bool, int)> IsOpenChanged { get; set; }
 
@@ -55,7 +57,6 @@
     string parentContainerId;
     int animationDurationMs = 200;
     int dropdownHeight = 240;
-    bool isOpen = false;
 
     protected override void OnInitialized()
     {
@@ -82,12 +83,12 @@
 
     string StateStyle()
     {
-        return isOpen ? "display:block;" : "display:none;";
+        return IsOpen ? "display:block;" : "display:none;";
     }
 
     public async Task OpenAsync()
     {
-        if (!isOpen)
+        if (!IsOpen)
         {
             await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
             await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
@@ -96,13 +97,21 @@
             {
                 await IsOpenChanged.InvokeAsync((true, animationDurationMs));
             });
-            isOpen = true;
+            IsOpen = true;
+        }
+        else
+        {
+            // Trigger for outside components
+            await InvokeAsync(async () =>
+            {
+                await IsOpenChanged.InvokeAsync((true, 0));
+            });
         }
     }
 
     public async Task CloseAsync()
     {
-        if (isOpen)
+        if (IsOpen)
         {
             await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
             await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);
@@ -112,7 +121,15 @@
                 await IsOpenChanged.InvokeAsync((false, animationDurationMs));
             });
             await Task.Delay(animationDurationMs);
-            isOpen = false;
+            IsOpen = false;
+        }
+        else
+        {
+            // Trigger for outside components
+            await InvokeAsync(async () =>
+            {
+                await IsOpenChanged.InvokeAsync((false, 0));
+            });
         }
     }
 

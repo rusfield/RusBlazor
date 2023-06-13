@@ -4,7 +4,7 @@
 
 
 <div class="rus-multiselect">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetValueText())" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetValueText())" Disabled="loadingComponent" Style="@(menuOpen ? "z-index: 2;" : "")" Active="inputActive" Label="@Label" />
     <RusMenu T="T" @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
@@ -85,6 +85,9 @@
 
     [Parameter] // Set to override how value is displayed. Default is "xxx yyy zzz".
     public Func<List<T>, string> OverrideValueText { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
 
     bool loadingComponent = true;
     bool loadingSearch = false;

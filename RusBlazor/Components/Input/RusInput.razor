@@ -7,11 +7,9 @@
     @Label
 </div>
 <div class="@($"rus-input-container {Class}")" style="@(Style)" @onclick="FocusInputAsync">
-    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="rus-input @ActiveClass()" disabled="@Disabled" />
-    <div class="rus-input-subtext">
-        <div style="padding-left: 6px;">
-            @ValueText
-        </div>
+    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input {ActiveClass()}")" disabled="@Disabled" />
+    <div class="@($"rus-input-subtext {ActiveClass()}")">
+        @ValueText
     </div>
 </div>
 
@@ -29,7 +27,7 @@
     public string ValueText { get; set; } = "";
 
     [Parameter]
-    public string Label { get; set; } = "Various Fruits";
+    public string Label { get; set; } = "";
 
     [Parameter]
     public bool Disabled { get; set; } = false;

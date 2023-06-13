@@ -1,13 +1,84 @@
 ﻿@using RusBlazor.Components.Select
+@using RusBlazor.Components.Menu
 
 @inherits TestContext
 
 @code {
+    SortedDictionary<int, string> testData = new SortedDictionary<int, string>()
+    {
+        { 1, "Item 1" },
+        { 2, "Item 2" },
+        { 3, "Item 3" }
+    };
+
     [Fact]
     public void RendersCorrectly()
     {
-        int currentValue = 123;
-        var cut = Render(@<RusSelect T="int" @bind-Value="currentValue" />);
-        cut.MarkupMatches(@<div class="rus-select"></div>);
+        var tcs = new TaskCompletionSource<(SortedDictionary<int, string>, int)>();
+        Func<int, string, int, int, CancellationToken, Task<(SortedDictionary<int, string>, int)>> getOptionsAsync = (selectedValue, search, pageIndex, pageSize, ct) => tcs.Task;
+        int currentValue = 1;
+        string label = "Test label";
+
+        var cut = Render(
+            @<RusSelect T="int" @bind-Value="currentValue" GetOptionsAsync="getOptionsAsync" Label="@(label)" />
+        );
+
+        cut.MarkupMatches(
+    @<div class="rus-select">
+        <div class="rus-input-label">@label</div>
+        <div class="rus-input-container" style="">
+            <input id:ignore class="rus-input inactive" disabled value:ignore>
+            <div class="rus-input-subtext inactive">@currentValue</div>
+        </div>
+    </div>
+    );
+    }
+
+    [Fact]
+    public void RenderLoadFirstValueState()
+    {
+        int currentValue = 1;
+        var tcs = new TaskCompletionSource<(SortedDictionary<int, string>, int)>();
+        Func<int, string, int, int, CancellationToken, Task<(SortedDictionary<int, string>, int)>> getOptionsAsync = (selectedValue, search, pageIndex, pageSize, ct) => tcs.Task;
+        var cut = Render(
+        @<RusSelect T="int" @bind-Value="currentValue" GetOptionsAsync="getOptionsAsync" />
+    );
+
+        cut.FindComponent<RusSelect<int>>().Render();
+        cut.Find(".rus-input").MarkupMatches(
+        @<input id:ignore class:ignore disabled value="Loading">
+        );
+    }
+
+    [Fact]
+    public void RenderValidFirstValueState()
+    {
+        int currentValue = 1;
+        var tcs = new TaskCompletionSource<(SortedDictionary<int, string>, int)>();
+        Func<int, string, int, int, CancellationToken, Task<(SortedDictionary<int, string>, int)>> getOptionsAsync = (selectedValue, search, pageIndex, pageSize, ct) => tcs.Task;
+        var cut = Render(
+        @<RusSelect T="int" @bind-Value="currentValue" GetOptionsAsync="getOptionsAsync" />
+        );
+        tcs.SetResult((testData, testData.Count));
+        cut.FindComponent<RusSelect<int>>().Render();
+        cut.Find(".rus-input").MarkupMatches(
+        @<input id:ignore class:ignore value="@(testData[currentValue])">
+        );
+    }
+
+    [Fact]
+    public void RenderInvalidFirstValueState()
+    {
+        int currentValue = -1;
+        var tcs = new TaskCompletionSource<(SortedDictionary<int, string>, int)>();
+        Func<int, string, int, int, CancellationToken, Task<(SortedDictionary<int, string>, int)>> getOptionsAsync = (selectedValue, search, pageIndex, pageSize, ct) => tcs.Task;
+        var cut = Render(
+        @<RusSelect T="int" @bind-Value="currentValue" GetOptionsAsync="getOptionsAsync" />
+    );
+        tcs.SetResult((testData, testData.Count));
+        cut.FindComponent<RusSelect<int>>().Render();
+        cut.Find(".rus-input").MarkupMatches(
+        @<input id:ignore class:ignore value="@($"Unknown ({currentValue})")">
+        );
     }
 }

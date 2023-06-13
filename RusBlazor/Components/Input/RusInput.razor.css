@@ -3,15 +3,20 @@
     border-radius: 5px;
     background-color: #424242;
     cursor: text;
-    padding: 4px;
     height: 38px;
     overflow: hidden;
-    padding-left: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
     .rus-input-container:hover > .rus-input {
         height: 26px;
         font-size: 1rem;
+    }
+
+    .rus-input-container:hover > .rus-input-subtext {
+        width: calc(100% - 16px - 6px); /* margin x 2 and padding */
+        margin-left: 8px;
     }
 
 
@@ -26,6 +31,8 @@
     height: 42px;
     font-size: 1.2rem;
     width: 240px; /* Temp */
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
     .rus-input.active {
@@ -38,6 +45,13 @@
     border-top: 1px solid #b3b3b3;
     font-size: 0.6rem;
     color: #b3b3b3;
+    transition: all 0.2s ease;
+    padding-left: 6px;
+}
+
+.rus-input-subtext.active {
+    width: calc(100% - 16px - 6px); /* margin x 2 and padding */
+    margin-left: 8px;
 }
 
 .rus-input-label {
