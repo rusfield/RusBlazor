@@ -1,0 +1,89 @@
+﻿@using RusBlazor.Components.FlagSelect
+@using MockData
+
+@inherits TestContext
+
+@code {
+    SortedDictionary<int, string> _testData;
+    TaskCompletionSource<(SortedDictionary<int, string>, int)> _tcs;
+    Func<List<int>, string, int, int, CancellationToken, Task<(SortedDictionary<int, string>, int)>> _getOptionsAsync;
+    int _selectedValue;
+
+    public RusFlagSelectTests()
+    {
+        SetupVariables(0);
+    }
+
+    void SetupVariables(int selectedValue)
+    {
+        _testData = MockDataHelper.BuildDummyData(0, 5, true);
+        _tcs = new TaskCompletionSource<(SortedDictionary<int, string>, int)>();
+        _getOptionsAsync = (selectedValues, search, pageIndex, pageSize, ct) => _tcs.Task;
+        _selectedValue = selectedValue;
+    }
+
+    [Fact]
+    public void RendersCorrectly()
+    {
+        SetupVariables(1);
+        string label = "Test label";
+
+        var cut = Render(
+            @<RusFlagSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" Label="@(label)" />
+    );
+
+        cut.MarkupMatches(
+    @<div class="rus-multiselect">
+        <div class="rus-input-label">@label</div>
+        <div class="rus-input-container" style="">
+            <input id:ignore class="rus-input inactive" disabled value:ignore>
+            <div class="rus-input-subtext inactive">@_selectedValue</div>
+        </div>
+    </div>
+    );
+    }
+
+    [Fact]
+    public void RenderLoadFirstValueState()
+    {
+        SetupVariables(1);
+        var cut = Render(
+        @<RusFlagSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" />
+    );
+
+        cut.FindComponent<RusFlagSelect<int>>().Render();
+        cut.Find(".rus-input").MarkupMatches(
+        @<input id:ignore class:ignore disabled value="Loading">
+        );
+    }
+
+    [Fact]
+    public void RenderValidFirstValueState()
+    {
+        SetupVariables(1);
+        var cut = Render(
+        @<RusFlagSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" />
+        );
+        _tcs.SetResult((_testData, _testData.Count));
+        cut.FindComponent<RusFlagSelect<int>>().Render();
+        cut.Find(".rus-input").MarkupMatches(
+        @<input id:ignore class:ignore value="@(_testData[_selectedValue])">
+        );
+    }
+
+    [Fact]
+    public void RenderInvalidFirstValueState()
+    {
+        // Invalid values should not really happen. However, to force it to happen, the selected value must be higher than any value available.
+        // However, backend should handle unknown values through the SelectedValues parameter in the GetOptionsAsync.
+        SetupVariables(16);
+        var cut = Render(
+        @<RusFlagSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" />
+    );
+        _tcs.SetResult((_testData, _testData.Count));
+        cut.FindComponent<RusFlagSelect<int>>().Render();
+        cut.Find(".rus-input").MarkupMatches(
+        @<input id:ignore class:ignore value="@($"Unknown ({_selectedValue})")">
+        );
+    }
+}
