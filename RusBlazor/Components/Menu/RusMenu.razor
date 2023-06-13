@@ -59,11 +59,10 @@
     int dropdownHeight = 240;
     bool showOverlay;
 
-    protected override void OnInitialized()
+    public RusMenu()
     {
         id = Guid.NewGuid().ToString();
         parentContainerId = Guid.NewGuid().ToString();
-        base.OnInitialized();
     }
 
     string AnchorStyle()
