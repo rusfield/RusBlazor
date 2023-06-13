@@ -31,4 +31,9 @@
     <ProjectReference Include="..\RusBlazor\RusBlazor.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\FlagSelect\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,7 @@
 ﻿@using RusBlazor.Components.MultiSelect
 @typeparam T
 
-<RusMultiSelect T="T" Value="selectedValues" ValueChanged="SelectedValuesChanged" OverrideValueText="OverrideValueText" GetOptionsAsync="GetOptionsAsync" GetSelectedOptionsAsync="GetSelectedOptionsAsync" Label="@Label"  />
+<RusMultiSelect T="T" Value="selectedValues" ValueChanged="SelectedValuesChanged" OverrideValueText="OverrideValueText" GetOptionsAsync="GetOptionsAsync" Label="@Label"  />
 
 
 @code {
@@ -13,10 +13,7 @@
     public EventCallback<T> ValueChanged { get; set; }
 
     [Parameter]
-    public Func<List<T>, string, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
-
-    [Parameter]
-    public Func<List<T>, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetSelectedOptionsAsync { get; set; }
+    public Func<List<T>, string?, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
 
     [Parameter]
     public string Label { get; set; }

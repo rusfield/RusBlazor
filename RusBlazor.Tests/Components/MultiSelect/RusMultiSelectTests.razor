@@ -1,4 +1,4 @@
-﻿@using RusBlazor.Components.Select
+﻿@using RusBlazor.Components.MultiSelect
 @using MockData
 
 @inherits TestContext
@@ -6,20 +6,20 @@
 @code {
     SortedDictionary<int, string> _testData;
     TaskCompletionSource<(SortedDictionary<int, string>, int)> _tcs;
-    Func<int, string, int, int, CancellationToken, Task<(SortedDictionary<int, string>, int)>> _getOptionsAsync;
-    int _selectedValue;
+    Func<List<int>, string, int, int, CancellationToken, Task<(SortedDictionary<int, string>, int)>> _getOptionsAsync;
+    List<int> _selectedValues;
 
-    public RusSelectTests()
+    public RusMultiSelectTests()
     {
         SetupVariables(0);
     }
 
-    void SetupVariables(int selectedValue)
+    void SetupVariables(params int[] selectedValues)
     {
         _testData = MockDataHelper.BuildDummyData(0, 5, false);
         _tcs = new TaskCompletionSource<(SortedDictionary<int, string>, int)>();
-        _getOptionsAsync = (selectedValue, search, pageIndex, pageSize, ct) => _tcs.Task;
-        _selectedValue = selectedValue;
+        _getOptionsAsync = (selectedValues, search, pageIndex, pageSize, ct) => _tcs.Task;
+        _selectedValues = new(selectedValues);
     }
 
     [Fact]
@@ -29,18 +29,18 @@
         string label = "Test label";
 
         var cut = Render(
-            @<RusSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" Label="@(label)" />
+            @<RusMultiSelect T="int" @bind-Value="_selectedValues" GetOptionsAsync="_getOptionsAsync" Label="@(label)" />
         );
 
         cut.MarkupMatches(
-    @<div class="rus-select">
+    @<div class="rus-multiselect">
         <div class="rus-input-label">@label</div>
         <div class="rus-input-container" style="">
             <input id:ignore class="rus-input inactive" disabled value:ignore>
-            <div class="rus-input-subtext inactive">@_selectedValue</div>
+            <div class="rus-input-subtext inactive">@string.Join(", ", _selectedValues)</div>
         </div>
     </div>
-    );
+        );
     }
 
     [Fact]
@@ -48,13 +48,13 @@
     {
         SetupVariables(1);
         var cut = Render(
-        @<RusSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" />
-    );
+        @<RusMultiSelect T="int" @bind-Value="_selectedValues" GetOptionsAsync="_getOptionsAsync" />
+        );
 
-        cut.FindComponent<RusSelect<int>>().Render();
+        cut.FindComponent<RusMultiSelect<int>>().Render();
         cut.Find(".rus-input").MarkupMatches(
         @<input id:ignore class:ignore disabled value="Loading">
-        );
+    );
     }
 
     [Fact]
@@ -62,13 +62,13 @@
     {
         SetupVariables(1);
         var cut = Render(
-        @<RusSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" />
-        );
+        @<RusMultiSelect T="int" @bind-Value="_selectedValues" GetOptionsAsync="_getOptionsAsync" />
+    );
         _tcs.SetResult((_testData, _testData.Count));
-        cut.FindComponent<RusSelect<int>>().Render();
+        cut.FindComponent<RusMultiSelect<int>>().Render();
         cut.Find(".rus-input").MarkupMatches(
-        @<input id:ignore class:ignore value="@(_testData[_selectedValue])">
-        );
+        @<input id:ignore class:ignore value="@(_testData[1])">
+    );
     }
 
     [Fact]
@@ -76,12 +76,12 @@
     {
         SetupVariables(-1);
         var cut = Render(
-        @<RusSelect T="int" @bind-Value="_selectedValue" GetOptionsAsync="_getOptionsAsync" />
-    );
+        @<RusMultiSelect T="int" @bind-Value="_selectedValues" GetOptionsAsync="_getOptionsAsync" />
+        );
         _tcs.SetResult((_testData, _testData.Count));
-        cut.FindComponent<RusSelect<int>>().Render();
+        cut.FindComponent<RusMultiSelect<int>>().Render();
         cut.Find(".rus-input").MarkupMatches(
-        @<input id:ignore class:ignore value="@($"Unknown ({_selectedValue})")">
+        @<input id:ignore class:ignore value="@($"Unknown (-1)")">
         );
     }
 }

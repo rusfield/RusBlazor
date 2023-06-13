@@ -10,14 +10,14 @@
 <br />
 <br />
 <br />
-<RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="3" Label="Flag Select" />
+<RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" Value="1" Label="Flag Select" />
 <br />
 <br />
 <br />
 <br />
 <br />
 <br />
-<RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" GetSelectedOptionsAsync="GetSelectedFruitsMultiselectAsync" Value="@(new() { 1, 3 })" Label="Multiselect" />
+<RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" Value="@(new() { 1 })" Label="Multiselect" />
 <br />
 <br />
 <br />
@@ -31,7 +31,7 @@
     private int selectedItem = 0;
     private IEnumerable<string> selectedItems = new List<string>();
 
-    async Task<(SortedDictionary<int, string>, int)> GetFruitsAsync(int selectedValue, string search, int pageIndex, int pageSize, CancellationToken token)
+    async Task<(SortedDictionary<int, string>, int)> GetFruitsAsync(int selectedValue, string? search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(1000, token);
         var results = new SortedDictionary<int, string>();
@@ -72,7 +72,7 @@
         return (new SortedDictionary<int, string>(results), results.Count);
     }
 
-    async Task<(SortedDictionary<int, string>, int)> GetFruitsMultiselectAsync(List<int> selectedValues, string search, int pageIndex, int pageSize, CancellationToken token)
+    async Task<(SortedDictionary<int, string>, int)> GetFruitsMultiselectAsync(List<int> selectedValues, string? search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(500, token);
         var results = new Dictionary<int, string>();
