@@ -96,7 +96,6 @@
     int pageSize = 15;
     int currentPageIndex = 0;
     int resultCount = -1;
-    Timer? searchTimer;
     CancellationTokenSource? cancellationTokenSource;
     SortedDictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
@@ -176,20 +175,28 @@
         menuOpen = showMenu;
     }
 
-    void InitSearch(int searchDelayMs)
+    async void InitSearch(int searchDelayMs)
     {
         cancellationTokenSource?.Cancel();
         cancellationTokenSource = new CancellationTokenSource();
         CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-        searchTimer?.Dispose();
-        searchTimer = new Timer(async (state) =>
+        try
         {
+
+
+            if (searchDelayMs > 0)
+                await Task.Delay(searchDelayMs, cancellationToken);
+
             if (!cancellationToken.IsCancellationRequested)
             {
                 await SearchAsync(cancellationToken);
             }
-        }, null, searchDelayMs, Timeout.Infinite);
+        }
+        catch (OperationCanceledException)
+        {
+            // Search cancelled cancelled
+        }
     }
 
     async Task SearchAsync(CancellationToken token)
@@ -361,7 +368,7 @@
 
     string GetValueText()
     {
-        if(OverrideValueText != null)
+        if (OverrideValueText != null)
         {
             return OverrideValueText(Value);
         }

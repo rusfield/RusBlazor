@@ -30,7 +30,7 @@
         }
 
     </div>
-    <RusBackgroundOverlay OnClick="CloseAsync" Vislbie="showOverlay"/>
+    <RusBackgroundOverlay OnClick="CloseAsync" />
 }
 
 
@@ -57,7 +57,6 @@
     string parentContainerId;
     int animationDurationMs = 200;
     int dropdownHeight = 240;
-    bool showOverlay;
 
     public RusMenu()
     {
@@ -83,26 +82,25 @@
 
     public async Task OpenAsync()
     {
-        if (!IsOpen)
+        var alreadyOpen = IsOpen;
+
+        IsOpen = true;
+
+        await InvokeAsync(async () =>
         {
-            showOverlay = true;
-            IsOpen = true;
-            await InvokeAsync(StateHasChanged);
-            await JSRuntime.InvokeVoidAsync("addAndRemoveClass", id, "loading", animationDurationMs);
-            await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, true, dropdownHeight, animationDurationMs);
-            await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, true, animationDurationMs);
-            await InvokeAsync(async () =>
-            {
-                await IsOpenChanged.InvokeAsync((true, animationDurationMs));
-            });
-        }
-        else
+            await IsOpenChanged.InvokeAsync((true, animationDurationMs));
+        });
+
+        if (!alreadyOpen)
         {
-            // Trigger for outside components
-            await InvokeAsync(async () =>
+            var functionSpecs = new object[]
             {
-                await IsOpenChanged.InvokeAsync((true, 0));
-            });
+                new { name = "toggleDropdownHeight", args = new object[] { id, true, dropdownHeight, animationDurationMs } },
+                new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, true, animationDurationMs } }
+            };
+
+            await JSRuntime.InvokeVoidAsync("executeMultipleFunctions", new object[] { functionSpecs });
+
         }
     }
 
@@ -110,9 +108,13 @@
     {
         if (IsOpen)
         {
-            showOverlay = false;
-            await JSRuntime.InvokeVoidAsync("toggleDropdownHeight", id, false, dropdownHeight, animationDurationMs);
-            await JSRuntime.InvokeVoidAsync("toggleDropdownOpacity", parentContainerId, false, animationDurationMs / 2);
+            var functionSpecs = new object[]
+            {
+                new { name = "toggleDropdownHeight", args = new object[] { id, false, dropdownHeight, animationDurationMs } },
+                new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, false, animationDurationMs } }
+            };
+
+            await JSRuntime.InvokeVoidAsync("executeMultipleFunctions", new object[] { functionSpecs });
 
             await InvokeAsync(async () =>
             {

@@ -1,3 +1,30 @@
+// Used to limit amount of JS calls from Blazor
+/* Usage in Blazor:
+    var functionSpecs = new object[]
+    {
+        new { name = "addAndRemoveClass", args = new object[] { id, "loading", animationDurationMs } },
+        new { name = "toggleDropdownHeight", args = new object[] { id, true, dropdownHeight, animationDurationMs } },
+        new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, true, animationDurationMs } }
+    };
+    await JSRuntime.InvokeVoidAsync("executeMultipleFunctions", new object[] { functionSpecs });
+*/
+window.executeMultipleFunctions = (functions) => {
+    functions.forEach(funcSpec => {
+        const func = window[funcSpec.name];
+        if (typeof func === 'function') {
+            try {
+                func.apply(null, funcSpec.args);
+            } catch (err) {
+                console.error(`Error executing function ${funcSpec.name}: ${err.message}`);
+            }
+        } else {
+            console.error(`Function ${funcSpec.name} not found`);
+        }
+    });
+};
+
+
+
 // Used by Menu to scroll to item
 window.scrollToElementInContainer = (containerId, elementId, scrollDuration) => {
     const container = document.getElementById(containerId);
@@ -106,3 +133,13 @@ window.addAndRemoveClass = (elementId, className, duration) => {
         element.classList.remove(className);
     }, duration);
 };
+
+window.addClass = (elementId, className) => {
+    let element = document.getElementById(elementId);
+    element.classList.add(className);
+};
+
+window.removeClass = (elementId, className) => {
+    let element = document.getElementById(elementId);
+    element.classList.remove(className);
+};   

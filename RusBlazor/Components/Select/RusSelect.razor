@@ -70,8 +70,7 @@
     string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
     string lastInput = "";
-    private Timer? searchTimer;
-    private CancellationTokenSource? cancellationTokenSource;
+    CancellationTokenSource? cancellationTokenSource;
     SortedDictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
     RusInput<string>? rusInput;
@@ -139,27 +138,25 @@
         InitSearch(0);
     }
 
-    void InitSearch(int searchDelayMs)
+    async void InitSearch(int searchDelayMs)
     {
         cancellationTokenSource?.Cancel();
         cancellationTokenSource = new CancellationTokenSource();
         CancellationToken cancellationToken = cancellationTokenSource.Token;
 
-        searchTimer?.Dispose();
-        searchTimer = new Timer(async (state) =>
+        if(searchDelayMs > 0)
+            await Task.Delay(searchDelayMs, cancellationToken);
+
+        if (!cancellationToken.IsCancellationRequested)
         {
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                await SearchAsync(cancellationToken);
-            }
-        }, null, searchDelayMs, Timeout.Infinite);
+            await SearchAsync(cancellationToken);
+        }
     }
 
     async Task SearchAsync(CancellationToken token)
     {
         loadingSearch = true;
         await rusMenu.OpenAsync();
-        await InvokeAsync(StateHasChanged);
         string search = lastInput;
         try
         {

@@ -41,15 +41,6 @@
     position: relative;
 }
 
-    .rus-menu-dropdown.loading {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-        .rus-menu-dropdown.loading::-webkit-scrollbar {
-            display: none;
-        }
-
 .rus-menu-bottom {
     background-color: #424242;
     border-radius: 6px;
