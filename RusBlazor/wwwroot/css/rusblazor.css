@@ -1,5 +1,6 @@
 @import url("element_scrollbar.css");
 @import url("var_zindex.css");
+@import url("var_colors.css");
 
 :root {
     --rus-menu-item-hover-background: #666;

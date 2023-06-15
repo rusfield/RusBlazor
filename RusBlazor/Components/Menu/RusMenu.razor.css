@@ -1,10 +1,14 @@
+* {
+    --frame-width: 1px;
+}
+
 .rus-menu {
     position: absolute;
     z-index: var(--zindex-menu);
-    width: calc(100% - 8px);
-    padding: 4px; /* Adding padding equivalent to the border width */
+    width: calc(100% - var(--frame-width) * 2);
+    padding: var(--frame-width);
     box-shadow: 0px 15px 50px 0px rgba(0,0,0,0.4);
-    border-radius: 6px;
+    border-radius: var(--frame-width);
     background: transparent;
     overflow: hidden;
     opacity: 0;
@@ -18,15 +22,17 @@
         width: 100%;
         height: 100%;
         z-index: var(--zindex-menu-bg);
-        background-color: #2a2a72; /* fallback */
+        background-color: var(--color-element-active-border);
+        /*
         background: linear-gradient(to bottom left, #333333, #204593, #009ffd);
+            */
     }
 
 
 
 .rus-menu-top {
-    background-color: #424242;
-    border-radius: 6px;
+    background-color: var(--color-element-active-border);
+    border-radius: var(--frame-width);
     z-index: var( --zindex-menu);
     position: relative;
 }
@@ -34,16 +40,16 @@
 .rus-menu-dropdown {
     background-color: #424242;
     overflow-y: scroll;
-    margin-left: 4px;
-    margin-right: 4px;
+    margin-left: var(--frame-width);
+    margin-right: var(--frame-width);
     box-shadow: inset 0 0 10px #000000;
     z-index: var( --zindex-menu);
     position: relative;
 }
 
 .rus-menu-bottom {
-    background-color: #424242;
-    border-radius: 6px;
+    background-color: var(--color-element-active-border);
+    border-radius: var(--frame-width);
     z-index: var( --zindex-menu);
     position: relative;
 }

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="wwwroot\css\var_colors.css" />
     <Content Remove="wwwroot\css\var_zindex.css" />
   </ItemGroup>
 
