@@ -9,20 +9,3 @@
     width: 100%;
     justify-items: stretch;
 }
-
-.rus-multiselect-button-description {
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    font-size: 0.75rem;
-}
-
-    .rus-multiselect-button-description.hide {
-        clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
-        transition: clip-path 0.25s;
-    }
-
-    .rus-multiselect-button-description.show {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        transition: clip-path 0.25s;
-    }

@@ -9,21 +9,18 @@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-multiselect-button-group")">
-                    <RusButton Style="@(buttonStyle)" OnClick="ShowSelectedAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ShowSelected))" OnMouseOut="HideButtonDescription">
+                    <RusButton Style="@(buttonStyle)" OnClick="ShowSelectedAsync">
                         @("Show")
                     </RusButton>
-                    <RusButton Style="@(buttonStyle)" OnClick="ResetFilterAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_ResetFilter))" OnMouseOut="HideButtonDescription">
+                    <RusButton Style="@(buttonStyle)">
                         @("Reset")
                     </RusButton>
-                    <RusButton Style="@(buttonStyle)" OnClick="SelectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_SelectVisible))" OnMouseOut="HideButtonDescription">
+                    <RusButton Style="@(buttonStyle)">
                         @("Select")
                     </RusButton>
-                    <RusButton Style="@(buttonStyle)" OnClick="DeselectVisibleAsync" OnMouseOver="(async () => await ShowButtonDescriptionAsync(description_DeselectVisible))" OnMouseOut="HideButtonDescription">
+                    <RusButton Style="@(buttonStyle)" OnClick="DeselectVisibleAsync">
                         @("Deselect")
                     </RusButton>
-                </div>
-                <div class="@($"rus-multiselect-button-description {(descriptionHover ? "show" : "hide")}")">
-                    @(new MarkupString(buttonDescription))
                 </div>
             </RusMenuItem>
         </MenuTopContent>
@@ -104,12 +101,6 @@
 
     string buttonStyle = "aspect-ratio:1/1;justify-self:stretch;overflow:hidden;";
 
-    bool descriptionHover = false;
-    string buttonDescription = new("&nbsp;");
-    string description_ShowSelected = "Show the selected values";
-    string description_ResetFilter = "Reset current filter";
-    string description_SelectVisible = "Selects all options on this page";
-    string description_DeselectVisible = "Deselects all options on this page";
     CancellationTokenSource? displayDescriptionTokenSource;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -337,33 +328,6 @@
     bool IsLastPageIndex()
     {
         return ((currentPageIndex + 1) * pageSize) >= resultCount;
-    }
-
-    async Task ShowButtonDescriptionAsync(string description)
-    {
-        displayDescriptionTokenSource?.Cancel();
-        displayDescriptionTokenSource = new();
-
-        try
-        {
-            await Task.Delay(100, displayDescriptionTokenSource.Token);
-            descriptionHover = true;
-            buttonDescription = new(description);
-        }
-        catch (TaskCanceledException)
-        {
-            // Cancelled
-        }
-
-    }
-
-    void HideButtonDescription()
-    {
-        displayDescriptionTokenSource?.Cancel();
-        displayDescriptionTokenSource = new();
-
-        descriptionHover = false;
-        buttonDescription = new("&nbsp;");
     }
 
     string GetValueText()
