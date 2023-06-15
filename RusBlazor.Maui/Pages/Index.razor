@@ -1,35 +1,48 @@
 ﻿@using Extensions;
+@using RusBlazor.Components.Button;
 
 @page "/"
 
-
-<RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" Value="2" Label="Single Select" />
 <br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" Value="1" Label="Flag Select" />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" Value="@(new() { 1 })" Label="Multiselect" />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<RusInput TValue="string" @bind-Value="test" />
+<RusButton OnClick="(() => displayDbValue = !displayDbValue)">Toggle Display</RusButton>
+<CascadingValue Name="DisplayDbValue" Value="displayDbValue">
+    <br />
+    <br />
+    <br />
+    <br />
+    <RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" @bind-Value="selectValue" Label="Single Select" />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" @bind-Value="flagSelectValue" Label="Flag Select" />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" @bind-Value="multiSelectValue" Label="Multiselect" />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <RusInput TValue="string" @bind-Value="test" />
+</CascadingValue>
 
 @code {
     string test = "";
+    bool displayDbValue = false;
     private int selectedItem = 0;
     private IEnumerable<string> selectedItems = new List<string>();
+
+    int selectValue = 2;
+    List<int> multiSelectValue = new();
+    int flagSelectValue = 2;
 
     async Task<(SortedDictionary<int, string>, int)> GetFruitsAsync(int selectedValue, string? search, int pageIndex, int pageSize, CancellationToken token)
     {
@@ -85,7 +98,7 @@
                 results[id] = item;
                 continue;
             }
-            
+
 
             if (item.Contains(search, StringComparison.InvariantCultureIgnoreCase))
                 results[id] = item;

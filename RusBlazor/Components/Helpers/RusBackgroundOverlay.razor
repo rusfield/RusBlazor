@@ -9,7 +9,12 @@
 
     async void HandleClick()
     {
-        visible = false;
+        Close();
         await OnClick.InvokeAsync();
+    }
+
+    public void Close()
+    {
+        visible = false;
     }
 }

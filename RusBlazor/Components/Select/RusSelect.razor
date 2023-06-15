@@ -48,6 +48,9 @@
 </div>
 
 @code {
+    [CascadingParameter(Name = "DisplayDbValue")]
+    public bool DisplayDbValue { get; set; } = false;
+
     [Parameter]
     public T Value { get; set; }
 
@@ -78,12 +81,23 @@
     int currentPageIndex = -1;
     int resultCount = -1;
     string? rusInputId;
+    bool previouslyDisplayDbValue = false;
 
-    protected override void OnParametersSet()
+
+    protected override async Task OnParametersSetAsync()
     {
         if (GetOptionsAsync == null)
             throw new ParameterRequiredException(nameof(GetOptionsAsync));
-        base.OnParametersSet();
+
+        if (DisplayDbValue != previouslyDisplayDbValue)
+        {
+            previouslyDisplayDbValue = DisplayDbValue;
+            if (!DisplayDbValue)
+                displayValue = "Loading";
+
+            await SetDisplayTextAsync();
+        }
+        await base.OnParametersSetAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -92,18 +106,8 @@
         if (firstRender)
         {
             rusInputId = rusInput?.GetId() ?? "";
-            (var currentValue, int tempCount) = await GetOptionsAsync(Value, Value.ToString(), 0, 1, CancellationToken.None);
-            if (currentValue.ContainsKey(Value))
-            {
-                displayValue = currentValue[Value];
-            }
-            else
-            {
-                // Fallback, but backend should return a value
-                displayValue = $"Unknown ({Value})";
-            }
+            await SetDisplayTextAsync();
             loadingComponent = false;
-            lastVerifiedDisplayValue = displayValue;
             this.StateHasChanged();
         }
 
@@ -190,8 +194,7 @@
     async Task SelectItemAsync(T key, string value)
     {
         Value = key;
-        displayValue = value;
-        lastVerifiedDisplayValue = value;
+        await SetDisplayTextAsync();
         await rusMenu.CloseAsync();
         await ValueChanged.InvokeAsync(Value);
     }
@@ -231,6 +234,33 @@
     bool IsLastPageIndex()
     {
         return ((currentPageIndex + 1) * pageSize) >= resultCount;
+    }
+
+    async Task SetDisplayTextAsync()
+    {
+        if (DisplayDbValue)
+        {
+            displayValue = Value.ToString();
+        }
+        else if (filteredItems.ContainsKey(Value))
+        {
+            displayValue = filteredItems[Value];
+        }
+        else
+        {
+            (var currentValue, int tempCount) = await GetOptionsAsync(Value, Value.ToString(), 0, 1, CancellationToken.None);
+            if (currentValue.ContainsKey(Value))
+            {
+                displayValue = currentValue[Value];
+            }
+            else
+            {
+                // Fallback, but backend should return a value
+                displayValue = $"Unknown ({Value})";
+            }
+        }
+
+        lastVerifiedDisplayValue = displayValue;
     }
 }
 

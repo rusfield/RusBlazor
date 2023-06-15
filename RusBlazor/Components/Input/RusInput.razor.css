@@ -13,18 +13,6 @@
         z-index: var(--zindex-input-active);
     }
 
-        .rus-input-container.active > .rus-input-subtext,
-        .rus-input-container:hover > .rus-input-subtext {
-            width: calc(100% - 24px - 6px); /* margin x 2 and padding */
-            margin-left: 12px;
-        }
-
-        .rus-input-container.active > .rus-input,
-        .rus-input-container:hover > .rus-input {
-            height: 26px;
-            font-size: 1rem;
-        }
-
 .rus-input {
     width: 100%;
     border: none;
@@ -32,21 +20,10 @@
     box-sizing: border-box;
     background-color: transparent;
     color: #f2f2f2;
-    transition: all 0.2s ease;
     height: 42px;
     font-size: 1.2rem;
-    width: 240px; /* Temp */
     padding-left: 12px;
     padding-right: 12px;
-}
-
-.rus-input-subtext {
-    width: 100%;
-    border-top: 1px solid #b3b3b3;
-    font-size: 0.6rem;
-    color: #b3b3b3;
-    transition: all 0.2s ease;
-    padding-left: 6px;
 }
 
 .rus-input-label {

@@ -30,7 +30,7 @@
         }
 
     </div>
-    <RusBackgroundOverlay OnClick="CloseAsync" />
+    <RusBackgroundOverlay @ref="backgroundOverlay" OnClick="CloseAsync" />
 }
 
 
@@ -57,6 +57,7 @@
     string parentContainerId;
     int animationDurationMs = 200;
     int dropdownHeight = 240;
+    RusBackgroundOverlay? backgroundOverlay;
 
     public RusMenu()
     {
@@ -108,6 +109,7 @@
     {
         if (IsOpen)
         {
+            backgroundOverlay?.Close();
             var functionSpecs = new object[]
             {
                 new { name = "toggleDropdownHeight", args = new object[] { id, false, dropdownHeight, animationDurationMs } },

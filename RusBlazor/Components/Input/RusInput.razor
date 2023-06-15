@@ -6,11 +6,7 @@
     @Label
 </div>
 <div class="@($"rus-input-container {Class} {ActiveClass()}")" style="@(Style)" @onclick="FocusInputAsync">
-
     <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input")" disabled="@Disabled" />
-    <div class="@($"rus-input-subtext")">
-        @ValueText
-    </div>
 </div>
 
 @code {
@@ -42,12 +38,11 @@
     public bool? Active { get; set; }
 
     string id;
-    bool active = false;
+    bool focused = false;
 
-    protected override void OnInitialized()
+    public RusInput()
     {
         id = Guid.NewGuid().ToString();
-        base.OnInitialized();
     }
 
     void OnInput(ChangeEventArgs args)
@@ -64,17 +59,17 @@
     {
         if (Active != null)
         {
-            return (bool)Active ? "active" : "inactive";
+            return (bool)Active ? "active" : "";
         }
         else
         {
-            return active ? "active" : "inactive";
+            return focused ? "active" : "";
         }
     }
 
     async Task HandleFocusAsync()
     {
-        active = true;
+        focused = true;
         this.StateHasChanged();
         if (OnFocus.HasDelegate)
         {
@@ -84,7 +79,7 @@
 
     async Task HandleBlurAsync()
     {
-        active = false;
+        focused = false;
         this.StateHasChanged();
         if (OnBlur.HasDelegate)
         {
