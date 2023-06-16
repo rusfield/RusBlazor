@@ -1,3 +1,5 @@
 :root {
-    --color-element-active-border: #E7E7E7;
+    --color-element-active-border: #7C3EC2;
+    --color-element-active-border-darker: #412166;
+    --color-text: #D3D3D3;
 }

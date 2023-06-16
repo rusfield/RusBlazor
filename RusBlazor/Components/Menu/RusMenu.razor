@@ -67,17 +67,18 @@
 
     string AnchorStyle()
     {
+        string percentage = "110";
         return Anchor switch
         {
-            Anchor.Bottom => "top: 100%; left: 0;",
-            Anchor.Top => "bottom: 100%; left: 0;",
-            Anchor.Left => "right: 100%; top: 0;",
-            Anchor.Right => "left: 100%; top: 0;",
-            Anchor.BottomLeft => "top: 100%; right: 0;",
-            Anchor.BottomRight => "top: 100%; left: 0;",
-            Anchor.TopLeft => "bottom: 100%; right: 0;",
-            Anchor.TopRight => "bottom: 100%; left: 0;",
-            _ => "top: 100%; left: 0;",
+            Anchor.Bottom => $"top: {percentage}%; left: 0;",
+            Anchor.Top => $"bottom: {percentage}%; left: 0;",
+            Anchor.Left => $"right: {percentage}%; top: 0;",
+            Anchor.Right => $"left: {percentage}%; top: 0;",
+            Anchor.BottomLeft => $"top: {percentage}%; right: 0;",
+            Anchor.BottomRight => $"top: {percentage}%; left: 0;",
+            Anchor.TopLeft => $"bottom: {percentage}%; right: 0;",
+            Anchor.TopRight => $"bottom: {percentage}%; left: 0;",
+            _ => $"top: {percentage}%; left: 50%; transform: translateX(-50%);",
         };
     }
 

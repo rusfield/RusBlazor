@@ -1,14 +1,14 @@
 * {
-    --frame-width: 1px;
+    --frame-width: 2px;
 }
 
 .rus-menu {
     position: absolute;
     z-index: var(--zindex-menu);
-    width: calc(100% - var(--frame-width) * 2);
+    width: calc(95% - var(--frame-width) * 2);
     padding: var(--frame-width);
     box-shadow: 0px 15px 50px 0px rgba(0,0,0,0.4);
-    border-radius: var(--frame-width);
+    border-radius: 6px;
     background: transparent;
     overflow: hidden;
     opacity: 0;
@@ -23,15 +23,13 @@
         height: 100%;
         z-index: var(--zindex-menu-bg);
         background-color: var(--color-element-active-border);
-        /*
-        background: linear-gradient(to bottom left, #333333, #204593, #009ffd);
-            */
+        background: linear-gradient(to bottom, var(--color-element-active-border), var(--color-element-active-border-darker));
     }
 
 
 
 .rus-menu-top {
-    background-color: var(--color-element-active-border);
+    background-color: transparent;
     border-radius: var(--frame-width);
     z-index: var( --zindex-menu);
     position: relative;
@@ -48,7 +46,7 @@
 }
 
 .rus-menu-bottom {
-    background-color: var(--color-element-active-border);
+    background-color: transparent;
     border-radius: var(--frame-width);
     z-index: var( --zindex-menu);
     position: relative;
