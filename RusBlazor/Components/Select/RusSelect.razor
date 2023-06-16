@@ -31,14 +31,14 @@
         </MenuContent>
         <MenuBottomContent>
             <RusMenuItem Hoverable="false">
-                <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:25%;height:30px;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
+                <div class="rus-select-pagination-group">
+                    <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
                         @("<")
                     </RusButton>
-                    <div style="width:50%;height:30px;">
-                        @(GetPaginationText())
+                    <div class="rus-select-pagination-text">
+                        @(new MarkupString(GetPaginationText()))
                     </div>
-                    <RusButton Style="width:25%;height:30px;" OnClick="NextPage" Disabled="IsLastPageIndex()">
+                    <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()">
                         @(">")
                     </RusButton>
                 </div>
@@ -68,12 +68,11 @@
 
     bool loadingComponent = true;
     bool loadingSearch = false;
-    bool menuOpen;
     bool inputActive;
     string displayValue = "Loading";
     string? lastVerifiedDisplayValue;
     string lastInput = "";
-    CancellationTokenSource? cancellationTokenSource;
+    CancellationTokenSource? searchTokenSource;
     SortedDictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
     RusInput<string>? rusInput;
@@ -121,7 +120,8 @@
 
     void OnBlur()
     {
-        cancellationTokenSource?.Cancel();
+        if(!rusMenu?.IsOpen ?? true)
+            searchTokenSource?.Cancel();
     }
 
     void InputChanged(string input)
@@ -144,9 +144,9 @@
 
     async void InitSearch(int searchDelayMs)
     {
-        cancellationTokenSource?.Cancel();
-        cancellationTokenSource = new CancellationTokenSource();
-        CancellationToken cancellationToken = cancellationTokenSource.Token;
+        searchTokenSource?.Cancel();
+        searchTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = searchTokenSource.Token;
 
         if(searchDelayMs > 0)
             await Task.Delay(searchDelayMs, cancellationToken);
@@ -213,22 +213,19 @@
             this.StateHasChanged();
             await Task.Delay(animationDelay);
         }
-        menuOpen = showMenu;
     }
 
     string GetPaginationText()
     {
         if (resultCount == -1)
-            return "";
+            return "&nbsp;<br />&nbsp;";
 
         int from = currentPageIndex * pageSize + 1;
         int to = (currentPageIndex + 1) * pageSize;
 
-        from = from > resultCount ? resultCount : from;
         to = to > resultCount ? resultCount : to;
-        string action = loadingSearch ? "Loading" : "Showing";
 
-        return $"{action} {from} to {to} of {resultCount} results";
+        return $"{from} to {to}<br />of {resultCount}";
     }
 
     bool IsLastPageIndex()

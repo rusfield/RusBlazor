@@ -51,14 +51,14 @@
         </MenuContent>
         <MenuBottomContent>
             <RusMenuItem Hoverable="false">
-                <div style="display: flex; height: 30px;">
-                    <RusButton Style="width:25%;height:30px;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
+                <div class="rus-multiselect-pagination-group">
+                    <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
                         @("<")
                     </RusButton>
-                    <div style="width:50%;" class="@($"rus-multiselect-button-description")">
+                    <div class="rus-multiselect-pagination-text">
                         @(new MarkupString(GetPaginationText()))
                     </div>
-                    <RusButton Style="width:25%;height:30px;" OnClick="NextPage" Disabled="IsLastPageIndex()">
+                    <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()">
                         @(">")
                     </RusButton>
                 </div>
@@ -91,12 +91,11 @@
     string displayValue = "Loading";
     string lastVerifiedDisplayValue = "";
     string lastInput = "";
-    bool menuOpen;
     bool inputActive;
     int pageSize = 15;
     int currentPageIndex = 0;
     int resultCount = -1;
-    CancellationTokenSource? cancellationTokenSource;
+    CancellationTokenSource? searchTokenSource;
     SortedDictionary<T, string> filteredItems = new();
     RusMenu<T>? rusMenu;
     RusInput<string>? rusInput;
@@ -104,8 +103,6 @@
     bool previouslyDisplayDbValue = false;
 
     string buttonStyle = "aspect-ratio:1/1;justify-self:stretch;overflow:hidden;";
-
-    CancellationTokenSource? displayDescriptionTokenSource;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -139,7 +136,7 @@
     async Task OnFocusAsync()
     {
         // Element may be re-focused from clicking in menu too.
-        if (!menuOpen)
+        if (!rusMenu?.IsOpen ?? false)
         {
             await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
             InitSearch(0);
@@ -160,7 +157,8 @@
 
     void OnBlur()
     {
-        cancellationTokenSource?.Cancel();
+        if(!rusMenu?.IsOpen ?? true)
+            searchTokenSource?.Cancel();
     }
 
     void InputChanged(string input)
@@ -183,14 +181,13 @@
             this.StateHasChanged();
             await Task.Delay(animationDelay);
         }
-        menuOpen = showMenu;
     }
 
     async void InitSearch(int searchDelayMs)
     {
-        cancellationTokenSource?.Cancel();
-        cancellationTokenSource = new CancellationTokenSource();
-        CancellationToken cancellationToken = cancellationTokenSource.Token;
+        searchTokenSource?.Cancel();
+        searchTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = searchTokenSource.Token;
 
         try
         {
@@ -327,9 +324,9 @@
         currentPageIndex = 0;
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
 
-        cancellationTokenSource?.Cancel();
-        cancellationTokenSource = new CancellationTokenSource();
-        CancellationToken cancellationToken = cancellationTokenSource.Token;
+        searchTokenSource?.Cancel();
+        searchTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = searchTokenSource.Token;
 
         (filteredItems, resultCount) = await GetOptionsAsync(Value, null, currentPageIndex, pageSize, cancellationToken);
         loadingSearch = false;
@@ -339,14 +336,14 @@
     string GetPaginationText()
     {
         if (resultCount == -1)
-            return new("&nbsp;");
+            return "&nbsp;<br />&nbsp;";
 
         int from = currentPageIndex * pageSize + 1;
         int to = (currentPageIndex + 1) * pageSize;
 
         to = to > resultCount ? resultCount : to;
 
-        return new($"{from} to {to}<br />of {resultCount}");
+        return $"{from} to {to}<br />of {resultCount}";
     }
 
     bool IsLastPageIndex()
