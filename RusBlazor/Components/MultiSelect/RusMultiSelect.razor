@@ -285,6 +285,7 @@
 
     async Task ResetFilterAsync()
     {
+        lastInput = "";
         InitSearch(0);
         await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
     }

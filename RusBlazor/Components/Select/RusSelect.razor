@@ -7,6 +7,18 @@
 <div class="rus-select">
     <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" ValueText="@(Value.ToString())" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Active="inputActive" Label="@Label" />
     <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
+        <MenuTopContent>
+            <RusMenuItem Hoverable="false">
+                <div class="@("rus-select-button-group")">
+                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync">
+                        <RusIcon IconName="done" />
+                    </RusButton>
+                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync">
+                        <RusIcon IconName="filter_alt_off" />
+                    </RusButton>
+                </div>
+            </RusMenuItem>
+        </MenuTopContent>
         <MenuContent>
             @if (loadingSearch)
             {
@@ -141,6 +153,20 @@
     void PreviousPage()
     {
         currentPageIndex--;
+        InitSearch(0);
+    }
+
+    async Task ResetFilterAsync()
+    {
+        lastInput = "";
+        InitSearch(0);
+        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+    }
+
+    async Task ShowSelectedAsync()
+    {
+        currentPageIndex = -1;
+        lastInput = "";
         InitSearch(0);
     }
 

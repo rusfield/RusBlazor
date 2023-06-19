@@ -7,6 +7,11 @@
     display: flex;
 }
 
+.rus-select-button-group {
+    display: flex;
+    gap: 8px;
+}
+
 .rus-select-pagination-text {
     width: 50%;
     text-align: center;

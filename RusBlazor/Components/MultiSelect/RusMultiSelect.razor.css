@@ -5,6 +5,7 @@
 
 .rus-multiselect-button-group {
     display: flex;
+    gap: 8px;
 }
 
 .rus-multiselect-pagination-group {
