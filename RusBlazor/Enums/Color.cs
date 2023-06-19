@@ -8,9 +8,9 @@ namespace RusBlazor.Enums
 {
     public enum Color
     {
-        Success,
-        Warning,
-        Error,
-        Info
+        SUCCESS,
+        WARNING,
+        ERROR,
+        INFO
     }
 }

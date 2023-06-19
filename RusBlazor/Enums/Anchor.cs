@@ -2,14 +2,14 @@
 {
     public enum Anchor
     {
-        Auto,
-        Bottom,
-        Top,
-        Left,
-        Right,
-        BottomLeft,
-        BottomRight,
-        TopLeft,
-        TopRight
+        AUTO,
+        BOTTOM,
+        TOP,
+        LEFT,
+        RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT,
+        TOP_LEFT,
+        TOP_RIGHT
     }
 }

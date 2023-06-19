@@ -1,6 +1,7 @@
 @import url("element_scrollbar.css");
 @import url("var_zindex.css");
 @import url("var_colors.css");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
 
 :root {
     --rus-menu-item-hover-background: #666;

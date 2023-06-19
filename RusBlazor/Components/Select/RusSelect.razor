@@ -1,4 +1,6 @@
 ﻿@using RusBlazor.Components.Button
+@using RusBlazor.Components.Icon
+
 @typeparam T
 @inject IJSRuntime JSRuntime
 
@@ -33,13 +35,13 @@
             <RusMenuItem Hoverable="false">
                 <div class="rus-select-pagination-group">
                     <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
-                        @("<")
+                        <RusIcon IconName="navigate_before" />
                     </RusButton>
                     <div class="rus-select-pagination-text">
                         @(new MarkupString(GetPaginationText()))
                     </div>
                     <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()">
-                        @(">")
+                        <RusIcon IconName="navigate_next" />
                     </RusButton>
                 </div>
             </RusMenuItem>
@@ -148,12 +150,19 @@
         searchTokenSource = new CancellationTokenSource();
         CancellationToken cancellationToken = searchTokenSource.Token;
 
-        if(searchDelayMs > 0)
-            await Task.Delay(searchDelayMs, cancellationToken);
-
-        if (!cancellationToken.IsCancellationRequested)
+        try
         {
-            await SearchAsync(cancellationToken);
+            if (searchDelayMs > 0)
+                await Task.Delay(searchDelayMs, cancellationToken);
+
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                await SearchAsync(cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Search cancelled cancelled
         }
     }
 

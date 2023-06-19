@@ -4,10 +4,7 @@
 }
 
 .rus-multiselect-button-group {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    width: 100%;
-    justify-items: stretch;
+    display: flex;
 }
 
 .rus-multiselect-pagination-group {
@@ -17,4 +14,5 @@
 .rus-multiselect-pagination-text {
     width: 50%;
     text-align: center;
+    color: var(--color-text);
 }

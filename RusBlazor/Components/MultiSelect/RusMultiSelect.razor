@@ -1,4 +1,6 @@
 ﻿@using RusBlazor.Components.Button
+@using RusBlazor.Components.Icon
+
 @typeparam T
 @inject IJSRuntime JSRuntime
 
@@ -9,17 +11,17 @@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-multiselect-button-group")">
-                    <RusButton Style="@(buttonStyle)" OnClick="ShowSelectedAsync">
-                        @("Show")
+                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync">
+                        <RusIcon IconName="checklist" />
                     </RusButton>
-                    <RusButton Style="@(buttonStyle)" OnClick="ResetFilterAsync">
-                        @("Reset")
+                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync">
+                        <RusIcon IconName="filter_alt_off" />
                     </RusButton>
-                    <RusButton Style="@(buttonStyle)" OnClick="SelectVisibleAsync">
-                        @("Select")
+                    <RusButton Style="width: 25%;" OnClick="SelectVisibleAsync">
+                        <RusIcon IconName="playlist_add_check" />
                     </RusButton>
-                    <RusButton Style="@(buttonStyle)" OnClick="DeselectVisibleAsync">
-                        @("Deselect")
+                    <RusButton Style="width: 25%;" OnClick="DeselectVisibleAsync">
+                        <RusIcon IconName="playlist_remove" />
                     </RusButton>
                 </div>
             </RusMenuItem>
@@ -53,13 +55,13 @@
             <RusMenuItem Hoverable="false">
                 <div class="rus-multiselect-pagination-group">
                     <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
-                        @("<")
+                        <RusIcon IconName="navigate_before" />
                     </RusButton>
                     <div class="rus-multiselect-pagination-text">
                         @(new MarkupString(GetPaginationText()))
                     </div>
                     <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()">
-                        @(">")
+                        <RusIcon IconName="navigate_next" />
                     </RusButton>
                 </div>
             </RusMenuItem>
@@ -101,8 +103,6 @@
     RusInput<string>? rusInput;
     string? rusInputId;
     bool previouslyDisplayDbValue = false;
-
-    string buttonStyle = "aspect-ratio:1/1;justify-self:stretch;overflow:hidden;";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -191,8 +191,6 @@
 
         try
         {
-
-
             if (searchDelayMs > 0)
                 await Task.Delay(searchDelayMs, cancellationToken);
 

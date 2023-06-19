@@ -42,7 +42,7 @@
     public EventCallback<(bool, int)> IsOpenChanged { get; set; }
 
     [Parameter]
-    public Anchor Anchor { get; set; } = Anchor.Auto;
+    public Anchor Anchor { get; set; } = Anchor.AUTO;
 
     [Parameter]
     public RenderFragment? MenuContent { get; set; }
@@ -70,14 +70,14 @@
         string percentage = "110";
         return Anchor switch
         {
-            Anchor.Bottom => $"top: {percentage}%; left: 0;",
-            Anchor.Top => $"bottom: {percentage}%; left: 0;",
-            Anchor.Left => $"right: {percentage}%; top: 0;",
-            Anchor.Right => $"left: {percentage}%; top: 0;",
-            Anchor.BottomLeft => $"top: {percentage}%; right: 0;",
-            Anchor.BottomRight => $"top: {percentage}%; left: 0;",
-            Anchor.TopLeft => $"bottom: {percentage}%; right: 0;",
-            Anchor.TopRight => $"bottom: {percentage}%; left: 0;",
+            Anchor.BOTTOM => $"top: {percentage}%; left: 0;",
+            Anchor.TOP => $"bottom: {percentage}%; left: 0;",
+            Anchor.LEFT => $"right: {percentage}%; top: 0;",
+            Anchor.RIGHT => $"left: {percentage}%; top: 0;",
+            Anchor.BOTTOM_LEFT => $"top: {percentage}%; right: 0;",
+            Anchor.BOTTOM_RIGHT => $"top: {percentage}%; left: 0;",
+            Anchor.TOP_LEFT => $"bottom: {percentage}%; right: 0;",
+            Anchor.TOP_RIGHT => $"bottom: {percentage}%; left: 0;",
             _ => $"top: {percentage}%; left: 50%; transform: translateX(-50%);",
         };
     }
