@@ -1,7 +1,4 @@
-﻿@using RusBlazor.Components.Button
-@using RusBlazor.Components.Icon
-
-@typeparam T
+﻿@typeparam T
 @inject IJSRuntime JSRuntime
 
 
@@ -94,7 +91,7 @@
     string lastVerifiedDisplayValue = "";
     string lastInput = "";
     bool inputActive;
-    int pageSize = 15;
+    int pageSize = 10;
     int currentPageIndex = 0;
     int resultCount = -1;
     CancellationTokenSource? searchTokenSource;
@@ -208,6 +205,7 @@
     async Task SearchAsync(CancellationToken token)
     {
         loadingSearch = true;
+        resultCount = -1;
         await rusMenu.OpenAsync();
         string search = lastInput;
         await InvokeAsync(StateHasChanged); // triggers "Loading" in menu
@@ -336,6 +334,8 @@
     {
         if (resultCount == -1)
             return "&nbsp;<br />&nbsp;";
+        else if (resultCount == 0)
+            return "No<br />results";
 
         int from = currentPageIndex * pageSize + 1;
         int to = (currentPageIndex + 1) * pageSize;

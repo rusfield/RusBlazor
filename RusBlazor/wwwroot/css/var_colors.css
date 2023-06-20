@@ -2,6 +2,6 @@
     --color-element-active-border: #7C3EC2;
     --color-element-active-border-darker: #412166;
     --color-text: #D3D3D3;
-
-
+    --color-inactive: #696969;
+    --gradient-info: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
 }

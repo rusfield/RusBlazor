@@ -1,13 +1,15 @@
-﻿<div style="display:flex; align-items: center;">
+﻿<div class="@($"rus-menu-content {(Checked ? "checked" : "")}")">
     @if (Multiselect)
     {
-        <RusCheckbox @bind-Value="Checked" />
+        <div class="multiselect-checkbox">
+            <RusCheckbox Value="Checked" />
+        </div>
     }
     <div style="display:block;">
-        <div class="rus-text-menu-item1">
+        <div class="text-key">
             @(Value ?? "")
         </div>
-        <div class="rus-text-menu-item1">
+        <div class="text-value">
             @(Key ?? "")
         </div>
     </div>

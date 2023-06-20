@@ -3,13 +3,13 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent; /* make track transparent to see the pseudo-padding */
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, dodgerblue, royalblue, mediumblue);
-    border-radius: 16px; /* make this larger than scrollbar width for round effect */
-    border: 4px solid transparent; /* add border the same color as your page's background */
-    background-clip: content-box; /* this is important to not color the border */
-    box-shadow: inset 0 0 0 10px; /* add shadow to create pseudo-padding */
+    background: var(--gradient-info);
+    border-radius: 16px;
+    border: 4px solid transparent;
+    background-clip: content-box; 
+    box-shadow: inset 0 0 0 10px rgba(0, 0, 0, 0.2);
 }
