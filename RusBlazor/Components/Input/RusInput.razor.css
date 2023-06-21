@@ -12,8 +12,8 @@
 
     .rus-input-container.active {
         z-index: var(--zindex-input-active);
-        border: 1px solid var(--color-element-active-border);
-        outline: 1px solid var(--color-element-active-border);
+        border: 1px solid var(--color-primary);
+        outline: 1px solid var(--color-primary);
     }
 
 .rus-input {
@@ -32,7 +32,7 @@
 .rus-input-label {
     position: relative;
     font-size: 0.9rem;
-    color: var(--color-text);
+    color: var(--color-light);
     font-weight: bold;
     padding-left: 4px;
     transition: ease 0.2s;
@@ -40,5 +40,5 @@
 
     .rus-input-label.active {
         z-index: var(--zindex-input-active);
-        color: var(--color-element-active-border);
+        color: var(--color-primary);
     }

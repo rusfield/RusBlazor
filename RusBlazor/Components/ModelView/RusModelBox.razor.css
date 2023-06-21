@@ -1,16 +1,26 @@
 .rus-modelbox-container {
-    background-color: pink;
-    width: calc(var(--modelview-box-width) + var(--modelview-box-reference-length));
-    height: calc(var(--modelview-box-height) + var(--modelview-box-reference-length));
+    /* Variables are also used in component */
+    --rus-modelbox-container-width: calc(var(--modelview-box-width) + var(--modelview-box-reference-length));
+    --rus-modelbox-container-height: calc(var(--modelview-box-height) + var(--modelview-box-reference-length)); 
+    width: var(--rus-modelbox-container-width);
+    height: var(--rus-modelbox-container-height);
     position: absolute;
 }
 
 .rus-modelbox {
-    background-color: dimgrey;
+    background-image: var(--gradient-primary);
     width: var(--modelview-box-width);
     height: var(--modelview-box-height);
     border-radius: 6px;
-    z-index: 2;
+    color: var(--color-light);
+    box-shadow: inset 0px 0px 0px 6px var(--color-primary-darken);
+    transition: all 0.2s ease;
+}
+.rus-modelbox:hover {
+    box-shadow: inset 0px 0px 0px 0px var(--color-primary-darken);
+    cursor: pointer;
+    font-weight: bold;
+    filter:brightness(120%);
 }
 
     .rus-modelbox.required {
@@ -22,31 +32,37 @@
     width: var(--modelview-box-reference-length);
     height: var(--modelview-box-reference-length);
     z-index: 1;
-    background-color: red;
+    background: var(--gradient-info);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
     .rus-modelbox-reference.left {
         top: 50%;
         left: 0;
         transform: translate(-50%, -50%);
+        background-size: 100% 10%;
     }
 
     .rus-modelbox-reference.right {
         top: 50%;
         right: 0;
         transform: translate(50%, -50%);
+        background-size: 100% 10%;
     }
 
     .rus-modelbox-reference.top {
         left: 50%;
         top: 0;
         transform: translate(-50%, -50%);
+        background-size: 10% 100%;
     }
 
     .rus-modelbox-reference.bottom {
         left: 50%;
         bottom: 0;
         transform: translate(-50%, 50%);
+        background-size: 10% 100%;
     }
 
 .center-content {

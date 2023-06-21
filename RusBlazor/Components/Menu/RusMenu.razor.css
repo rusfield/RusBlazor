@@ -22,8 +22,8 @@
         width: 100%;
         height: 100%;
         z-index: var(--zindex-menu-bg);
-        background-color: var(--color-element-active-border);
-        background: linear-gradient(to bottom, var(--color-element-active-border), var(--color-element-active-border-darker));
+        background-color: var(--color-primary);
+        background: var(--gradient-primary);
     }
 
 

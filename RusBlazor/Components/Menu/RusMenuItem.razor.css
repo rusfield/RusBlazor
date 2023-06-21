@@ -9,11 +9,11 @@
     }
 
     .rus-menu-item.hoverable:hover {
-        background: var(--color-inactive);
+        background: var(--color-light-darken);
 
         cursor: pointer;
     }
 
     .rus-menu-item.separator {
-        border-bottom: 1px solid var(--color-inactive);
+        border-bottom: 1px solid var(--color-light-darken);
     }

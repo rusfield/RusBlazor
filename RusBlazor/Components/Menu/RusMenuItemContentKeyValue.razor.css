@@ -1,9 +1,9 @@
 .rus-menu-content {
-    color: var(--color-text);
+    color: var(--color-light);
     display: flex;
     align-items: center;
     border-radius: 6px;
-    background: linear-gradient(to right, var(--color-element-active-border-darker) 25%, transparent 50%);
+    background: linear-gradient(to right, var(--color-primary-darken) 25%, transparent 50%);
     background-size: 200% 100%;
     background-position: right bottom;
     transition: all 0.1s ease;
