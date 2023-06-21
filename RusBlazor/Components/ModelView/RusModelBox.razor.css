@@ -1,30 +1,32 @@
 .rus-modelbox-container {
     /* Variables are also used in component */
     --rus-modelbox-container-width: calc(var(--modelview-box-width) + var(--modelview-box-reference-length));
-    --rus-modelbox-container-height: calc(var(--modelview-box-height) + var(--modelview-box-reference-length)); 
+    --rus-modelbox-container-height: calc(var(--modelview-box-height) + var(--modelview-box-reference-length));
     width: var(--rus-modelbox-container-width);
     height: var(--rus-modelbox-container-height);
     position: absolute;
 }
 
 .rus-modelbox {
-    background-image: var(--gradient-primary);
     width: var(--modelview-box-width);
     height: var(--modelview-box-height);
     border-radius: 6px;
     color: var(--color-light);
-    box-shadow: inset 0px 0px 0px 6px var(--color-primary-darken);
     transition: all 0.2s ease;
 }
-.rus-modelbox:hover {
-    box-shadow: inset 0px 0px 0px 0px var(--color-primary-darken);
-    cursor: pointer;
-    font-weight: bold;
-    filter:brightness(120%);
-}
+
+    .rus-modelbox:hover {
+        cursor: pointer;
+        font-weight: bold;
+        filter: brightness(120%);
+    }
 
     .rus-modelbox.required {
-        background-color: green;
+        background-image: var(--gradient-primary);
+    }
+
+    .rus-modelbox.active {
+        background-image: var(--gradient-tertiary);
     }
 
 .rus-modelbox-reference {

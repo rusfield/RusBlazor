@@ -1,5 +1,7 @@
-﻿<div class="@($"rus-modelbox-container center-content {(Required ? "required" : "")}")" style="@(PositionStyle())">
-    <div class="rus-modelbox center-content">
+﻿@using RusBlazor.Enums
+
+<div class="@($"rus-modelbox-container center-content")" style="@(PositionStyle())">
+    <div class="@($"rus-modelbox center-content {Status.ToString().ToLower()}")">
         <div style="margin: 5px">
             @TableName
         </div>
@@ -28,7 +30,7 @@
     public string? TableName { get; set; }
 
     [Parameter]
-    public bool Required { get; set; } = false;
+    public ModelBoxStatus Status { get; set; } = ModelBoxStatus.ACTIVE;
 
     [Parameter]
     public int GridX { get; set; }

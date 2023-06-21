@@ -26,7 +26,7 @@
     --color-light: #D3D3D3;
     --color-light-lighten: #f0f0f0;
     --color-light-darken: #696969;
-    --color-light-darken: #696969;
     --gradient-primary: radial-gradient(100% 100% at 100% 0, var(--color-primary-lighten) 0, var(--color-primary) 50%, var(--color-primary-darken) 100%);
+    --gradient-tertiary: radial-gradient(100% 100% at 100% 0, var(--color-tertiary-lighten) 0, var(--color-tertiary) 50%, var(--color-tertiary-darken) 100%);
     --gradient-info: radial-gradient(100% 100% at 100% 0, var(--color-info-lighten) 0, var(--color-info) 50%, var(--color-info-darken) 100%);
 }
