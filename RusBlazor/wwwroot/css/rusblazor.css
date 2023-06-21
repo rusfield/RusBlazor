@@ -5,6 +5,9 @@
 
 :root {
     background-color: #333;
+    --modelview-box-width: 120px;
+    --modelview-box-height: 80px;
+    --modelview-box-reference-length: 80px;
 }
 
 * {

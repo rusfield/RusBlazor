@@ -1,5 +1,6 @@
 ﻿@using Extensions;
 @using RusBlazor.Components.Button;
+@using RusBlazor.Components.ModelView
 
 @page "/"
 
@@ -31,8 +32,12 @@
     <br />
     <br />
     <br />
-    <RusInput TValue="string" @bind-Value="test" />
 </CascadingValue>
+<div style="width: 800px; height: 400px;">
+    <RusModelView>
+        <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Left="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" Top="@(("Yo", "Yo"))" X="100" Y="100" />
+    </RusModelView>
+</div>
 
 @code {
     string test = "";
