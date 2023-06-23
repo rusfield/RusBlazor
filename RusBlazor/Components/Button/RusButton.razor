@@ -1,6 +1,6 @@
 ﻿@using RusBlazor.Enums
 
-<button class="@($"rus-button ripple gradient {Color.ToString().ToLower()} {Class} {(DefaultPadding ? "padding" : "")}")" style="@(Style)" @onclick="OnClick" disabled="@Disabled" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" id="@(_id)">
+<button class="@($"rus-button ripple {Color.ToString().ToLower()}-gradient {Class} {(DefaultPadding ? "padding" : "")}")" style="@(Style)" @onclick="OnClick" disabled="@Disabled" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" id="@(_id)">
     @ChildContent
 </button>
 

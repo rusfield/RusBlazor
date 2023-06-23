@@ -4,6 +4,7 @@
     {
         INACTIVE,
         ACTIVE,
-        REQUIRED
+        REQUIRED,
+        MISSING_REFERENCE
     }
 }
