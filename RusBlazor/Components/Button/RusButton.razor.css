@@ -1,34 +1,18 @@
-/* https://getcssscan.com/css-buttons-examples */
 .rus-button {
-    align-items: center;
-    appearance: none;
-    background-image: var(--gradient-info);
-    border: 0;
     color: var(--color-light);
     border-radius: 6px;
-    box-shadow: rgba(0, 0, 0, .4) 0 2px 4px,rgba(0, 0, 0, .3) 0 7px 13px -3px,rgba(0, 0, 0, .5) 0 -3px 0 inset;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    line-height: 1;
-    list-style: none;
-    overflow: hidden;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 4px;
-    padding-bottom: 8px;
     position: relative;
-    text-align: left;
-    text-decoration: none;
-    transition: box-shadow .15s,transform .15s;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    white-space: nowrap;
-    will-change: box-shadow,transform;
-    font-size: 18px;
+    overflow: hidden;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
 }
+
+    .rus-button.padding {
+        padding: 10px 20px;
+    }
 
     .rus-button:disabled {
         filter: grayscale(100%);
@@ -37,18 +21,6 @@
     }
 
     .rus-button:not(:disabled):hover {
-        cursor: pointer;
-        box-shadow: rgba(0, 0, 0, .4) 0 4px 8px, rgba(0, 0, 0, .3) 0 7px 13px -3px, rgba(0, 0, 0, .3) 0 -3px 0 inset;
-        transform: translateY(-2px);
-    }
-
-    .rus-button:not(:disabled):focus {
-        box-shadow: rgba(0, 0, 0, .3) 0 0 0 1.5px inset, rgba(0, 0, 0, .4) 0 2px 4px, rgba(0, 0, 0, .3) 0 7px 13px -3px, rgba(0, 0, 0, .3) 0 -3px 0 inset;
-        outline: none
-    }
-
-    .rus-button:not(:disabled):active {
-        box-shadow: rgba(0, 0, 0, .3) 0 3px 7px inset;
-        transform: translateY(2px);
-        outline: none;
+        transform: scale(1.05);
+        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
     }

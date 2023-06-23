@@ -8,16 +8,16 @@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-multiselect-button-group")">
-                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync">
+                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync" DefaultPadding="false">
                         <RusIcon IconName="checklist" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync">
+                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync" DefaultPadding="false">
                         <RusIcon IconName="filter_alt_off" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="SelectVisibleAsync">
+                    <RusButton Style="width: 25%;" OnClick="SelectVisibleAsync" DefaultPadding="false">
                         <RusIcon IconName="playlist_add_check" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="DeselectVisibleAsync">
+                    <RusButton Style="width: 25%;" OnClick="DeselectVisibleAsync" DefaultPadding="false">
                         <RusIcon IconName="playlist_remove" />
                     </RusButton>
                 </div>
@@ -51,13 +51,13 @@
         <MenuBottomContent>
             <RusMenuItem Hoverable="false">
                 <div class="rus-multiselect-pagination-group">
-                    <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
+                    <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="IsFirstPageIndex()" DefaultPadding="false">
                         <RusIcon IconName="navigate_before" />
                     </RusButton>
                     <div class="rus-multiselect-pagination-text">
                         @(new MarkupString(GetPaginationText()))
                     </div>
-                    <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()">
+                    <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()" DefaultPadding="false">
                         <RusIcon IconName="navigate_next" />
                     </RusButton>
                 </div>
@@ -348,6 +348,11 @@
     bool IsLastPageIndex()
     {
         return ((currentPageIndex + 1) * pageSize) >= resultCount;
+    }
+
+    bool IsFirstPageIndex()
+    {
+        return currentPageIndex <= 0;
     }
 
     string GetDbValue()

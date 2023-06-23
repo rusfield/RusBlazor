@@ -22,8 +22,10 @@
         width: 100%;
         height: 100%;
         z-index: var(--zindex-menu-bg);
-        background-color: var(--color-primary);
-        background: var(--gradient-primary);
+        background-color: var(--color-dark);
+        /*
+        background: var(--gradient-dark);
+            */
     }
 
 
@@ -36,7 +38,7 @@
 }
 
 .rus-menu-dropdown {
-    background-color: #424242;
+    background-color: var(--color-dark-lighten);
     overflow-y: scroll;
     margin-left: var(--frame-width);
     margin-right: var(--frame-width);

@@ -7,10 +7,10 @@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-select-button-group")">
-                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync">
+                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync" DefaultPadding="false">
                         <RusIcon IconName="done" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync">
+                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync" DefaultPadding="false">
                         <RusIcon IconName="filter_alt_off" />
                     </RusButton>
                 </div>
@@ -44,13 +44,13 @@
         <MenuBottomContent>
             <RusMenuItem Hoverable="false">
                 <div class="rus-select-pagination-group">
-                    <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="currentPageIndex <= 0">
+                    <RusButton Style="width: 25%;" OnClick="PreviousPage" Disabled="IsFirstPageIndex()" DefaultPadding="false">
                         <RusIcon IconName="navigate_before" />
                     </RusButton>
                     <div class="rus-select-pagination-text">
                         @(new MarkupString(GetPaginationText()))
                     </div>
-                    <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()">
+                    <RusButton Style="width: 25%;" OnClick="NextPage" Disabled="IsLastPageIndex()" DefaultPadding="false">
                         <RusIcon IconName="navigate_next" />
                     </RusButton>
                 </div>
@@ -267,6 +267,11 @@
     bool IsLastPageIndex()
     {
         return ((currentPageIndex + 1) * pageSize) >= resultCount;
+    }
+
+    bool IsFirstPageIndex()
+    {
+        return currentPageIndex <= 0;
     }
 
     async Task SetDisplayTextAsync()
