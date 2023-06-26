@@ -1,8 +1,12 @@
 ﻿@using Extensions;
 @using RusBlazor.Components.Button;
-@using RusBlazor.Components.ModelView
+@using RusBlazor.Components.ModelView;
+@using RusBlazor.Components.Dialog;
 
 @page "/"
+
+<RusDialog @ref="_dialog"/>
+
 
 <br />
 <RusButton OnClick="(() => displayDbValue = !displayDbValue)">Toggle Display</RusButton>
@@ -35,7 +39,7 @@
 </CascadingValue>
 <div style="width: 800px; height: 400px;">
     <RusModelView>
-        <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="0" Status="Enums.ModelBoxStatus.REQUIRED" />
+        <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="0" Status="Enums.ModelBoxStatus.REQUIRED" OnClick="OpenDialog" />
         <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="0" />
         <RusModelBox TableName="Hello Hello Hello Hello" Bottom="@(("Yo", "Yo"))"  GridX="0" GridY="1" />
         <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))"  GridX="0" GridY="2" />
@@ -45,11 +49,14 @@
     </RusModelView>
 </div>
 
+
+
 @code {
     string test = "";
     bool displayDbValue = false;
-    private int selectedItem = 0;
-    private IEnumerable<string> selectedItems = new List<string>();
+    int selectedItem = 0;
+    IEnumerable<string> selectedItems = new List<string>();
+    RusDialog? _dialog;
 
     int selectValue = 2;
     List<int> multiSelectValue = new();
@@ -141,4 +148,9 @@
         "Strawberry",
         "Watermelon Watermelon Watermelon Watermelon Watermelon Watermelon Watermelon Watermelon Watermelon Watermelon Watermelon Watermelon"
     };
+
+    void OpenDialog()
+    {
+        _dialog.Open(typeof(Test));
+    }
 }

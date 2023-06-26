@@ -3,4 +3,5 @@
     height: 100%;
     overflow: auto;
     position: relative;
+    z-index: var(--zindex-modelview);
 }

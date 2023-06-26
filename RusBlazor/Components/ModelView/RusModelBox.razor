@@ -1,7 +1,7 @@
 ﻿@using RusBlazor.Enums
 @using RusBlazor.Components.Button
 
-<div class="@($"rus-modelbox-container center-content")" style="@(PositionStyle())">
+<div class="@($"rus-modelbox-container center-content")" style="@(PositionStyle())" @onclick="OnClick">
     <div class="rus-modelbox">
         <RusButton Color="ColorType()" Style="width:100%;height:100%;">
             @TableName
@@ -51,6 +51,9 @@
 
     [Parameter]
     public (string, string)? Bottom { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
 
 
     string PositionStyle()

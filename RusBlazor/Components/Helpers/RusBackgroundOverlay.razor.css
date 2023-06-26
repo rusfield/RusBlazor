@@ -10,20 +10,30 @@
     display: block;
 }
     .rus-background-overlay.visible {
-        animation: fade 0.2s ease forwards;
+        animation: fadein 0.2s ease forwards;
     }
 
     .rus-background-overlay.invisible {
         pointer-events:none;
-        animation: fade 0.2s ease backwards;
+        animation: fadeout 0.2s ease forwards;
     }
 
-@keyframes fade {
-    0% {
+@keyframes fadein {
+    from {
         background-color: rgb(0, 0, 0, 0);
     }
 
-    100% {
+    to {
         background-color: rgb(0, 0, 0, 0.5);
+    }
+}
+
+@keyframes fadeout {
+    from {
+        background-color: rgb(0, 0, 0, 0.5);
+    }
+
+    to {
+        background-color: rgb(0, 0, 0, 0);
     }
 }

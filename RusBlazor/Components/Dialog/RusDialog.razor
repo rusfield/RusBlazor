@@ -1,0 +1,39 @@
+﻿@using RusBlazor.Components.Helpers
+
+@if (_component != null)
+{
+    <div class="@($"rus-dialog {(_isOpen ? "open" : "close")}")">
+        <div class="rus-dialog-exit">
+            <RusButton DefaultPadding="false" Style="border-radius: 50%; padding:0px; height:24px;" OnClick="CloseAsync">
+                <RusIcon IconName="close" />
+            </RusButton>
+        </div>
+        <DynamicComponent Type="@_component" Parameters="_parameters" />
+    </div>
+    <RusBackgroundOverlay OnClick="CloseAsync" @ref="_backgroundOverlay" />
+}
+
+@code {
+    bool _isOpen = false;
+    RusBackgroundOverlay? _backgroundOverlay;
+    Type? _component;
+    Dictionary<string, object?> _parameters = new();
+
+    public void Open(Type component, Dictionary<string, object?>? parameters = null)
+    {
+        _component = component;
+        if (parameters != null)
+            _parameters = parameters;
+        _isOpen = true;
+        this.StateHasChanged();
+    }
+
+    async Task CloseAsync()
+    {
+        _isOpen = false;
+        _backgroundOverlay?.Close();
+        await Task.Delay(200);
+        _component = null;
+        _parameters = new();
+    }
+}

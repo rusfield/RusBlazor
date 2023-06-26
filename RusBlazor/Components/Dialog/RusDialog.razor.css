@@ -1,0 +1,44 @@
+.rus-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: var(--color-dark);
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: var(--zindex-dialog);
+}
+
+    .rus-dialog.open {
+        animation: open 0.2s forwards;
+    }
+
+    .rus-dialog.close {
+        animation: close 0.2s forwards;
+    }
+
+.rus-dialog-exit {
+    position: absolute;
+    right: -12px;
+    top: -12px;
+}
+
+@keyframes open {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes close {
+    from {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(0);
+    }
+}
