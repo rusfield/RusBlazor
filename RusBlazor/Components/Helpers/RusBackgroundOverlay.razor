@@ -5,16 +5,21 @@
     [Parameter]
     public EventCallback OnClick { get; set; }
 
+    [Parameter]
+    public bool CloseOnClick { get; set; } = true;
+
     bool visible = true;
 
     async void HandleClick()
     {
-        Close();
+        if(CloseOnClick)
+            visible = false;
         await OnClick.InvokeAsync();
     }
 
     public void Close()
     {
         visible = false;
+        this.StateHasChanged();
     }
 }

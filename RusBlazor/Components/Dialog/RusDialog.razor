@@ -10,7 +10,7 @@
         </div>
         <DynamicComponent Type="@_component" Parameters="_parameters" />
     </div>
-    <RusBackgroundOverlay OnClick="CloseAsync" @ref="_backgroundOverlay" />
+    <RusBackgroundOverlay CloseOnClick="false" @ref="_backgroundOverlay" />
 }
 
 @code {
