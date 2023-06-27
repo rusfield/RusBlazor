@@ -1,0 +1,24 @@
+﻿@if (TabsContainer.ActiveTab == this)
+{
+    @ChildContent
+}
+
+@* TODO: Consider changing this to conditional display:none instead, to keep states *@
+
+@code {
+    [CascadingParameter(Name = "TabsContainer")]
+    public RusTabs TabsContainer { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        TabsContainer.TabItems.Add(this);
+        base.OnInitialized();
+
+    }
+}

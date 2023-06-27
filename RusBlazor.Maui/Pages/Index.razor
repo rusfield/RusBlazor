@@ -2,35 +2,109 @@
 @using RusBlazor.Components.Button;
 @using RusBlazor.Components.ModelView;
 @using RusBlazor.Components.Dialog;
+@using RusBlazor.Components.Tabs
 
 @page "/"
 
-<RusDialog @ref="_dialog"/>
+<RusDialog @ref="_dialog" />
 
 
 
-<div style="width: 800px; height: 400px;">
+<div style="width: 800px; height: 400px; padding-top: 50px;">
     <RusModelView>
         <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="0" Status="Enums.ModelBoxStatus.REQUIRED" OnClick="OpenDialog" />
         <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="0" />
-        <RusModelBox TableName="Hello Hello Hello Hello" Bottom="@(("Yo", "Yo"))"  GridX="0" GridY="1" />
-        <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))"  GridX="0" GridY="2" />
+        <RusModelBox TableName="Hello Hello Hello Hello" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="1" />
+        <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" GridX="0" GridY="2" />
         <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="2" />
-
-
     </RusModelView>
 </div>
 
-
+<RusTabs>
+    <RusTabItem Name="First tab">
+        <div style="color: white;">
+            Content 1
+        </div>
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+    <RusTabItem Name="First tab">
+        Content 1
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+    <RusTabItem Name="First tab">
+        Content 1
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+    <RusTabItem Name="First tab">
+        Content 1
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+    <RusTabItem Name="First tab">
+        Content 1
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+    <RusTabItem Name="First tab">
+        Content 1
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+    <RusTabItem Name="First tab">
+        Content 1
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+    <RusTabItem Name="First tab">
+        Content 1
+    </RusTabItem>
+    <RusTabItem Name="Second tab">
+        Content 2
+    </RusTabItem>
+    <RusTabItem Name="Third tab">
+        Content 3
+    </RusTabItem>
+</RusTabs>
 
 @code {
-    RusDialog? _dialog;
+    RusDialog _dialog;
 
 
     async void OpenDialog()
     {
         var buttons = new List<(string, EventCallback, RusBlazor.Enums.Color)>();
-        buttons.Add(("Test", new (this, new Action(Nothing)), RusBlazor.Enums.Color.PRIMARY));
+        buttons.Add(("Test", new(this, new Action(Nothing)), RusBlazor.Enums.Color.PRIMARY));
         await _dialog.OpenWithButtonsAsync(typeof(Test), buttons);
     }
 

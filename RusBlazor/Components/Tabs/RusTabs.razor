@@ -1,0 +1,58 @@
+﻿<div class="rus-tabs">
+    @if (TabItems.Any())
+    {
+        <div class="titles">
+            @foreach (var tab in TabItems)
+            {
+                bool active = tab == ActiveTab;
+                <div class="@($"rus-tabs-title {(active ? "active" : "")}")" @onclick="@(() => ActiveTab = tab)">
+                    <RusIcon IconName="auto_awesome" />
+                    <div>
+                        @DisplayName(tab.Name)
+                    </div>
+                    <div class="button">
+                        <RusButton DefaultPadding="false" Style="@($"border-radius: 50%; height: 24px;")">
+                            <RusIcon IconName="close" />
+                        </RusButton>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div>No tabs available.</div>
+    }
+    <div class="dummy-scrollbar" />
+</div>
+
+<CascadingValue Value="this" Name="TabsContainer">
+    @ChildContent
+</CascadingValue>
+
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public List<RusTabItem> TabItems { get; } = new List<RusTabItem>();
+
+    public RusTabItem ActiveTab { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (TabItems.Any() && ActiveTab == null)
+        {
+            ActiveTab = TabItems.First();
+        }
+    }
+
+    string DisplayName(string name)
+    {
+        name = name.ToUpper();
+        if (name.Length > 12)
+            return $"{name.Substring(0, 10)}...";
+        return name;
+    }
+}

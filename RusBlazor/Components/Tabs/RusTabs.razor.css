@@ -1,0 +1,63 @@
+.rus-tabs {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+    .rus-tabs > .titles {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .rus-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .rus-tabs:hover::-webkit-scrollbar {
+        display: block;
+    }
+
+    .rus-tabs > .dummy-scrollbar {
+        display: block;
+        height: 17px;
+    }
+
+    .rus-tabs:hover > .dummy-scrollbar {
+        display: none;
+    }
+
+.rus-tabs-title {
+    background: var(--color-dark-lighten);
+    cursor: pointer;
+    padding: 8px;
+    color: var(--color-light);
+    font-size: 1rem;
+    box-shadow: inset -10px 0px 10px -10px rgba(0, 0, 0, 0.5), inset 0px -10px 10px -10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+    .rus-tabs-title > * {
+        padding: 4px;
+    }
+
+    .rus-tabs-title:not(.active):hover {
+        filter: brightness(110%);
+    }
+
+    .rus-tabs-title > .button {
+        visibility: hidden;
+    }
+
+    .rus-tabs-title.active:hover > .button {
+        visibility: visible;
+    }
+
+    .rus-tabs-title.active {
+        background: var(--gradient-dark);
+        color: var(--color-light);
+        box-shadow: none;
+    }
