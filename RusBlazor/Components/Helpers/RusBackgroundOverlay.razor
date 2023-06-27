@@ -1,7 +1,11 @@
-﻿<div class="@($"rus-background-overlay {(visible ? "visible" : "invisible")}")" @onclick="HandleClick" />
+﻿<div class="@($"rus-background-overlay {(visible ? "visible" : "invisible")}")" @onclick="HandleClick">
+    @ChildContent
+</div>
 
 
 @code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
     [Parameter]
     public EventCallback OnClick { get; set; }
 

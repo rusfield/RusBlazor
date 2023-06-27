@@ -1,19 +1,15 @@
 .rus-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
     background-color: var(--color-dark);
     padding: 20px;
-    box-sizing: border-box;
     z-index: var(--zindex-dialog);
+    position: relative;
 }
 
-    .rus-dialog.open {
+    .rus-dialog.opening {
         animation: open 0.2s forwards;
     }
 
-    .rus-dialog.close {
+    .rus-dialog.closing {
         animation: close 0.2s forwards;
     }
 
@@ -23,22 +19,28 @@
     top: -12px;
 }
 
+.rus-dialog-buttons {
+    position: absolute;
+    right: 12px;
+    bottom: -12px;
+}
+
 @keyframes open {
     from {
-        transform: translate(-50%, -50%) scale(0);
+        transform: scale(0);
     }
 
     to {
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(1);
     }
 }
 
 @keyframes close {
     from {
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(1);
     }
 
     to {
-        transform: translate(-50%, -50%) scale(0);
+        transform: scale(0);
     }
 }
