@@ -10,10 +10,19 @@
     public RusTabs TabsContainer { get; set; }
 
     [Parameter]
-    public string Name { get; set; }
+    public string? Name { get; set; } = "";
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string? IconName { get; set; } = null;
+
+    [Parameter]
+    public bool IsClosable { get; set; } = true;
+
+    // Used by RusTabs
+    public bool IsClosed { get; set; } = false;
 
     protected override void OnInitialized()
     {
