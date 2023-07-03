@@ -65,18 +65,13 @@
         if (firstRender && TabItems.Any())
         {
             // Re-render new TabItems that are added on load.
+            if (TabItems.Any() && ActiveTab == null)
+            {
+                ActiveTab = TabItems.First();
+            }
             this.StateHasChanged();
         }
         base.OnAfterRender(firstRender);
-    }
-
-    protected override void OnParametersSet()
-    {
-        if (TabItems.Any() && ActiveTab == null)
-        {
-            ActiveTab = TabItems.First();
-        }
-        base.OnParametersSet();
     }
 
     string DisplayName(string name)
