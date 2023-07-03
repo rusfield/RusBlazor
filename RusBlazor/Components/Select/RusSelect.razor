@@ -3,7 +3,7 @@
 
 <div class="rus-select">
     <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" ValueText="@(Value.ToString())" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Active="inputActive" Label="@Label" />
-    <RusMenu @ref="rusMenu" T="T" IsOpenChanged="ShowMenuChanged">
+    <RusMenu @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-select-button-group")">
@@ -86,7 +86,7 @@
     string lastInput = "";
     CancellationTokenSource? searchTokenSource;
     SortedDictionary<T, string> filteredItems = new();
-    RusMenu<T>? rusMenu;
+    RusMenu? rusMenu;
     RusInput<string>? rusInput;
     int pageSize = 15;
     int currentPageIndex = -1;

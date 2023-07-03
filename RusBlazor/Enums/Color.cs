@@ -8,6 +8,7 @@ namespace RusBlazor.Enums
 {
     public enum Color
     {
+        TRANSPARENT,
         PRIMARY,
         SECONDARY,
         TERTIARY,

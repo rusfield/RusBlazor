@@ -12,6 +12,7 @@
     background: transparent;
     overflow: hidden;
     opacity: 0;
+    min-width: 200px;
 }
 
     .rus-menu::before {

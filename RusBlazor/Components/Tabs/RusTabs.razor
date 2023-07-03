@@ -1,7 +1,16 @@
-﻿<div class="rus-tabs">
-    @if (TabItems.Any())
+﻿@using RusBlazor.Enums
+
+<div class="rus-tabs">
+    @if (MenuContent != null)
     {
-        <div class="titles">
+        <div class="@($"rus-tabs-menu")">
+            <RusButton DefaultPadding="false" Color="Color.TRANSPARENT" OnClick="OnMenuClick">
+                <RusIcon IconName="menu" Style="font-size: 2rem" />
+            </RusButton>
+        </div>
+    }
+    <div class="rus-tabs-title-container">
+        <div class="rus-tabs-titles">
             @foreach (var tab in TabItems)
             {
                 bool active = tab == ActiveTab;
@@ -26,26 +35,40 @@
                 </div>
             }
         </div>
-    }
-    else
-    {
-        <div>No tabs available.</div>
-    }
-    <div class="dummy-scrollbar" />
+        <div class="dummy-scrollbar" />
+    </div>
+
+    @MenuContent
 </div>
 
 <CascadingValue Value="this" Name="TabsContainer">
-    @ChildContent
+    @TabContent
 </CascadingValue>
 
 
 @code {
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? MenuContent { get; set; }
+
+    [Parameter]
+    public RenderFragment TabContent { get; set; }
+
+    [Parameter]
+    public EventCallback OnMenuClick { get; set; }
 
     public List<RusTabItem> TabItems { get; } = new();
 
     public RusTabItem? ActiveTab { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && TabItems.Any())
+        {
+            // Re-render new TabItems that are added on load.
+            this.StateHasChanged();
+        }
+        base.OnAfterRender(firstRender);
+    }
 
     protected override void OnParametersSet()
     {

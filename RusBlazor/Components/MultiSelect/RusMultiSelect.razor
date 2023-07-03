@@ -4,7 +4,7 @@
 
 <div class="rus-multiselect">
     <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetDbValue())" Disabled="loadingComponent" Active="inputActive" Label="@Label" />
-    <RusMenu T="T" @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
+    <RusMenu @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-multiselect-button-group")">
@@ -96,7 +96,7 @@
     int resultCount = -1;
     CancellationTokenSource? searchTokenSource;
     SortedDictionary<T, string> filteredItems = new();
-    RusMenu<T>? rusMenu;
+    RusMenu? rusMenu;
     RusInput<string>? rusInput;
     string? rusInputId;
     bool previouslyDisplayDbValue = false;

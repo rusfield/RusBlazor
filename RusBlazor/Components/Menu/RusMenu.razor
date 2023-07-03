@@ -1,6 +1,5 @@
 ﻿@using RusBlazor.Components.Helpers
 @using RusBlazor.Enums
-@typeparam T
 
 @inject IJSRuntime JSRuntime
 
@@ -17,7 +16,7 @@
 
         @if (MenuContent != null)
         {
-            <div class="rus-menu-dropdown" id="@id" style="@($"height:{dropdownHeight}px;")">
+            <div class="rus-menu-dropdown" id="@id" style="@($"max-height:{dropdownHeight}px;")">
                 @MenuContent
             </div>
         }

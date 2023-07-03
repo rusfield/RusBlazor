@@ -36,6 +36,11 @@
     --gradient-light: radial-gradient(100% 100% at 100% 0, var(--color-light-lighten) 0, var(--color-light) 50%, var(--color-light-darken) 100%);
 }
 
+.transparent,
+.transparent-gradient {
+    background-color: rgba(0, 0, 0, 0);
+}
+
 
 .primary {
     background-color: var(--color-primary);
