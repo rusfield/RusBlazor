@@ -1,6 +1,7 @@
 ﻿@using RusBlazor.Enums
+@using RusBlazor.Handlers
 
-<button class="@($"rus-button ripple {Color.ToString().ToLower()}-gradient {Class} {(DefaultPadding ? "padding" : "no-padding")}")" style="@($"{Style} {(Color == Color.TRANSPARENT ? "box-shadow: none;" : "")}")" @onclick="OnClick" disabled="@Disabled" @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" id="@(_id)">
+<button class="@($"rus-button ripple {Color.ToString().ToLower()}-gradient {Class} {(DefaultPadding ? "padding" : "no-padding")}")" style="@($"{Style} {(Color == Color.TRANSPARENT ? "box-shadow: none;" : "")}")" @onclick="OnClick" disabled="@Disabled" @onmouseover="InternalOnMouseOver" @onmouseout="InternalOnMouseOut" id="@(_id)">
     @ChildContent
 </button>
 
@@ -33,10 +34,31 @@
     [Parameter]
     public Color Color { get; set; } = Color.PRIMARY;
 
+    [Parameter]
+    public string? HoverTooltipText { get; set; } = null;
+
     string _id;
 
     public RusButton()
     {
         _id = Guid.NewGuid().ToString().ToLower();
+    }
+
+    async void InternalOnMouseOver()
+    {
+        if (!string.IsNullOrWhiteSpace(HoverTooltipText))
+            TooltipHandler.DisplayTooltip(HoverTooltipText);
+
+        if (OnMouseOver.HasDelegate)
+            await OnMouseOver.InvokeAsync();
+    }
+
+    async void InternalOnMouseOut()
+    {
+        if (!string.IsNullOrWhiteSpace(HoverTooltipText))
+            TooltipHandler.ResetTooltip();
+
+        if (OnMouseOver.HasDelegate)
+            await OnMouseOut.InvokeAsync();
     }
 }

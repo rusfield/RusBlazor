@@ -1,0 +1,14 @@
+.rus-tab-item-container {
+    flex-grow: 1;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rus-tab-item {
+    width: 90%;
+    height: 90%;
+    position: relative;
+    box-sizing: border-box;
+}

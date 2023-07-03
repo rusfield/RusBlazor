@@ -1,50 +1,51 @@
 ﻿@using RusBlazor.Enums
 
-<div class="rus-tabs">
-    @if (MenuContent != null)
-    {
-        <div class="@($"rus-tabs-menu")">
-            <RusButton DefaultPadding="false" Color="Color.TRANSPARENT" OnClick="OnMenuClick">
-                <RusIcon IconName="menu" Style="font-size: 2rem" />
-            </RusButton>
+<div class="rus-tabs-container">
+    <div class="rus-tabs">
+        @if (MenuContent != null)
+        {
+            <div class="@($"rus-tabs-menu")">
+                <RusButton DefaultPadding="false" Color="Color.TRANSPARENT" OnClick="OnMenuClick">
+                    <RusIcon IconName="menu" Style="font-size: 2rem" />
+                </RusButton>
+            </div>
+        }
+        <div class="rus-tabs-title-container">
+            <div class="rus-tabs-titles">
+                @foreach (var tab in TabItems)
+                {
+                    bool active = tab == ActiveTab;
+                    <div class="@($"rus-tabs-title {(active ? "active" : "")} {(tab.IsClosed ? "closed" : "")}")" @onclick="@(async () => await OpenTabAsync(tab))">
+                        @if (!string.IsNullOrWhiteSpace(tab.IconName))
+                        {
+                            <div class="icon">
+                                <RusIcon IconName="@tab.IconName" />
+                            </div>
+                        }
+                        <span class="label">
+                            @DisplayName(tab.Name)
+                        </span>
+                        @if (tab.IsClosable)
+                        {
+                            <div class="button">
+                                <RusButton DefaultPadding="false" Style="@($"border-radius: 50%; height: 24px;")" OnClick="(async () => await CloseTabAsync(tab))">
+                                    <RusIcon IconName="close" />
+                                </RusButton>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="dummy-scrollbar" />
         </div>
-    }
-    <div class="rus-tabs-title-container">
-        <div class="rus-tabs-titles">
-            @foreach (var tab in TabItems)
-            {
-                bool active = tab == ActiveTab;
-                <div class="@($"rus-tabs-title {(active ? "active" : "")} {(tab.IsClosed ? "closed" : "")}")" @onclick="@(async () => await OpenTabAsync(tab))">
-                    @if (!string.IsNullOrWhiteSpace(tab.IconName))
-                    {
-                        <div class="icon">
-                            <RusIcon IconName="@tab.IconName" />
-                        </div>
-                    }
-                    <span class="label">
-                        @DisplayName(tab.Name)
-                    </span>
-                    @if (tab.IsClosable)
-                    {
-                        <div class="button">
-                            <RusButton DefaultPadding="false" Style="@($"border-radius: 50%; height: 24px;")" OnClick="(async () => await CloseTabAsync(tab))">
-                                <RusIcon IconName="close" />
-                            </RusButton>
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-        <div class="dummy-scrollbar" />
     </div>
-
-    @MenuContent
+    <div style="position: relative;">
+        @MenuContent
+    </div>
+    <CascadingValue Value="this" Name="TabsContainer">
+        @TabContent
+    </CascadingValue>
 </div>
-
-<CascadingValue Value="this" Name="TabsContainer">
-    @TabContent
-</CascadingValue>
-
 
 @code {
     [Parameter]

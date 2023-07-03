@@ -8,16 +8,16 @@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-multiselect-button-group")">
-                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync" DefaultPadding="false">
+                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync" DefaultPadding="false" HoverTooltipText="@_showSelectedTooltip">
                         <RusIcon IconName="checklist" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync" DefaultPadding="false">
+                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync" DefaultPadding="false" HoverTooltipText="@_resetFilterTooltip">
                         <RusIcon IconName="filter_alt_off" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="SelectVisibleAsync" DefaultPadding="false">
+                    <RusButton Style="width: 25%;" OnClick="SelectVisibleAsync" DefaultPadding="false" HoverTooltipText="@_selectVisibleTooltip">
                         <RusIcon IconName="playlist_add_check" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="DeselectVisibleAsync" DefaultPadding="false">
+                    <RusButton Style="width: 25%;" OnClick="DeselectVisibleAsync" DefaultPadding="false" HoverTooltipText="@_deselectVisibleTooltip">
                         <RusIcon IconName="playlist_remove" />
                     </RusButton>
                 </div>
@@ -100,6 +100,11 @@
     RusInput<string>? rusInput;
     string? rusInputId;
     bool previouslyDisplayDbValue = false;
+
+    string _showSelectedTooltip = "Show selected values";
+    string _resetFilterTooltip = "Reset filter";
+    string _selectVisibleTooltip = "Select all (in current page)";
+    string _deselectVisibleTooltip = "Deselect all (in current page)";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

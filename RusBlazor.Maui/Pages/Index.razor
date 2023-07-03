@@ -2,7 +2,8 @@
 @using RusBlazor.Components.Button;
 @using RusBlazor.Components.ModelView;
 @using RusBlazor.Components.Dialog;
-@using RusBlazor.Components.Tabs
+@using RusBlazor.Components.Tabs;
+@using RusBlazor.Components.Footer;
 
 @page "/"
 
@@ -25,15 +26,13 @@
     </MenuContent>
     <TabContent>
         <RusTabItem Name="First tab" IconName="auto_awesome">
-            <div style="width: 800px; height: 400px; padding-top: 50px;">
-                <RusModelView>
-                    <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="0" Status="Enums.ModelBoxStatus.REQUIRED" OnClick="OpenDialog" />
-                    <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="0" />
-                    <RusModelBox TableName="Hello Hello Hello Hello" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="1" />
-                    <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" GridX="0" GridY="2" />
-                    <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="2" />
-                </RusModelView>
-            </div>
+            <RusModelView>
+                <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="0" Status="Enums.ModelBoxStatus.REQUIRED" OnClick="OpenDialog" />
+                <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="0" />
+                <RusModelBox TableName="Hello Hello Hello Hello" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="1" />
+                <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" GridX="0" GridY="2" />
+                <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="2" />
+            </RusModelView>
         </RusTabItem>
         <RusTabItem Name="Second tab">
             Content 2
@@ -82,6 +81,7 @@
         </RusTabItem>
     </TabContent>
 </RusTabs>
+<RusFooter Text="HotfixMods - 10.1.5.50232"/>
 
 @code {
     RusDialog _dialog;

@@ -7,10 +7,10 @@
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
                 <div class="@("rus-select-button-group")">
-                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync" DefaultPadding="false">
+                    <RusButton Style="width: 25%;" OnClick="ShowSelectedAsync" DefaultPadding="false" HoverTooltipText="@_showSelectedTooltip">
                         <RusIcon IconName="done" />
                     </RusButton>
-                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync" DefaultPadding="false">
+                    <RusButton Style="width: 25%;" OnClick="ResetFilterAsync" DefaultPadding="false" HoverTooltipText="@_resetFilterTooltip">
                         <RusIcon IconName="filter_alt_off" />
                     </RusButton>
                 </div>
@@ -93,6 +93,8 @@
     int resultCount = -1;
     string? rusInputId;
     bool previouslyDisplayDbValue = false;
+    string _showSelectedTooltip = "Show selected values";
+    string _resetFilterTooltip = "Reset filter";
 
 
     protected override async Task OnParametersSetAsync()

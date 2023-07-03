@@ -1,6 +1,17 @@
 ﻿@if (TabsContainer.ActiveTab == this)
 {
-    @ChildContent
+    @if (UseDefaultContainer)
+    {
+        <div class="rus-tab-item-container">
+            <div class="rus-tab-item">
+                @ChildContent
+            </div>
+        </div>
+    }
+    else
+    {
+        @ChildContent
+    }
 }
 
 @* TODO: Consider changing this to conditional display:none instead, to keep states *@
@@ -20,6 +31,9 @@
 
     [Parameter]
     public bool IsClosable { get; set; } = true;
+
+    [Parameter]
+    public bool UseDefaultContainer { get; set; } = true;
 
     // Used by RusTabs
     public bool IsClosed { get; set; } = false;
