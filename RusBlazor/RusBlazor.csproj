@@ -12,6 +12,11 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Remove="wwwroot\css\icons.css" />
+	  <Content Remove="wwwroot\fonts\icons.woff2" />
+	</ItemGroup>
+
   <ItemGroup>
     <None Remove="Components\Checkbox\RusCheckbox.razor.css" />
     <None Remove="Components\Menu\RusMenuItem.razor.css" />
@@ -30,10 +35,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 
 </Project>
