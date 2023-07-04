@@ -18,9 +18,14 @@
     List<int> multiSelectValue = new();
     int flagSelectValue = 2;
 
+
+    bool temp = false;
     async Task<(SortedDictionary<int, string>, int)> GetFruitsAsync(int selectedValue, string? search, int pageIndex, int pageSize, CancellationToken token)
     {
         await Task.Delay(1000, token);
+        if (temp)
+            await Task.Delay(10000);
+            temp = true;
         var results = new SortedDictionary<int, string>();
         int id = 1;
 

@@ -54,3 +54,8 @@
     z-index: var( --zindex-menu);
     position: relative;
 }
+
+.hide-scrollbar {
+    overflow: hidden !important;
+    padding-right: 20px !important;
+}

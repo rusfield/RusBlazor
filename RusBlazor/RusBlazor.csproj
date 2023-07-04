@@ -22,10 +22,6 @@
     <Content Include="Components\Menu\RusMenuItem.razor.css" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="compilerconfig.json" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />

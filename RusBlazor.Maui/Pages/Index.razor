@@ -35,7 +35,7 @@
             </RusModelView>
         </RusTabItem>
         <RusTabItem Name="Second tab">
-            Content 2
+            <RusBlazor.Components.Loader.RusLoader />
         </RusTabItem>
         <RusTabItem Name="Third tab">
             Content 3
@@ -85,7 +85,7 @@
 
 @code {
     RusDialog _dialog;
-    RusMenu? _rusMenu;
+    RusMenu _rusMenu;
 
     async void OpenDialog()
     {

@@ -97,7 +97,8 @@
             var functionSpecs = new object[]
             {
                 new { name = "toggleDropdownHeight", args = new object[] { id, true, dropdownHeight, animationDurationMs } },
-                new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, true, animationDurationMs } }
+                new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, true, animationDurationMs } },
+                new { name = "addAndRemoveClass", args = new object[] { id, "hide-scrollbar", animationDurationMs } }
             };
 
             await JSRuntime.InvokeVoidAsync("executeMultipleFunctions", new object[] { functionSpecs });
@@ -112,7 +113,9 @@
             var functionSpecs = new object[]
             {
                 new { name = "toggleDropdownHeight", args = new object[] { id, false, dropdownHeight, animationDurationMs } },
-                new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, false, animationDurationMs } }
+                new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, false, animationDurationMs } },
+                                new { name = "addAndRemoveClass", args = new object[] { id, "hide-scrollbar", animationDurationMs } }
+
             };
 
             await JSRuntime.InvokeVoidAsync("executeMultipleFunctions", new object[] { functionSpecs });
