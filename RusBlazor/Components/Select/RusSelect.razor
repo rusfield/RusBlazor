@@ -2,7 +2,7 @@
 @inject IJSRuntime JSRuntime
 
 <div class="rus-select">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" ValueText="@(Value.ToString())" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Disabled="loadingComponent" Active="inputActive" Label="@Label" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" ValueText="@(Value.ToString())" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Loading="loadingComponent" Active="inputActive" Label="@Label" />
     <RusMenu @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
@@ -81,7 +81,7 @@
     bool loadingComponent = true;
     bool loadingSearch = false;
     bool inputActive;
-    string displayValue = "Loading";
+    string displayValue = "";
     string? lastVerifiedDisplayValue;
     string lastInput = "";
     CancellationTokenSource? searchTokenSource;

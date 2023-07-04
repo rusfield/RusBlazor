@@ -2,11 +2,17 @@
 @inherits InputBase<TValue>
 
 @inject IJSRuntime JSRuntime
-<div class="@($"rus-input-label {ActiveClass()}")">
+<div class="@($"rus-input-label {ActiveClass()} {DisabledClass()}")">
     @Label
 </div>
-<div class="@($"rus-input-container {Class} {ActiveClass()}")" style="@(Style)" @onclick="FocusInputAsync">
-    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input")" disabled="@Disabled" />
+<div class="@($"rus-input-container {Class} {ActiveClass()} {DisabledClass()}")" style="@(Style)" @onclick="FocusInputAsync">
+    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input")" disabled="@(Disabled || Loading)" />
+    @if (Loading)
+    {
+        <div class="rus-input-loader">
+            <RusLoader Color="Enums.Color.LIGHT" />
+        </div>
+    }
 </div>
 
 @code {
@@ -27,6 +33,9 @@
 
     [Parameter]
     public bool Disabled { get; set; } = false;
+
+    [Parameter]
+    public bool Loading { get; set; } = false;
 
     [Parameter]
     public string Class { get; set; } = "";
@@ -65,6 +74,11 @@
         {
             return focused ? "active" : "";
         }
+    }
+
+    string DisabledClass()
+    {
+        return Disabled || Loading ? "disabled" : "";
     }
 
     async Task HandleFocusAsync()
