@@ -7,8 +7,8 @@
         <div class="@($"rus-dialog {TransitionClass()}")">
             <div class="rus-dialog-content">
                 <div class="rus-dialog-exit">
-                    <RusButton DefaultPadding="false" Style="border-radius: 50%; height:24px;" OnClick="CloseAsync">
-                        <RusIcon IconName="close" />
+                    <RusButton DefaultPadding="false" Style="border-radius: 50%; height:48px;" OnClick="CloseAsync">
+                        <RusIcon IconName="close" Style="font-size: 48px;" />
                     </RusButton>
                 </div>
                 <DynamicComponent Type="@_component" Parameters="_parameters" />
