@@ -5,23 +5,25 @@
 {
     <RusBackgroundOverlay CloseOnClick="false" @ref="_backgroundOverlay">
         <div class="@($"rus-dialog {TransitionClass()}")">
-            <div class="rus-dialog-exit">
-                <RusButton DefaultPadding="false" Style="border-radius: 50%; height:24px;" OnClick="CloseAsync">
-                    <RusIcon IconName="close" />
-                </RusButton>
-            </div>
-            <DynamicComponent Type="@_component" Parameters="_parameters" />
-            @if (_buttons.Count > 0)
-            {
-                <div class="rus-dialog-buttons">
-                    @foreach (var button in _buttons)
-                    {
-                        <RusButton OnClick="@button.Item2" Color="@button.Item3">
-                            @button.Item1
-                        </RusButton>
-                    }
+            <div class="rus-dialog-content">
+                <div class="rus-dialog-exit">
+                    <RusButton DefaultPadding="false" Style="border-radius: 50%; height:24px;" OnClick="CloseAsync">
+                        <RusIcon IconName="close" />
+                    </RusButton>
                 </div>
-            }
+                <DynamicComponent Type="@_component" Parameters="_parameters" />
+                @if (_buttons.Count > 0)
+                {
+                    <div class="rus-dialog-buttons">
+                        @foreach (var button in _buttons)
+                        {
+                            <RusButton OnClick="@button.Item2" Color="@button.Item3">
+                                @button.Item1
+                            </RusButton>
+                        }
+                    </div>
+                }
+            </div>
         </div>
     </RusBackgroundOverlay>
 }
@@ -38,7 +40,7 @@
     {
         if (_opening)
         {
-            // This "hack" is needed because keeping the CSS Scale property applied causes nested CSS positions to be messed up 
+            // This "hack" is needed because keeping the CSS Scale property applied causes nested CSS positions to be messed up
             await Task.Delay(200);
             _opening = false;
             this.StateHasChanged();
@@ -88,6 +90,6 @@
             return "opening";
         else if (_closing)
             return "closing";
-            return "";
+        return "";
     }
 }
