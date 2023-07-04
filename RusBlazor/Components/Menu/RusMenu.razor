@@ -1,5 +1,6 @@
 ﻿@using RusBlazor.Components.Helpers
 @using RusBlazor.Enums
+@using RusBlazor.Handlers
 
 @inject IJSRuntime JSRuntime
 
@@ -135,6 +136,10 @@
                 await IsOpenChanged.InvokeAsync((false, 0));
             });
         }
+
+        // When the menu disappears, some of the elements do not trigger mouseout correctly.
+        // Clean up any tooltips caught by this. 
+        TooltipHandler.ResetTooltip();
     }
 
     public string GetId()

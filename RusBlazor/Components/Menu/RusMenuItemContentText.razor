@@ -1,8 +1,10 @@
-﻿<div class="rus-text-menu-item1">
-    @Text
+﻿<div class="rus-menu-content">
+    <div class="rus-menu-content-text">
+        @(Text ?? "")
+    </div>
 </div>
 
 @code{
     [Parameter]
-    public string Text { get; set; }
+    public string? Text { get; set; }
 }

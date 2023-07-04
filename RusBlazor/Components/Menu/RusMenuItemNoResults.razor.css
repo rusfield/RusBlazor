@@ -1,0 +1,8 @@
+.rus-menu-item-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 20px;
+    box-sizing: border-box;
+}
