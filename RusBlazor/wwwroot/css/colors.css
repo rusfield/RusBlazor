@@ -26,6 +26,8 @@
     --color-light: #D3D3D3;
     --color-light-lighten: #f0f0f0;
     --color-light-darken: #696969;
+    /* Enable Gradients */
+    /*
     --gradient-primary: radial-gradient(100% 100% at 100% 0, var(--color-primary-lighten) 0, var(--color-primary) 50%, var(--color-primary-darken) 100%);
     --gradient-secondary: radial-gradient(100% 100% at 100% 0, var(--color-secondary-lighten) 0, var(--color-secondary) 50%, var(--color-secondary-darken) 100%);
     --gradient-tertiary: radial-gradient(100% 100% at 100% 0, var(--color-tertiary-lighten) 0, var(--color-tertiary) 50%, var(--color-tertiary-darken) 100%);
@@ -34,6 +36,16 @@
     --gradient-error: radial-gradient(100% 100% at 100% 0, var(--color-error-lighten) 0, var(--color-error) 50%, var(--color-error-darken) 100%);
     --gradient-dark: radial-gradient(100% 100% at 100% 0, var(--color-dark-lighten) 0, var(--color-dark) 50%, var(--color-dark-darken) 100%);
     --gradient-light: radial-gradient(100% 100% at 100% 0, var(--color-light-lighten) 0, var(--color-light) 50%, var(--color-light-darken) 100%);
+        */
+    /* Disable Gradients */
+    --gradient-primary: radial-gradient(100% 100% at 100% 0, var(--color-primary-darken) 0, var(--color-primary-darken) 50%, var(--color-primary-darken) 100%);
+    --gradient-secondary: radial-gradient(100% 100% at 100% 0, var(--color-secondary-darken) 0, var(--color-secondary-darken) 50%, var(--color-secondary-darken) 100%);
+    --gradient-tertiary: radial-gradient(100% 100% at 100% 0, var(--color-tertiary-darken) 0, var(--color-tertiary-darken) 50%, var(--color-tertiary-darken) 100%);
+    --gradient-info: radial-gradient(100% 100% at 100% 0, var(--color-info-darken) 0, var(--color-info-darken) 50%, var(--color-info-darken) 100%);
+    --gradient-warning: radial-gradient(100% 100% at 100% 0, var(--color-warning-darken) 0, var(--color-warning-darken) 50%, var(--color-warning-darken) 100%);
+    --gradient-error: radial-gradient(100% 100% at 100% 0, var(--color-error-darken) 0, var(--color-error-darken) 50%, var(--color-error-darken) 100%);
+    --gradient-dark: radial-gradient(100% 100% at 100% 0, var(--color-dark-darken) 0, var(--color-dark-darken) 50%, var(--color-dark-darken) 100%);
+    --gradient-light: radial-gradient(100% 100% at 100% 0, var(--color-light-darken) 0, var(--color-light-darken) 50%, var(--color-light-darken) 100%);
 }
 
 .transparent,
