@@ -19,6 +19,7 @@
 
 .rus-tabs-title-container {
     overflow-x: scroll;
+    z-index: 2; /* Placed above the tab contents, needed for the scrollbar */
 }
 
     .rus-tabs-title-container::-webkit-scrollbar {
@@ -111,6 +112,7 @@
     height: 48px;
     background: var(--color-dark-lighten);
     border-right: 1px solid var(--color-dark-darken);
+    z-index: var(--zindex-header);
 }
 
 @keyframes removePadding {

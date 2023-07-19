@@ -7,11 +7,10 @@
 
 @page "/"
 
-<RusDialog @ref="_dialog" />
 
 
 
-<RusTabs OnMenuClick="OnMenuClickAsync">
+<RusTabs @ref="_rusTabs" OnMenuClick="OnMenuClickAsync">
     <MenuContent>
         <RusMenu @ref="_rusMenu">
             <MenuContent>
@@ -27,7 +26,7 @@
     <TabContent>
         <RusTabItem Name="First tab" IconName="auto_awesome">
             <RusModelView>
-                <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="0" Status="Enums.ModelBoxStatus.REQUIRED" OnClick="OpenDialog" />
+                <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="0" Status="Enums.ModelBoxStatus.REQUIRED" OnClick="_rusTabs.OpenTabDialogAsync" />
                 <RusModelBox TableName="Hello Hello Hello Hello" GridX="1" GridY="0" />
                 <RusModelBox TableName="Hello Hello Hello Hello" Bottom="@(("Yo", "Yo"))" GridX="0" GridY="1" />
                 <RusModelBox TableName="Hello Hello Hello Hello" Right="@(("Yo", "Yo"))" GridX="0" GridY="2" />
@@ -84,20 +83,10 @@
 <RusFooter Text="HotfixMods - 10.1.5.50232"/>
 
 @code {
-    RusDialog _dialog;
     RusMenu _rusMenu;
+    RusTabs _rusTabs;
 
-    async void OpenDialog()
-    {
-        var buttons = new List<(string, EventCallback, RusBlazor.Enums.Color)>();
-        buttons.Add(("Test", new(this, new Action(Nothing)), RusBlazor.Enums.Color.PRIMARY));
-        await _dialog.OpenWithButtonsAsync(typeof(Test), buttons);
-    }
 
-    async void Nothing()
-    {
-        await _dialog.CloseAsync();
-    }
 
     async void OnMenuClickAsync()
     {

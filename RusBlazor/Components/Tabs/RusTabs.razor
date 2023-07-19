@@ -81,7 +81,7 @@
         /*
         if (name.Length > 12)
             return $"{name.Substring(0, 10)}...";
-            */
+        */
         name = name + name + name + name;
         return name;
     }
@@ -109,5 +109,10 @@
     {
         if (!tab.IsClosed)
             ActiveTab = tab;
+    }
+
+    public async Task OpenTabDialogAsync()
+    {
+        await ActiveTab.OpenDialogAsync();
     }
 }

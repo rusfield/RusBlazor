@@ -3,7 +3,7 @@
 
 @if (_component != null)
 {
-    <RusBackgroundOverlay CloseOnClick="false" @ref="_backgroundOverlay">
+    <RusBackgroundOverlay CloseOnClick="false" @ref="_backgroundOverlay" FixedPosition="false">
         <div class="@($"rus-dialog {TransitionClass()}")">
             <div class="rus-dialog-content">
                 <div class="rus-dialog-exit">

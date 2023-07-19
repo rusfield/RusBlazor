@@ -4,6 +4,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    margin-top: -17px; /* Dummy scrollbar placeholder */
+    z-index: 1; /* Placed below top tabs, the overlap part is the scrollbar */
 }
 
 .rus-tab-item {
