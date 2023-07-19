@@ -231,6 +231,7 @@
     {
         Value = key;
         await SetDisplayTextAsync();
+        await Task.Delay(200); // Select-animation play
         await rusMenu.CloseAsync();
         await ValueChanged.InvokeAsync(Value);
     }
