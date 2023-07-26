@@ -1,8 +1,10 @@
-﻿@typeparam T
+﻿@using RusBlazor.Enums
+
+@typeparam T
 @inject IJSRuntime JSRuntime
 
 <div class="rus-select">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" ValueText="@(Value.ToString())" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Loading="loadingComponent" Active="inputActive" Label="@Label" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" ValueText="@(Value.ToString())" OnFocus="OnFocus" OnBlur="OnBlur" InputChanged="InputChanged" Loading="loadingComponent" Active="inputActive" Label="@Label" BorderRadius="BorderRadius" />
     <RusMenu @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
@@ -77,6 +79,9 @@
 
     [Parameter] // Label over component
     public string Label { get; set; } = "";
+
+    [Parameter]
+    public BorderRadius BorderRadius { get; set; } = Enums.BorderRadius.ALL;
 
     bool loadingComponent = true;
     bool loadingSearch = false;

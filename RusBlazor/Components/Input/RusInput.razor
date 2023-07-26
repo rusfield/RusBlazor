@@ -1,11 +1,13 @@
-﻿@typeparam TValue
+﻿@using RusBlazor.Enums
+
+@typeparam TValue
 @inherits InputBase<TValue>
 
 @inject IJSRuntime JSRuntime
 <div class="@($"rus-input-label {ActiveClass()} {DisabledClass()}")">
     @Label
 </div>
-<div class="@($"rus-input-container {Class} {ActiveClass()} {DisabledClass()}")" style="@(Style)" @onclick="FocusInputAsync">
+<div class="@($"rus-input-container {Class} {ActiveClass()} {DisabledClass()}")" style="@($"{BorderRadiusStyle()} {Style}")" @onclick="FocusInputAsync">
     <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input")" disabled="@(Disabled || Loading)" />
     @if (Loading)
     {
@@ -46,6 +48,9 @@
     [Parameter] // Used for handling active from the outside, for example menus which frequently loses focus of input
     public bool? Active { get; set; }
 
+    [Parameter]
+    public BorderRadius BorderRadius { get; set; } = Enums.BorderRadius.ALL;
+
     string id;
     bool focused = false;
 
@@ -74,6 +79,18 @@
         {
             return focused ? "active" : "";
         }
+    }
+
+    string BorderRadiusStyle()
+    {
+        int borderRadiusValue = 5;
+        return BorderRadius switch
+        {
+            BorderRadius.ALL => $"border-radius:{borderRadiusValue}px;",
+            BorderRadius.LEFT => $"border-top-left-radius:{borderRadiusValue}px;border-bottom-left-radius:{borderRadiusValue}px;",
+            BorderRadius.RIGHT => $"border-top-right-radius:{borderRadiusValue}px;border-bottom-right-radius:{borderRadiusValue}px;",
+            _ => "" // NONE or undefined
+        };
     }
 
     string DisabledClass()
