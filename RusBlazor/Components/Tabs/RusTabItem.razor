@@ -3,7 +3,14 @@
 <div class="rus-tab-item-container" style="@(DisplayStyle())">
     <RusDialog @ref="_dialog" />
     <div class="rus-tab-item">
-        @ChildContent
+        <div class="rus-tab-item-header">
+            <div class="rus-tab-item-header-content">
+                @Name
+            </div>
+        </div>
+        <div class="rus-tab-item-background">
+            @ChildContent
+        </div>
     </div>
 </div>
 
