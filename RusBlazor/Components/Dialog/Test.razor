@@ -2,9 +2,9 @@
     <br />
 <RusButton OnClick="(() => displayDbValue = !displayDbValue)">Toggle Display</RusButton>
 <CascadingValue Name="DisplayDbValue" Value="displayDbValue">
-    <RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" @bind-Value="selectValue" Label="Single Select" />
-    <RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" @bind-Value="flagSelectValue" Label="Flag Select" />
-    <RusBlazor.Components.MultiSelect.RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" @bind-Value="multiSelectValue" Label="Multiselect" />
+    <RusSelect GetOptionsAsync="GetFruitsAsync" GetPageIndexByIdAsync="GetPageIndexByIdAsync" @bind-Value="selectValue" Label="Single Select" CompareValue="new(2)" />
+    <RusFlagSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" @bind-Value="flagSelectValue" Label="Flag Select" CompareValue="new(5)" />
+    <RusBlazor.Components.MultiSelect.RusMultiSelect T="int" GetOptionsAsync="GetFruitsMultiselectAsync" @bind-Value="multiSelectValue" Label="Multiselect" CompareValue="new(new(){ 5 })" />
 </CascadingValue>
 </div>
 
@@ -82,7 +82,7 @@
 
             id = id * 2;
         }
-        return (new SortedDictionary<int, string>(results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => k.Key, v => v.Value)), results.Count);
+        return (new SortedDictionary<int, string>(results.Skip(pageIndex * pageSize).Take(pageSize).ToDictionary(k => (int)k.Key, v => v.Value)), results.Count);
     }
 
     private List<string> items = new List<string>

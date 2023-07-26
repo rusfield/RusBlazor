@@ -1,0 +1,15 @@
+﻿@using RusBlazor.Enums
+
+<div class="rus-compare-button">
+    <RusButton DefaultPadding="false" Style="@($"border-radius: 50%; height: 24px;")" OnClick="OnClick" Color="Color.TERTIARY">
+        <RusIcon IconName="arrow_upward_alt" />
+    </RusButton>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+}

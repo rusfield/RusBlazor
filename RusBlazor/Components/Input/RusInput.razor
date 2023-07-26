@@ -1,4 +1,6 @@
 ﻿@using RusBlazor.Enums
+@using RusBlazor.Components.Helpers
+@using RusBlazor.Wrappers
 
 @typeparam TValue
 @inherits InputBase<TValue>
@@ -17,7 +19,15 @@
     }
 </div>
 
+@if (DisplayCompareValueButton())
+{
+    <RusCompareButton OnClick="CompareButtonClick" />
+}
+
 @code {
+    [Parameter]
+    public CompareWrapper<TValue> CompareValue { get; set; }
+
     [Parameter]
     public EventCallback OnFocus { get; set; }
 
@@ -126,5 +136,21 @@
     protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
     {
         throw new NotImplementedException();
+    }
+
+    bool DisplayCompareValueButton()
+    {
+        bool elementInUse = focused || (Active ?? false);
+        bool valueValidAndDifferent = CompareValue != null && !Value.Equals(CompareValue.Value);
+        return !elementInUse && valueValidAndDifferent;
+    }
+
+    async void CompareButtonClick()
+    {
+        if(CompareValue != null)
+        {
+            Value = CompareValue.Value;
+            await ValueChanged.InvokeAsync(Value);
+        }
     }
 }

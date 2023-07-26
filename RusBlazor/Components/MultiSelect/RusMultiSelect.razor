@@ -1,4 +1,6 @@
 ﻿@using RusBlazor.Enums
+@using RusBlazor.Components.Helpers
+@using RusBlazor.Wrappers
 
 @typeparam T
 @inject IJSRuntime JSRuntime
@@ -65,6 +67,10 @@
             </RusMenuItem>
         </MenuBottomContent>
     </RusMenu>
+    @if (DisplayCompareValueButton())
+    {
+        <RusCompareButton OnClick="CompareButtonClick" />
+    }
 </div>
 
 @code {
@@ -76,6 +82,9 @@
 
     [Parameter]
     public EventCallback<List<T>> ValueChanged { get; set; }
+
+    [Parameter]
+    public CompareWrapper<List<T>> CompareValue { get; set; }
 
     [Parameter]
     public Func<List<T>, string?, int, int, CancellationToken, Task<(SortedDictionary<T, string>, int)>> GetOptionsAsync { get; set; }
@@ -163,7 +172,7 @@
 
     void OnBlur()
     {
-        if(!rusMenu?.IsOpen ?? true)
+        if (!rusMenu?.IsOpen ?? true)
             searchTokenSource?.Cancel();
     }
 
@@ -371,5 +380,38 @@
             return OverrideValueText(Value);
         }
         return string.Join(", ", Value);
+    }
+
+    bool DisplayCompareValueButton()
+    {
+        // If CompareValue is not set, do not show
+        if(CompareValue?.Value != null)
+        {
+            // If CompareValue and Value have different counts, show
+            if(CompareValue.Value.Count == Value.Count)
+            {
+                // If any differences between Value and CompareValue, show
+                foreach(var value in Value)
+                {
+                    if (!CompareValue.Value.Contains(value))
+                        return true;
+                }
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    async void CompareButtonClick()
+    {
+        if (CompareValue != null)
+        {
+            loadingComponent = true;
+            Value = CompareValue.Value;
+            await SetDisplayTextAsync();
+            loadingComponent = false;
+            await ValueChanged.InvokeAsync(Value);
+        }
     }
 }
