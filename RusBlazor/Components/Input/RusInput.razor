@@ -6,10 +6,10 @@
 @inherits InputBase<TValue>
 
 @inject IJSRuntime JSRuntime
-<div class="@($"rus-input-label {ActiveClass()} {DisabledClass()}")">
+<div class="@($"rus-input-label {ColorClass()} {DisabledClass()}")">
     @Label
 </div>
-<div class="@($"rus-input-container {Class} {ActiveClass()} {DisabledClass()}")" style="@($"{BorderRadiusStyle()} {Style}")" @onclick="FocusInputAsync">
+<div class="@($"rus-input-container {Class} {ColorClass()} {DisabledClass()} {CompareButtonClass()}")" style="@($"{BorderRadiusStyle()} {Style}")" @onclick="FocusInputAsync">
     <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input")" disabled="@(Disabled || Loading)" />
     @if (Loading)
     {
@@ -21,7 +21,7 @@
 
 @if (DisplayCompareValueButton())
 {
-    <RusCompareButton OnClick="CompareButtonClick" />
+    <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" />
 }
 
 @code {
@@ -58,11 +58,15 @@
     [Parameter] // Used for handling active from the outside, for example menus which frequently loses focus of input
     public bool? Active { get; set; }
 
+    [Parameter] // Used for handling compare button hover from the outside
+    public bool? CompareButtonHovered { get; set; }
+
     [Parameter]
     public BorderRadius BorderRadius { get; set; } = Enums.BorderRadius.ALL;
 
     string id;
     bool focused = false;
+    bool internalCompareButtonHover = false;
 
     public RusInput()
     {
@@ -79,9 +83,15 @@
         return id;
     }
 
-    string ActiveClass()
+    string ColorClass()
     {
-        if (Active != null)
+        bool compareOhver = CompareButtonHovered ?? internalCompareButtonHover;
+
+        if (compareOhver)
+        {
+            return "compare-hover";
+        }
+        else if (Active != null)
         {
             return (bool)Active ? "active" : "";
         }
@@ -106,6 +116,11 @@
     string DisabledClass()
     {
         return Disabled || Loading ? "disabled" : "";
+    }
+
+    string CompareButtonClass()
+    {
+        return internalCompareButtonHover ? "compare-hover" : "";
     }
 
     async Task HandleFocusAsync()
@@ -152,5 +167,11 @@
             Value = CompareValue.Value;
             await ValueChanged.InvokeAsync(Value);
         }
+        internalCompareButtonHover = false;
+    }
+
+    void OnCompareButtonHover(bool isHovering)
+    {
+        internalCompareButtonHover = isHovering;
     }
 }

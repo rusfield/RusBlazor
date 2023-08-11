@@ -9,6 +9,12 @@
     transition: ease 0.2s;
 }
 
+    .rus-input-container.compare-hover {
+        z-index: var(--zindex-input-active);
+        border: 1px solid var(--color-tertiary);
+        outline: 1px solid var(--color-tertiary);
+    }
+
     .rus-input-container.active {
         z-index: var(--zindex-input-active);
         border: 1px solid var(--color-primary);
@@ -45,6 +51,11 @@
     padding-left: 4px;
     transition: ease 0.2s;
 }
+
+    .rus-input-label.compare-hover {
+        z-index: var(--zindex-input-active);
+        color: var(--color-tertiary);
+    }
 
     .rus-input-label.active {
         z-index: var(--zindex-input-active);

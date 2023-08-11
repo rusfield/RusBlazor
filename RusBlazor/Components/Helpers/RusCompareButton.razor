@@ -1,8 +1,8 @@
 ﻿@using RusBlazor.Enums
 
-<div class="rus-compare-button">
+<div class="rus-compare-button" onmouseover="@(() => HandleHover(true))" onmouseout="@(() => HandleHover(false))">
     <RusButton DefaultPadding="false" Style="@($"border-radius: 50%; height: 24px;")" OnClick="OnClick" Color="Color.TERTIARY">
-        <RusIcon IconName="arrow_upward_alt" />
+        <RusIcon IconName="arrow_right_alt" />
     </RusButton>
 </div>
 
@@ -11,5 +11,13 @@
     public EventCallback OnClick { get; set; }
 
     [Parameter]
+    public EventCallback<bool> OnHover { get; set; }
+
+    [Parameter]
     public string Style { get; set; }
+
+    async void HandleHover(bool isHovering)
+    {
+        await OnHover.InvokeAsync(isHovering);
+    }
 }

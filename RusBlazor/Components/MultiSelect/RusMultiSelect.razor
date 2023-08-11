@@ -6,7 +6,7 @@
 @inject IJSRuntime JSRuntime
 
 <div class="rus-multiselect">
-    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetDbValue())" Loading="loadingComponent" Active="inputActive" Label="@Label" BorderRadius="BorderRadius" />
+    <RusInput TValue="string" @ref="rusInput" @bind-Value="displayValue" @bind-CompareButtonHovered="compareButtonHover" DisplayName="test" OnFocus="OnFocusAsync" OnBlur="OnBlur" InputChanged="InputChanged" ValueText="@(GetDbValue())" Loading="loadingComponent" Active="inputActive" Label="@Label" BorderRadius="BorderRadius" />
     <RusMenu @ref="rusMenu" IsOpenChanged="ShowMenuChanged">
         <MenuTopContent>
             <RusMenuItem Hoverable="false">
@@ -69,7 +69,7 @@
     </RusMenu>
     @if (DisplayCompareValueButton())
     {
-        <RusCompareButton OnClick="CompareButtonClick" />
+        <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" />
     }
 </div>
 
@@ -100,6 +100,7 @@
 
     bool loadingComponent = true;
     bool loadingSearch = false;
+    bool compareButtonHover = false;
     string displayValue = "";
     string lastVerifiedDisplayValue = "";
     string lastInput = "";
@@ -405,6 +406,7 @@
 
     async void CompareButtonClick()
     {
+        compareButtonHover = false;
         if (CompareValue != null)
         {
             loadingComponent = true;
@@ -413,5 +415,10 @@
             loadingComponent = false;
             await ValueChanged.InvokeAsync(Value);
         }
+    }
+
+    void OnCompareButtonHover(bool isHovering)
+    {
+        compareButtonHover = isHovering;
     }
 }
