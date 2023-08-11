@@ -45,6 +45,7 @@
 
     string OverrideValueText(List<T> selectedValues)
     {
-        return Value.ToString();
+        var value = selectedValues.GetValueByFlags();
+        return value?.ToString() ?? "";
     }
 }

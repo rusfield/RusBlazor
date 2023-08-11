@@ -1,7 +1,8 @@
 ﻿@using RusBlazor.Enums
+@using RusBlazor.Handlers
 
 <div class=@($"rus-compare-button {ActiveClass()}") onmouseover="@(() => HandleHover(true))" onmouseout="@(() => HandleHover(false))">
-    <RusButton DefaultPadding="false" Style="@($"border-radius: 50%; height: 24px;")" OnClick="OnClick" Color="Color.TERTIARY">
+    <RusButton DefaultPadding="false" Style="@($"border-radius: 50%; height: 24px;")" OnClick="HandleClick" Color="Color.TERTIARY">
         <RusIcon IconName="arrow_right_alt" />
     </RusButton>
 </div>
@@ -19,12 +20,30 @@
     [Parameter]
     public bool Active { get; set; } = false;
 
+    [Parameter]
+    public string TooltipText { get; set; } = "";
+
     bool internalHover = false;
 
     async void HandleHover(bool isHovering)
     {
         internalHover = isHovering;
+        if (isHovering)
+        {
+            TooltipHandler.DisplayTooltip(TooltipText);
+        }
+        else
+        {
+            TooltipHandler.ResetTooltip();
+        }
+
         await OnHover.InvokeAsync(isHovering);
+    }
+
+    async void HandleClick()
+    {
+        TooltipHandler.ResetTooltip();
+        await OnClick.InvokeAsync();
     }
 
     string ActiveClass()

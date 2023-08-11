@@ -69,7 +69,7 @@
     </RusMenu>
     @if (DisplayCompareValueButton())
     {
-        <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" Active="inputActive" />
+        <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" Active="inputActive" TooltipText="@TooltipText()" />
     }
 </div>
 
@@ -380,7 +380,16 @@
         {
             return OverrideValueText(Value);
         }
-        return string.Join(", ", Value);
+        return string.Join(" ", Value);
+    }
+
+    string GetDbCompareValue()
+    {
+        if (OverrideValueText != null)
+        {
+            return OverrideValueText(CompareValue.Value);
+        }
+        return string.Join(", ", CompareValue.Value);
     }
 
     bool DisplayCompareValueButton()
@@ -420,5 +429,10 @@
     void OnCompareButtonHover(bool isHovering)
     {
         compareButtonHover = isHovering;
+    }
+
+    string TooltipText()
+    {
+        return $"Change value <strong>{GetDbValue()}</strong> to <strong>{GetDbCompareValue()}</strong>";
     }
 }

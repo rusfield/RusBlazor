@@ -21,7 +21,7 @@
 
 @if (DisplayCompareValueButton())
 {
-    <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" Active="(ComponentIsActive())" />
+    <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" Active="(ComponentIsActive())" TooltipText="@TooltipText()" />
 }
 
 @code {
@@ -181,5 +181,10 @@
     void OnCompareButtonHover(bool isHovering)
     {
         internalCompareButtonHover = isHovering;
+    }
+
+    string TooltipText()
+    {
+        return $"Change value <strong>{Value}</strong> to <strong>{CompareValue}</strong>";
     }
 }

@@ -63,7 +63,7 @@
     </RusMenu>
     @if (DisplayCompareValueButton())
     {
-        <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" Active="inputActive" />
+        <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" Active="inputActive" TooltipText="@TooltipText()" />
     }
 </div>
 
@@ -108,7 +108,7 @@
     int resultCount = -1;
     string? rusInputId;
     bool previouslyDisplayDbValue = false;
-    string _showSelectedTooltip = "Show selected values";
+    string _showSelectedTooltip = "Show selected value";
     string _resetFilterTooltip = "Reset filter";
 
 
@@ -340,6 +340,11 @@
     void OnCompareButtonHover(bool isHovering)
     {
         compareButtonHover = isHovering;
+    }
+
+    string TooltipText()
+    {
+        return $"Change value <strong>{Value.ToString()}</strong> to <strong>{CompareValue?.Value.ToString()}</strong>";
     }
 }
 
