@@ -21,7 +21,7 @@
 
 @if (DisplayCompareValueButton())
 {
-    <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" />
+    <RusCompareButton OnClick="CompareButtonClick" OnHover="OnCompareButtonHover" Active="(ComponentIsActive())" />
 }
 
 @code {
@@ -91,13 +91,21 @@
         {
             return "compare-hover";
         }
-        else if (Active != null)
+        else
         {
-            return (bool)Active ? "active" : "";
+            return ComponentIsActive() ? "active" : "";
+        }
+    }
+
+    bool ComponentIsActive()
+    {
+        if (Active != null)
+        {
+            return (bool)Active;
         }
         else
         {
-            return focused ? "active" : "";
+            return focused;
         }
     }
 
