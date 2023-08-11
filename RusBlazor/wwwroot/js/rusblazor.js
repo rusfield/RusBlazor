@@ -143,3 +143,9 @@ window.removeClass = (elementId, className) => {
     let element = document.getElementById(elementId);
     element.classList.remove(className);
 };   
+
+// By disabling drag, Blazor no longer gets an error on drag drop for random text that causes this weird cursor bug.
+// https://github.com/MicrosoftEdge/WebView2Feedback/issues/2805
+document.addEventListener("dragstart", function (event) {
+    event.preventDefault();
+});
