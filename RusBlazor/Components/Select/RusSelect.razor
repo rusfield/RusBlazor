@@ -99,6 +99,7 @@
     string displayValue = "";
     string? lastVerifiedDisplayValue;
     string lastInput = "";
+    bool closing = false;
     CancellationTokenSource? searchTokenSource;
     SortedDictionary<T, string> filteredItems = new();
     RusMenu? rusMenu;
@@ -152,7 +153,7 @@
 
     void OnBlur()
     {
-        if(!rusMenu?.IsOpen ?? true)
+        if (!rusMenu?.IsOpen ?? true)
             searchTokenSource?.Cancel();
     }
 
@@ -248,11 +249,16 @@
 
     async Task SelectItemAsync(T key, string value)
     {
-        Value = key;
-        await SetDisplayTextAsync();
-        await Task.Delay(200); // Select-animation play
-        await rusMenu.CloseAsync();
-        await ValueChanged.InvokeAsync(Value);
+        if (!closing) // prevent double select conflict
+        {
+            closing = true;
+            Value = key;
+            await SetDisplayTextAsync();
+            await Task.Delay(200); // Select-animation play
+            await rusMenu.CloseAsync();
+            await ValueChanged.InvokeAsync(Value);
+            closing = false;
+        }
     }
 
     async Task ShowMenuChanged((bool, int) data)
@@ -331,7 +337,7 @@
     async void CompareButtonClick()
     {
         compareButtonHover = false;
-        if(CompareValue != null)
+        if (CompareValue != null)
         {
             loadingComponent = true;
             Value = CompareValue.Value;

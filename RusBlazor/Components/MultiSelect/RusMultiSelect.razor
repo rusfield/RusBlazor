@@ -247,20 +247,23 @@
 
     async Task SelectItemAsync(T key)
     {
-        // Toggle whether key is added or removed
-        if (Value.Contains(key))
+        if (inputActive) // prevent stuff from being selected during close
         {
-            Value.Remove(key);
-        }
-        else
-        {
-            Value.Add(key);
-        }
+            // Toggle whether key is added or removed
+            if (Value.Contains(key))
+            {
+                Value.Remove(key);
+            }
+            else
+            {
+                Value.Add(key);
+            }
 
-        await SetDisplayTextAsync();
+            await SetDisplayTextAsync();
 
-        await ValueChanged.InvokeAsync(Value);
-        await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+            await ValueChanged.InvokeAsync(Value);
+            await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
+        }
     }
 
     async Task SetDisplayTextAsync()
@@ -395,13 +398,13 @@
     bool DisplayCompareValueButton()
     {
         // If CompareValue is not set, do not show
-        if(CompareValue?.Value != null)
+        if (CompareValue?.Value != null)
         {
             // If CompareValue and Value have different counts, show
-            if(CompareValue.Value.Count == Value.Count)
+            if (CompareValue.Value.Count == Value.Count)
             {
                 // If any differences between Value and CompareValue, show
-                foreach(var value in Value)
+                foreach (var value in Value)
                 {
                     if (!CompareValue.Value.Contains(value))
                         return true;
