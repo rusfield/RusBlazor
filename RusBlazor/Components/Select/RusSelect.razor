@@ -232,16 +232,17 @@
             // TODO: Remove this, undefined values are returned in backend
             if (search.TryParseAsT<T>(out var value) && !filteredItems.ContainsKey(value))
                 filteredItems.Add(value, $"Undefined ({value})");
+
+            loadingSearch = false;
+            await InvokeAsync(StateHasChanged);
+            if (filteredItems.ContainsKey(Value))
+            {
+                await JSRuntime.InvokeVoidAsync("scrollToElementInContainer", rusMenu!.GetId(), $"{rusMenu!.GetId()}-{Value.ToString()}", 150);
+            }
         }
         catch (OperationCanceledException e)
         {
             // Search cancelled
-        }
-        loadingSearch = false;
-        await InvokeAsync(StateHasChanged);
-        if (filteredItems.ContainsKey(Value))
-        {
-            await JSRuntime.InvokeVoidAsync("scrollToElementInContainer", rusMenu!.GetId(), $"{rusMenu!.GetId()}-{Value.ToString()}", 150);
         }
     }
 
