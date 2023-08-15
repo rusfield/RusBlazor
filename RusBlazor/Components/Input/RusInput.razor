@@ -10,7 +10,7 @@
     @Label
 </div>
 <div class="@($"rus-input-container {Class} {ColorClass()} {DisabledClass()} {CompareButtonClass()}")" style="@($"{BorderRadiusStyle()} {Style}")" @onclick="FocusInputAsync">
-    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input")" disabled="@(Disabled || Loading)" />
+    <input id="@id" @bind="Value" @onfocus="@HandleFocusAsync" @onblur="@HandleBlurAsync" @oninput="@OnInput" class="@($"rus-input {(Active ?? false ? "active" : "")}")" disabled="@(Disabled || Loading)" />
     @if (Loading)
     {
         <div class="rus-input-loader">

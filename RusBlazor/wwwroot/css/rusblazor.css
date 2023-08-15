@@ -15,6 +15,11 @@
     user-select: none;
 }
 
+::selection {
+    background-color: var(--color-primary-darken);
+    color: var(--color-light);
+}
+
 .allow-select {
     user-select: auto;
 }

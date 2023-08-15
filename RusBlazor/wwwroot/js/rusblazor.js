@@ -69,6 +69,7 @@ window.selectElement = (elementId) => {
         var element = document.getElementById(elementId);
         element.focus();
         element.select();
+        element.scrollLeft = 0; // prevent jumping back and forth for focus/unfocus
     }, 100);
 }
 
