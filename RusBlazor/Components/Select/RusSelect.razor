@@ -144,7 +144,10 @@
 
     void OnFocus()
     {
-        InitSearch(0);
+        if (!inputActive)
+        {
+            InitSearch(0);
+        }
     }
 
     void OnBlur()

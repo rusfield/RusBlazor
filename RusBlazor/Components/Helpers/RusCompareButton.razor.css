@@ -2,6 +2,8 @@
     position: absolute;
     margin-top: -34px;
     margin-left: -11px;
+    z-index: 1;
+    transition: 0.2s ease;
 }
 
     .rus-compare-button.active {
