@@ -152,7 +152,7 @@
     async Task OnFocusAsync()
     {
         // Element may be re-focused from clicking in menu too.
-        if (!rusMenu?.IsOpen ?? false)
+        if (!inputActive)
         {
             await JSRuntime.InvokeVoidAsync("selectElement", rusInputId);
             InitSearch(0);
