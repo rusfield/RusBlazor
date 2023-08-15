@@ -1,5 +1,5 @@
 ﻿
-<div @onclick="OnClick" class="@($"rus-menu-item {HoverClass()} {Class} {SeparatorClass()}")" id="@Id">
+<div @onclick="OnClick" class="@($"rus-menu-item {HoverClass()} {Class} {SeparatorClass()}")" id="@Id" style="@Style">
     @ChildContent
 </div>
 
@@ -21,6 +21,9 @@
 
     [Parameter]
     public bool Separator { get; set; } = false;
+
+    [Parameter]
+    public string Style { get; set; }
 
     void OnClick()
     {

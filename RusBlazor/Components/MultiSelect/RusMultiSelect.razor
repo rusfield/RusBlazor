@@ -29,14 +29,14 @@
         <MenuContent>
             @if (loadingSearch)
             {
-                <RusMenuItem Hoverable="false">
+                <RusMenuItem Hoverable="false" Style="height: 80%;">
                     <RusMenuItemContentLoading />
                 </RusMenuItem>
             }
             else if (!filteredItems.Any())
             {
-                <RusMenuItem Hoverable="false">
-                    <RusMenuItemNoResults />
+                <RusMenuItem Hoverable="false" Style="height: 80%;">
+                    <RusMenuItemContentNoResults />
                 </RusMenuItem>
             }
             else
