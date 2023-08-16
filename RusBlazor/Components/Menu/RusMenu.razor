@@ -88,7 +88,7 @@
         await Task.Run(async () =>
         {
             // If clicked too fast, wait for closing to finish
-            while (closing) 
+            while (closing)
             {
                 await Task.Delay(50);
             }
@@ -98,10 +98,19 @@
 
         IsOpen = true;
 
-        await InvokeAsync(async () =>
+        if (IsOpenChanged.HasDelegate)
         {
-            await IsOpenChanged.InvokeAsync((true, animationDurationMs));
-        });
+            await InvokeAsync(async () =>
+            {
+                await IsOpenChanged.InvokeAsync((true, animationDurationMs));
+            });
+        }
+        else
+        {
+            // This must be forced to run at this point, or the javascript below won't work
+            this.StateHasChanged();
+        }
+
 
         if (!alreadyOpen)
         {
@@ -109,7 +118,7 @@
             {
                 new { name = "toggleDropdownHeight", args = new object[] { id, true, dropdownHeight, animationDurationMs } },
                 new { name = "toggleDropdownOpacity", args = new object[] { parentContainerId, true, animationDurationMs } },
-                new { name = "addAndRemoveClass", args = new object[] { id, "hide-scrollbar", animationDurationMs } }
+                // new { name = "addAndRemoveClass", args = new object[] { id, "hide-scrollbar", animationDurationMs } } // Re-enable again if there comes a time when needed
             };
 
             await JSRuntime.InvokeVoidAsync("executeMultipleFunctions", new object[] { functionSpecs });
@@ -152,7 +161,7 @@
         closing = false;
 
         // When the menu disappears, some of the elements do not trigger mouseout correctly.
-        // Clean up any tooltips caught by this. 
+        // Clean up any tooltips caught by this.
         TooltipHandler.ResetTooltip();
     }
 

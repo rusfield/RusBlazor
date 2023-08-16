@@ -88,5 +88,6 @@
     async void OnMenuClickAsync()
     {
         await _rusMenu.OpenAsync();
+        this.StateHasChanged();
     }
 }
