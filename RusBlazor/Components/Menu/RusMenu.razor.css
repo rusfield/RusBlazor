@@ -48,6 +48,16 @@
     position: relative;
 }
 
+    .rus-menu-dropdown.grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+        gap: 1px;
+        overflow: auto;
+        padding: 1px;
+        background-color: var(--color-light);
+    }
+
+
 .rus-menu-bottom {
     background-color: transparent;
     border-radius: var(--frame-width);

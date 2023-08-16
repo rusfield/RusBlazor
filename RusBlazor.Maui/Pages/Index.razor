@@ -10,14 +10,18 @@
 <RusTabs @ref="_rusTabs" OnMenuClick="OnMenuClickAsync">
     <MenuContent>
         <RusMenu @ref="_rusMenu">
-            <MenuContent>
-                <RusMenuItem>
-                    <RusMenuItemContentText Text="Hello" />
-                </RusMenuItem>
-                <RusMenuItem>
-                    <RusMenuItemContentText Text="Hello" />
-                </RusMenuItem>
-            </MenuContent>
+            <MenuGridContent>
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+                <RusMenuGridContent Header="Test" IconName="auto_awesome" Description="This is just for test. This is just for test. This is just for test. This is just for test. This is just for test." />
+
+            </MenuGridContent>
         </RusMenu>
     </MenuContent>
     <TabContent>
@@ -77,7 +81,7 @@
         </RusTabItem>
     </TabContent>
 </RusTabs>
-<RusFooter Text="HotfixMods - 10.1.5.50232"/>
+<RusFooter Text="HotfixMods - 10.1.5.50232" />
 
 @code {
     RusMenu _rusMenu;

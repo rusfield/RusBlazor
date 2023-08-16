@@ -15,10 +15,17 @@
             </div>
         }
 
-        @if (MenuContent != null)
+        @if (MenuListContent != null)
         {
             <div class="rus-menu-dropdown" id="@id" style="@($"max-height:{dropdownHeight}px;")">
-                @MenuContent
+                @MenuListContent
+            </div>
+        }
+
+        @if (MenuGridContent != null)
+        {
+            <div class="rus-menu-dropdown grid" id="@id" style="@($"max-height:{dropdownHeight}px;")">
+                @MenuGridContent
             </div>
         }
 
@@ -45,7 +52,10 @@
     public Anchor Anchor { get; set; } = Anchor.AUTO;
 
     [Parameter]
-    public RenderFragment? MenuContent { get; set; }
+    public RenderFragment? MenuListContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? MenuGridContent { get; set; }
 
     [Parameter]
     public RenderFragment? MenuTopContent { get; set; }
