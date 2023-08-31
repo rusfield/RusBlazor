@@ -12,22 +12,6 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Content Remove="wwwroot\css\icons.css" />
-	  <Content Remove="wwwroot\fonts\icons.woff2" />
-	</ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Components\Checkbox\RusCheckbox.razor.css" />
-    <None Remove="Components\Menu\RusMenuItem.razor.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Components\Checkbox\RusCheckbox.razor.css" />
-    <Content Include="Components\Menu\RusMenuItem.razor.css" />
-  </ItemGroup>
-
-
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
